@@ -1,3 +1,4 @@
+#!/bin/sh
 import pymongo
 import requests
 import os
