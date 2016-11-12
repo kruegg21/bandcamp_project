@@ -259,9 +259,6 @@ def crawler(roots):
     root_album = roots[0]
     root_user = roots[1]
 
-    print os.getcwd()
-    raw_input()
-
     # Web driver
     driver = webdriver.Chrome(os.getcwd() + '/chromedriver_linux64')
 
