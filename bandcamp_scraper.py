@@ -22,6 +22,29 @@ def get_mongo_database(db_name):
     # Open database
     return client[db_name]
 
+def clean_html(s):
+    return [c for c in s if c not in "\"<>\\/"]
+
+def click_through_more_button(driver, class_):
+    # Click 'more' button until we reach bottom of user list
+    while True:
+        # Check if 'more' button exists
+        try:
+            button = driver.find_element_by_class_name(class_)
+        except:
+            break
+
+        # Click 'more' button
+        if button.is_displayed():
+            button.click()
+        else:
+            break
+
+        # Sleep to allow time for data to load
+        time.sleep(5)
+
+    return driver
+
 def get_user_collection(url, driver, db):
     # Search URL
     driver.get(url)
@@ -122,29 +145,6 @@ def get_user_collection(url, driver, db):
     print "Number of albums in list: {}".format(len(album_dict))
     return album_list
 
-def clean_html(s):
-    return [c for c in s if c not in "\"<>\\/"]
-
-def click_through_more_button(driver, class_):
-    # Click 'more' button until we reach bottom of user list
-    while True:
-        # Check if 'more' button exists
-        try:
-            button = driver.find_element_by_class_name(class_)
-        except:
-            break
-
-        # Click 'more' button
-        if button.is_displayed():
-            button.click()
-        else:
-            break
-
-        # Sleep to allow time for data to load
-        time.sleep(5)
-
-    return driver
-
 def get_album_data(url, driver, db):
     # Search URL
     driver.get(url)
@@ -165,26 +165,37 @@ def get_album_data(url, driver, db):
     user_urls = list()
     for user in soup.find_all('a', {'class': 'pic'}):
         user_urls.append(user['href'][:-15])
-    more_button = soup.find('a', {'class': 'more-thumbs'})
 
     # Get link to album artwork
-    album_artwork_url = soup.find('a', {'class': 'popupImage'})['href']
+    album_artwork_tag = soup.find('a', {'class': 'popupImage'})
+    if album_artwork_tag:
+        album_artwork_url = album_artwork_tag['href']
+    else:
+        album_artwork_url = None
 
     # Get album tags
     album_tags = [tag['href'] for tag in soup.find_all('a', {'class': 'tag'})]
 
     # Get album description
-    album_description = soup.find('div', {'class': 'tralbumData tralbum-about'}).text
+    album_description_tag = soup.find('div', {'class': 'tralbumData tralbum-about'})
+    if album_description_tag:
+        album_description = album_description_tag.text
+    else:
+        album_description = None
 
     # Get album credits
-    album_credits = soup.find('div', {'class': 'tralbumData tralbum-credits'}).text
+    album_credits_tag = soup.find('div', {'class': 'tralbumData tralbum-credits'})
+    if album_credits_tag:
+        album_credits = album_credits_tag.text
+    else:
+        album_credits = None
 
     # Get purchasing information
     purchasing_info = dict()
     price_tag = soup.find('span', {'class': 'base-text-color'})
     currency_tag = soup.find('span', {'class': 'buyItemExtra secondaryText'})
     if price_tag:
-        price = price_tag.text.split('$')[-1]
+        price = ''.join([c for c in price_tag.text if c.isdigit() or c in '.'])
     else:
         price = 'Name your price'
     if currency_tag:
@@ -242,7 +253,11 @@ def reverse_mongo_key_formatting(s):
 def translate_url_to_tag(url):
     return url.split('/')[-1]
 
-def crawler(root_album, root_user):
+def crawler(roots):
+    # Unpack tuple
+    root_album = roots[0]
+    root_user = roots[1]
+
     # Web driver
     driver = webdriver.Chrome(os.getcwd() + '/chromedriver')
 
@@ -290,5 +305,5 @@ if __name__ == "__main__":
               ('https://jeffrosenstock.bandcamp.com/album/worry',
                'https://bandcamp.com/superstardestroyerrecords')]
 
-    p = Pool(4)
+    p = Pool(16)
     p.map(crawler, params)
