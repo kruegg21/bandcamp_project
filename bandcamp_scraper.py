@@ -260,7 +260,7 @@ def crawler(roots):
     root_user = roots[1]
 
     # Web driver
-    driver = webdriver.Chrome(os.getcwd() + '/chromedriver')
+    driver = webdriver.Chrome(os.getcwd() + '/chromedriver_linux64')
 
     # Get Mongo database to dump things into
     db = get_mongo_database('bandcamp')
