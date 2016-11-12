@@ -4,3 +4,4 @@ pip install pymongo
 pip install requests
 pip install os
 pip install bs4
+pip install simplejson

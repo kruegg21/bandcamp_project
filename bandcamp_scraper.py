@@ -2,162 +2,294 @@ import pymongo
 import requests
 import os
 import time
+import pprint
 import random
 import re
+import simplejson
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from multiprocessing import Process
 
 def random_sleep():
     sleep_time = random.uniform(10,15)
     print "Going to sleep for {} seconds".format(sleep_time)
     time.sleep(sleep_time)
 
-def get_mongo_database(db_name, collection_name):
+def get_mongo_database(db_name):
     # Open MongoDB client
     client = pymongo.MongoClient()
 
     # Open database
-    db = client[db_name]
+    return client[db_name]
 
-    # Choose collection
-    return db[collection_name]
-
-def get_user_collection(url, driver):
+def get_user_collection(url, driver, db):
+    # Search URL
     driver.get(url)
 
     # Counters to keep track of number of titles we have gathered
     n_after = 0
     n_previous = -999
     counter = 1
-    while n_after != n_previous:
-        # Scroll down chunk of page
-        page_height = counter * 1500
-        driver.execute_script("window.scrollTo(0, {});".format(page_height))
-        time.sleep(0.2)
-
+    made_it_to_bottom = False
+    while not made_it_to_bottom:
         # Get raw HTML
         html = driver.page_source
 
         # Make soup
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, 'lxml')
 
-        # Get album and artist titles
-        album_dict = dict()
+        made_it_to_bottom = True
+        for user in soup.find_all('li', {'class': lambda L: L and \
+                    L.startswith('collection-item-container')}):
+            if not user.find('div', {'class' : 'collection-item-title'}):
+                # Scroll down chunk of page
+                made_it_to_bottom = False
+                counter += 1
+                page_height = counter * 500
+                driver.execute_script("window.scrollTo(0, {});".format(page_height))
+                time.sleep(0.5)
+                break
 
-        tag = 'collection-item-container track_play_hilite lazy'
-        classes = [tag, tag + ' ']
-        for t in classes:
-            for user in soup.find_all('li', {'class': t}):
-                user_dict = dict()
-                album_tag = user.find('div', {'class' : 'collection-item-title'})
-                artist_tag = user.find('div', {'class' : 'collection-item-artist'})
-                track_tag = user.find('a', {'class' : 'fav-track-link'})
-                collection_tag = user.find('a', {'class' : 'item-link also-link'})
-                if artist_tag:
-                    user_dict['artist'] = artist_tag.text[3:]
-                if track_tag:
-                    user_dict['track'] = track_tag.text
-                    user_dict['album_url'] = track_tag['href']
-                if collection_tag:
-                    t = collection_tag.text
-                    user_dict['collection_count'] = ''.join(c for c in t if c.isdigit())
-                if album_tag:
-                    t = album_tag.text
-                    if t[-13:] == '(gift given)\n':
-                        t = t[:-13].strip()
-                        user_dict['wishlist'] = '0'
-                    else:
-                        user_dict['wishlist'] = '1'
-                    t = mongo_preprocess(t)
-                    user_dict['album'] = t
-                    album_dict[t] = user_dict
-
-        # Update counters
-        n_previous = n_after
-        n_after = len(album_dict)
-        counter += 1
-
-    final_dict = {url.split('/')[-1] : album_dict}
-    return final_dict
-
-def scrape_album_metadata(html):
-    # Get MongoDB collection instance
-    collection = get_mongo_database('bandcamp_data', 'album_support')
+    # Get raw HTML
+    html = driver.page_source
 
     # Make soup
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'lxml')
 
-    album_title = soup.find('h2', {'class' : 'trackTitle'}).contents[0].strip()
-    artist_name = soup.find('span', {'itemprop' : 'byArtist'}).find('a').contents[0].strip()
-
-    print album_title, artist_name
-
-    for user in soup.find_all('a', {'class': 'fan pic'}):
-         print user['href']
-    for user in soup.find_all('a', {'class' : 'pic'}):
-         print user
-
-    # # Traverse HTML
-    # for entry in soup.find_all("tr"):
-    #     post = {}
-    #     artist = entry.find('a', {'class': 'artist'})
-    #     if artist:
-    #         post['artist_id'] = artist['title'].strip('[]')
-    #         post['artist_name'] = artist.contents[0]
-    #     album = entry.find("a", {"class": "album"})
-    #     if album:
-    #         post['album_id'] = album['title'].strip('[]')
-    #         post['album_name'] = album.contents[0]
-    #         post['year'] = payload['year']
-    #         post['genre'] = payload['genres']
-    #     statistics = entry.find_all('b')
-    #     if statistics:
-    #         post['average_rating'] = statistics[0].contents[0]
-    #         post['number_of_ratings'] = statistics[1].contents[0]
-    #         post['number_of_reviews'] = statistics[2].contents[0]
-    #     if post:
-    #         # Insert into MongoDB database
-    #         result = collection.insert_one(post)
-    # return soup
+    # Get album and artist titles
+    album_dict = dict()
+    album_list = list()
 
 
-# def get_user_collection_request(url):
-#
-#     r = requests.get(url)
-#     random_sleep()
-#     soup = BeautifulSoup(r.content, 'html.parser')
-#     print soup
-#     raw_input()
-#
-#     album_title = soup.find('h2', {'class' : 'trackTitle'}).contents[0].strip()
-#     artist_name = soup.find('span', {'itemprop' : 'byArtist'}).find('a').contents[0].strip()
-#
-#     print album_title, artist_name
-#
-#     for user in soup.find_all('a', {'class': 'fan pic'}):
-#          print user['href']
-#     for user in soup.find_all('a', {'class' : 'pic'}):
-#          print user
+    for user in soup.find_all('li', {'class': lambda L: L and \
+                L.startswith('collection-item-container')}):
 
-def mongo_preprocess(s):
+        # Get all tags
+        album_tag = user.find('div', {'class' : 'collection-item-title'})
+        album_url_tag = user.find('a', {'class': 'item-link'})
+        artist_tag = user.find('div', {'class' : 'collection-item-artist'})
+        track_tag = user.find('a', {'class' : 'fav-track-link'})
+        text_tag = user.find('span', {'class' : 'text'})
+        collection_tag = user.find('a', {'class' : 'item-link also-link'})
+
+        # Extract what we want
+        if track_tag:
+            track = track_tag.text
+        else:
+            track = 'None'
+
+        if collection_tag:
+            t = collection_tag.text
+            collection_count = ''.join(c for c in t if c.isdigit())
+        else:
+            collection_count = 'None'
+        if text_tag:
+            text = text_tag.text
+        else:
+            text = 'None'
+        album = album_tag.text
+        if album[-13:] == '(gift given)\n':
+            album = album[:-13].strip()
+            wishlist = '0'
+        else:
+            wishlist = '1'
+        album_url = album_url_tag['href']
+        album_list.append(album_url)
+        artist = artist_tag.text[3:]
+
+
+        user_dict = dict()
+        user_dict['album_url'] = album_url
+        user_dict['artist'] = artist
+        user_dict['track'] = track
+        user_dict['collection_count'] = collection_count
+        user_dict['text'] = text
+        user_dict['wishlist'] = wishlist
+        user_dict['album'] = album
+
+        album_dict[mongo_key_formatting(album_url)] = user_dict
+
+    # Dump to MongoDB
+    final_dict = {'_id': mongo_key_formatting(url),
+                  'data': simplejson.dumps(album_dict)}
+    if not db.user_collections.find_one({"_id": mongo_key_formatting(url)}):
+        db.user_collections.insert(final_dict)
+
+    # Error Check
+    pp = pprint.PrettyPrinter(indent = 2)
+    pp.pprint(album_dict)
+    print "User name: {}".format(url)
+    print "Number of albums in list: {}".format(len(album_dict))
+    return album_list
+
+def clean_html(s):
+    return [c for c in s if c not in "\"<>\\/"]
+
+def click_through_more_button(driver, class_):
+    # Click 'more' button until we reach bottom of user list
+    while True:
+        # Check if 'more' button exists
+        try:
+            button = driver.find_element_by_class_name(class_)
+        except:
+            break
+
+        # Click 'more' button
+        if button.is_displayed():
+            button.click()
+        else:
+            break
+
+        # Sleep to allow time for data to load
+        time.sleep(5)
+
+    return driver
+
+def get_album_data(url, driver, db):
+    # Search URL
+    driver.get(url)
+
+    # Click to bottom of writing button
+    driver = click_through_more_button(driver, 'more-writing')
+
+    # Click to bottom of 'more' button
+    driver = click_through_more_button(driver, 'more-thumbs')
+
+    # Get raw HTML
+    html = driver.page_source
+
+    # Make soup
+    soup = BeautifulSoup(html, 'lxml')
+
+    # Get list of user URLs
+    user_urls = list()
+    for user in soup.find_all('a', {'class': 'pic'}):
+        user_urls.append(user['href'][:-15])
+    more_button = soup.find('a', {'class': 'more-thumbs'})
+
+    # Get link to album artwork
+    album_artwork_url = soup.find('a', {'class': 'popupImage'})['href']
+
+    # Get album tags
+    album_tags = [tag['href'] for tag in soup.find_all('a', {'class': 'tag'})]
+
+    # Get album description
+    album_description = soup.find('div', {'class': 'tralbumData tralbum-about'}).text
+
+    # Get album credits
+    album_credits = soup.find('div', {'class': 'tralbumData tralbum-credits'}).text
+
+    # Get purchasing information
+    purchasing_info = dict()
+    price_tag = soup.find('span', {'class': 'base-text-color'})
+    currency_tag = soup.find('span', {'class': 'buyItemExtra secondaryText'})
+    if price_tag:
+        price = price_tag.text.split('$')[-1]
+    else:
+        price = 'Name your price'
+    if currency_tag:
+        currency = currency_tag.text
+    else:
+        currency = 'None'
+
+    # Album data
+    album_data = dict()
+    album_data['user_urls'] = user_urls
+    album_data['name'] = url
+    album_data['album_artwork_url'] = album_artwork_url
+    album_data['album_tags'] = album_tags
+    album_data['album_description'] = album_description
+    album_data['album_credits'] = album_credits
+    album_data['price'] = price
+    album_data['currency'] = currency
+
+    # Dump to MongoDB
+    final_dict = {'_id': mongo_key_formatting(url),
+                  'album_data' : simplejson.dumps(album_data)}
+    if not db.albums.find_one({"_id": mongo_key_formatting(url)}):
+        db.albums.insert(final_dict)
+
+    # Error checking
+    print "Number of users supporting: {}".format(len(user_urls))
+    print "Link to album artwork: {}".format(album_artwork_url)
+    print "Album tags: {}".format([translate_url_to_tag(url) for url in album_tags])
+    print "Price: {}".format(price)
+    print "Currency: {}\n\n\n".format(currency)
+
+    return user_urls
+
+def check_for_key(collection, key):
+    """
+    Input:
+        db -- MongoDB database
+        collection -- collection with db
+        key -- string of key we are checking for
+    Output:
+        Bool indicating if key exists in collection
+    """
+    return collection.find({key : {'$exists': True}}).limit(1)
+
+def mongo_key_formatting(s):
     """
     MongoDB requires keys to not have periods in them. This function replace
     '.' with '_' to make MongoDB happy
     """
-    return s.replace('.', ',')
+    return s.replace('.', '_')
 
-if __name__ == "__main__":
-    # Root URL
-    url = 'https://jeffrosenstock.bandcamp.com/'
+def reverse_mongo_key_formatting(s):
+    return s.replace('_', '.')
 
+def translate_url_to_tag(url):
+    return url.split('/')[-1]
+
+def crawler(root_album, root_user):
     # Web driver
     driver = webdriver.Chrome(os.getcwd() + '/chromedriver')
 
-    # Get Mongo collection to dump things into
-    mongo_collection = get_mongo_database('bandcamp', 'user_collections')
+    # Get Mongo database to dump things into
+    db = get_mongo_database('bandcamp')
 
-    # Get collectino for user
-    collection_dictionary = get_user_collection('https://bandcamp.com/devonpotrie', driver)
+    # Global set of user and album URLs to iterate through
+    user_urls = set()
+    album_urls = set()
 
-    # Dump user collection into Mongo
-    mongo_collection.insert(collection_dictionary)
+    # Get user URLs from root
+    new_user_urls = get_album_data(root_album, driver, db)
+    new_album_urls = get_user_collection(root_user, driver, db)
+
+    user_urls.update(new_user_urls)
+    album_urls.update(new_album_urls)
+
+    # Crawl through website
+    while album_urls:
+        while user_urls:
+            # Get user, gather data and add albums to list
+            user_url = user_urls.pop()
+            if not db.user_collections.find_one({"_id": mongo_key_formatting(user_url)}):
+                new_album_urls = get_user_collection(user_url, driver, db)
+                album_urls.update(new_album_urls)
+            else:
+                print "Skipping key: {}".format(user_url)
+
+
+        album_url = album_urls.pop()
+        if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
+            new_user_urls = get_album_data(album_url, driver, db)
+            user_urls.update(new_user_urls)
+        else:
+            print "Skipping key: {}".format(album_url)
+
+
+if __name__ == "__main__":
+    params = [('https://openmikeeagle360.bandcamp.com/album/dark-comedy',
+               'https://bandcamp.com/williamkaufmann'),
+              ('https://deafheavens.bandcamp.com/album/sunbather',
+               'https://bandcamp.com/calebbratcher'),
+              ('https://burial.bandcamp.com/album/burial-untrue-hdbcd002d',
+               'https://bandcamp.com/zangvil'),
+              ('https://jeffrosenstock.bandcamp.com/album/worry',
+               'https://bandcamp.com/superstardestroyerrecords')]
+    for param in params:
+        p = Process(target=crawler, args=param)
+        p.start()
+        p.join()
