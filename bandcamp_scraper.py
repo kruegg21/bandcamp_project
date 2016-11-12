@@ -8,7 +8,7 @@ import re
 import simplejson
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from multiprocessing import Process
+from multiprocessing import Pool
 
 def random_sleep():
     sleep_time = random.uniform(10,15)
@@ -289,7 +289,6 @@ if __name__ == "__main__":
                'https://bandcamp.com/zangvil'),
               ('https://jeffrosenstock.bandcamp.com/album/worry',
                'https://bandcamp.com/superstardestroyerrecords')]
-    for param in params:
-        p = Process(target=crawler, args=param)
-        p.start()
-        p.join()
+
+    p = Pool(4)
+    p.map(crawler, params)
