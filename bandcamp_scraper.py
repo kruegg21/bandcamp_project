@@ -5,9 +5,12 @@ import os
 import time
 import pprint
 import random
+import json
+import demjson
 import re
 import simplejson
 from bs4 import BeautifulSoup
+from HTMLParser import HTMLParser
 from selenium import webdriver
 from multiprocessing import Pool
 
@@ -97,15 +100,26 @@ def add_entry_to_user_collection(user, album_dict, album_list):
 
 def get_user_collection(url, driver, db):
     # Search URL
-    driver.get(url)
+    r = requests.get(url)
+    html = r.text
 
     # Get album and artist titles
     album_dict = dict()
     album_list = list()
 
     # Make soup
-    html = driver.page_source
     soup = BeautifulSoup(html, 'lxml')
+
+    JSON = re.compile('var CollectionData = ({.*?});', re.DOTALL)
+    matches = JSON.search(html)
+
+    pp = pprint.PrettyPrinter(indent = 2)
+    for key, value in demjson.decode(matches.group(1))['item_details'].iteritems():
+        album_url = value['item_url']
+        album_list.append(album_url)
+        album_dict[mongo_key_formatting(album_url)] = value
+
+    '''
 
     # Set to keep track of items we have already scraped
     item_tags = soup.find_all('li', {'class': lambda L: L and \
@@ -116,7 +130,7 @@ def get_user_collection(url, driver, db):
     page_height_base = 295
     while item_ids:
         # Move down page
-        page_height = counter * 870 + page_height_base
+        page_height = counter * 880 + page_height_base
         driver.execute_script("window.scrollTo(0, {});".format(page_height))
         counter += 1
 
@@ -132,9 +146,9 @@ def get_user_collection(url, driver, db):
             while not tag.find('div', {'class' : 'collection-item-title'}):
                 # Check if we need to move further down page
                 t1 = time.time()
-                if t1 - t0 > 2.5:
+                if t1 - t0 > 1:
                     # Move down page
-                    page_height = counter * 870 + page_height_base
+                    page_height = counter * 880 + page_height_base
                     driver.execute_script("window.scrollTo(0, {});".format(page_height))
                     counter += 1
 
@@ -147,16 +161,17 @@ def get_user_collection(url, driver, db):
             album_dict, album_list = add_entry_to_user_collection(tag,
                                                                   album_dict,
                                                                   album_list)
+    '''
 
     # Dump to MongoDB
     final_dict = {'_id': mongo_key_formatting(url),
                   'data': simplejson.dumps(album_dict)}
-    if not db.user_collections.find_one({"_id": mongo_key_formatting(url)}):
-        db.user_collections.insert(final_dict)
+    if not db.user_collections_new.find_one({"_id": mongo_key_formatting(url)}):
+        db.user_collections_new.insert(final_dict)
 
     # Error Check
-    pp = pprint.PrettyPrinter(indent = 2)
-    pp.pprint(album_dict)
+    # pp = pprint.PrettyPrinter(indent = 2)
+    # pp.pprint(album_dict)
     print "User name: {}".format(url)
     print "Number of albums in list: {}".format(len(album_dict))
     return album_list
@@ -176,6 +191,8 @@ def get_album_data(url, driver, db):
 
     # Make soup
     soup = BeautifulSoup(html, 'lxml')
+
+
 
     # Get list of user URLs
     user_urls = list()
@@ -285,8 +302,8 @@ def crawler(roots):
     album_urls = set()
 
     # Get user URLs from root
-    new_user_urls = get_album_data(root_album, driver, db)
     new_album_urls = get_user_collection(root_user, driver, db)
+    new_user_urls = get_album_data(root_album, driver, db)
 
     user_urls.update(new_user_urls)
     album_urls.update(new_album_urls)
@@ -296,7 +313,7 @@ def crawler(roots):
         while user_urls:
             # Get user, gather data and add albums to list
             user_url = user_urls.pop()
-            if not db.user_collections.find_one({"_id": mongo_key_formatting(user_url)}):
+            if not db.user_collections_new.find_one({"_id": mongo_key_formatting(user_url)}):
                 new_album_urls = get_user_collection(user_url, driver, db)
                 album_urls.update(new_album_urls)
             else:
@@ -314,11 +331,13 @@ def crawler(roots):
 if __name__ == "__main__":
     params = [('https://openmikeeagle360.bandcamp.com/album/dark-comedy',
                'https://bandcamp.com/williamkaufmann'),
-              ('https://deafheavens.bandcamp.com/album/sunbather',
-               'https://bandcamp.com/calebbratcher'),
-              ('https://burial.bandcamp.com/album/burial-untrue-hdbcd002d',
-               'https://bandcamp.com/zangvil'),
+              ('https://clppng.bandcamp.com/album/splendor-misery',
+               'https://bandcamp.com/almualim'),
+              ('https://xiuxiu.bandcamp.com/album/plays-the-music-of-twin-peaks',
+               'https://bandcamp.com/bardono'),
               ('https://jeffrosenstock.bandcamp.com/album/worry',
                'https://bandcamp.com/superstardestroyerrecords')]
-    p = Pool(4)
+    p = Pool(8)
     p.map(crawler, params)
+
+    j = crawler(params[0])
