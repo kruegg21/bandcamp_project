@@ -113,11 +113,11 @@ def get_user_collection(url, driver, db):
     JSON = re.compile('var CollectionData = ({.*?});', re.DOTALL)
     matches = JSON.search(html)
 
-    pp = pprint.PrettyPrinter(indent = 2)
-    for key, value in demjson.decode(matches.group(1))['item_details'].iteritems():
-        album_url = value['item_url']
-        album_list.append(album_url)
-        album_dict[mongo_key_formatting(album_url)] = value
+    if matches:
+        for key, value in demjson.decode(matches.group(1))['item_details'].iteritems():
+            album_url = value['item_url']
+            album_list.append(album_url)
+            album_dict[mongo_key_formatting(album_url)] = value
 
     '''
 
