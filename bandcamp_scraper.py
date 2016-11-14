@@ -114,66 +114,23 @@ def get_user_collection(url, driver, db):
     matches = JSON.search(html)
 
     if matches:
-        for key, value in demjson.decode(matches.group(1))['item_details'].iteritems():
-            album_url = value['item_url']
-            album_list.append(album_url)
-            album_dict[mongo_key_formatting(album_url)] = value
+        try:
+            for key, value in demjson.decode(matches.group(1))['item_details'].iteritems():
+                album_url = value['item_url']
+                album_list.append(album_url)
+                album_dict[mongo_key_formatting(album_url)] = value
 
-    '''
+            # Dump to MongoDB
+            final_dict = {'_id': mongo_key_formatting(url),
+                          'data': simplejson.dumps(album_dict)}
+            if not db.user_collections_new.find_one({"_id": mongo_key_formatting(url)}):
+                db.user_collections_new.insert(final_dict)
 
-    # Set to keep track of items we have already scraped
-    item_tags = soup.find_all('li', {'class': lambda L: L and \
-                                L.startswith('collection-item-container')})
-    item_ids = [item_tag['data-itemid'] for item_tag in item_tags]
-
-    counter = 0
-    page_height_base = 295
-    while item_ids:
-        # Move down page
-        page_height = counter * 880 + page_height_base
-        driver.execute_script("window.scrollTo(0, {});".format(page_height))
-        counter += 1
-
-        # Get first six item ids
-        next_six = item_ids[:6]
-        item_ids = item_ids[6:]
-
-        # Wait for each of the six items to load
-        for item in next_six:
-            tag = soup.find('li', {'data-itemid': item})
-
-            t0 = time.time()
-            while not tag.find('div', {'class' : 'collection-item-title'}):
-                # Check if we need to move further down page
-                t1 = time.time()
-                if t1 - t0 > 1:
-                    # Move down page
-                    page_height = counter * 880 + page_height_base
-                    driver.execute_script("window.scrollTo(0, {});".format(page_height))
-                    counter += 1
-
-                    # Reset clock
-                    t0 = time.time()
-
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'lxml')
-                tag = soup.find('li', {'data-itemid': item})
-            album_dict, album_list = add_entry_to_user_collection(tag,
-                                                                  album_dict,
-                                                                  album_list)
-    '''
-
-    # Dump to MongoDB
-    final_dict = {'_id': mongo_key_formatting(url),
-                  'data': simplejson.dumps(album_dict)}
-    if not db.user_collections_new.find_one({"_id": mongo_key_formatting(url)}):
-        db.user_collections_new.insert(final_dict)
-
-    # Error Check
-    # pp = pprint.PrettyPrinter(indent = 2)
-    # pp.pprint(album_dict)
-    print "User name: {}".format(url)
-    print "Number of albums in list: {}".format(len(album_dict))
+            # Error Check
+            print "User name: {}".format(url)
+            print "Number of albums in list: {}".format(len(album_dict))
+        except:
+            pass
     return album_list
 
 def get_album_data(url, driver, db):
@@ -287,57 +244,66 @@ def translate_url_to_tag(url):
     return url.split('/')[-1]
 
 def crawler(roots):
-    # Unpack tuple
-    root_album = roots[0]
-    root_user = roots[1]
+    for i in xrange(9999):
+        try:
+            # Unpack tuple
+            root_album = roots[0]
+            root_user = roots[1]
 
-    # Web driver
-    driver = webdriver.Chrome(os.getcwd() + '/chromedriver_mac64')
+            # Web driver
+            driver = webdriver.Chrome(os.getcwd() + '/chromedriver_mac64')
 
-    # Get Mongo database to dump things into
-    db = get_mongo_database('bandcamp')
+            # Get Mongo database to dump things into
+            db = get_mongo_database('bandcamp')
 
-    # Global set of user and album URLs to iterate through
-    user_urls = set()
-    album_urls = set()
+            # Global set of user and album URLs to iterate through
+            user_urls = set()
+            album_urls = set()
 
-    # Get user URLs from root
-    new_album_urls = get_user_collection(root_user, driver, db)
-    new_user_urls = get_album_data(root_album, driver, db)
+            # Get user URLs from root
+            new_album_urls = get_user_collection(root_user, driver, db)
+            new_user_urls = get_album_data(root_album, driver, db)
 
-    user_urls.update(new_user_urls)
-    album_urls.update(new_album_urls)
-
-    # Crawl through website
-    while album_urls:
-        while user_urls:
-            # Get user, gather data and add albums to list
-            user_url = user_urls.pop()
-            if not db.user_collections_new.find_one({"_id": mongo_key_formatting(user_url)}):
-                new_album_urls = get_user_collection(user_url, driver, db)
-                album_urls.update(new_album_urls)
-            else:
-                print "Skipping key: {}".format(user_url)
-
-
-        album_url = album_urls.pop()
-        if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
-            new_user_urls = get_album_data(album_url, driver, db)
             user_urls.update(new_user_urls)
-        else:
-            print "Skipping key: {}".format(album_url)
+            album_urls.update(new_album_urls)
+
+            # Crawl through website
+            while album_urls:
+                while user_urls:
+                    # Get user, gather data and add albums to list
+                    user_url = user_urls.pop()
+                    if not db.user_collections_new.find_one({"_id": mongo_key_formatting(user_url)}):
+                        new_album_urls = get_user_collection(user_url, driver, db)
+                        album_urls.update(new_album_urls)
+                    else:
+                        print "Skipping key: {}".format(user_url)
+
+                album_url = album_urls.pop()
+                if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
+                    new_user_urls = get_album_data(album_url, driver, db)
+                    user_urls.update(new_user_urls)
+                else:
+                    print "Skipping key: {}".format(album_url)
+        except:
+            driver.close()
 
 
 if __name__ == "__main__":
-    params = [('https://openmikeeagle360.bandcamp.com/album/dark-comedy',
-               'https://bandcamp.com/williamkaufmann'),
-              ('https://clppng.bandcamp.com/album/splendor-misery',
-               'https://bandcamp.com/almualim'),
-              ('https://xiuxiu.bandcamp.com/album/plays-the-music-of-twin-peaks',
-               'https://bandcamp.com/bardono'),
-              ('https://jeffrosenstock.bandcamp.com/album/worry',
-               'https://bandcamp.com/superstardestroyerrecords')]
+    params = [('https://preoccupations.bandcamp.com/',
+               'https://bandcamp.com/charlesquinn'),
+              ('https://inquisitionbm.bandcamp.com/album/obscure-verses-for-the-multiverse',
+               'https://bandcamp.com/carcharoth'),
+              ('https://deathspellomega.bandcamp.com/album/paracletus',
+               'https://bandcamp.com/bryankerndrummer'),
+              ('https://miloraps.bandcamp.com/album/i-wish-my-brother-rob-was-here',
+               'https://bandcamp.com/Totallygnarly'),
+              ('https://graveface.bandcamp.com/album/dandelion-gum',
+               'https://bandcamp.com/rajjawa'),
+              ('https://toucheamore.bandcamp.com/album/is-survived-by',
+               'https://bandcamp.com/Rhokeheartburkett'),
+              ('https://nonameraps.bandcamp.com/album/telefone',
+               'https://bandcamp.com/duvaldiykid'),
+              ('https://girlslivingoutsidesocietysshit.bandcamp.com/album/demo',
+               'https://bandcamp.com/danielashton')]
     p = Pool(8)
     p.map(crawler, params)
-
-    j = crawler(params[0])
