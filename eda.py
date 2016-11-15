@@ -112,6 +112,8 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
                           'album_id': album_list,
                           'rating': rating_list})
 
+    print "Created SFrame"
+
     # Dump
     if dump:
         sf.save('data/{}.csv'.format(name), format='csv')
