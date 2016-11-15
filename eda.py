@@ -104,6 +104,8 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
 
+
+    print album_list[:100]
     print len(set(album_list))
     print len(set(_id_list))
     print len(set(rating_list))
