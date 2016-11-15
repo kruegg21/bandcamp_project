@@ -285,7 +285,8 @@ def crawler(roots):
                 else:
                     print "Skipping key: {}".format(album_url)
         except:
-            driver.close()
+            pass
+            # driver.close()
 
 
 if __name__ == "__main__":
