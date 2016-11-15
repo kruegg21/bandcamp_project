@@ -94,7 +94,15 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     i = 0
     count = len(df)
     for index, row in df.iterrows():
-        albums = row[list_like_column].split(delimiter)
+        albums_string = row[list_like_column]
+
+        # Strip list symbols
+        if albums_string[:3] == '[u\'':
+            albums_string = albums_string[3:]
+        if albums_string[-2:] == '\']':
+            albums_string = albums_string[:-2]
+
+        albums = albums_string.split(delimiter)
         n_albums = len(albums)
         _id_list += [row._id] * n_albums
         rating_list += [1] * n_albums
@@ -102,7 +110,6 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
 
         # Progress counter
         if i % 100 == 0:
-            print len(albums)
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
 
@@ -124,8 +131,6 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     sf = graphlab.SFrame({'_id': _id_list,
                           'album_id': album_list,
                           'rating': rating_list})
-
-    print "Created SFrame"
 
     # Dump
     if dump:
