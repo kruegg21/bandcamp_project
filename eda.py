@@ -79,7 +79,7 @@ def add_row(r, d):
 
 @timeit
 def convert_to_sframe_format(df, list_like_column = None, count_column = None,
-                             name = None, dump = True):
+                             name = None, dump = True, delimiter = None):
     """
     Inputs:
         df -- DataFrame with '_id' column, list-like column, and count column
@@ -99,7 +99,7 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
         n_albums = len(row[list_like_column])
         _id_list += [row._id] * n_albums
         rating_list += [1] * n_albums
-        album_list += row[list_like_column]
+        album_list += row[list_like_column].split(delimiter)
 
         # Progress counter
         if i % 100 == 0:
@@ -161,7 +161,8 @@ def main_pipeline():
                                   list_like_column = 'albums',
                                   count_column = 'n_albums',
                                   name = 'user_to_album_sf',
-                                  dump = True)
+                                  dump = True,
+                                  delimiter = '\', u\'')
 
 
 def test():
