@@ -104,6 +104,12 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
 
+    print len(album_list)
+    print len(_id_list)
+    print len(rating_list)
+
+    raw_input()
+
     # Remove DataFrame
     del df
 
