@@ -94,7 +94,7 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     i = 0
     count = len(df)
     for index, row in df.iterrows():
-        print row[list_like_column][:10]
+        print row[list_like_column][:200]
         raw_input()
         n_albums = len(row[list_like_column])
         _id_list += [row._id] * n_albums
