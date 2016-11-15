@@ -94,13 +94,15 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     i = 0
     count = len(df)
     for index, row in df.iterrows():
-        n_albums = len(row[list_like_column])
+        albums = row[list_like_column].split(delimiter)
+        n_albums = len(albums)
         _id_list += [row._id] * n_albums
         rating_list += [1] * n_albums
-        album_list += row[list_like_column].split(delimiter)
+        album_list += albums
 
         # Progress counter
         if i % 100 == 0:
+            print len(albums)
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
 
