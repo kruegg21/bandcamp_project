@@ -113,8 +113,8 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
 
     print "Number of filled cells: {}".format(len(rating_list))
     print "Matrix sparcity: {}".format(float(len(rating_list)) / \
-                                    len(set(album_list)) * len(set(_id_list)))
-    print "Rows have correct lenght: {}".format(len(album_list) == len(_id_list))
+                                    (len(set(album_list)) * len(set(_id_list))))
+    print "Rows have correct length: {}".format(len(album_list) == len(_id_list))
     raw_input()
 
     # Remove DataFrame
