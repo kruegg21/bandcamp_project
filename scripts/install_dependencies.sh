@@ -5,4 +5,5 @@ pip install requests
 pip install os
 pip install bs4
 pip install simplejson
+pip install demjson
 sudo apt-get install mongodb-server
