@@ -1,4 +1,5 @@
 import graphlab
+import graphlab.aggregate as agg
 import json
 import numpy as np
 import os
@@ -120,9 +121,6 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     print "Matrix sparcity: {}".format(float(len(rating_list)) / \
                                     (len(set(album_list)) * len(set(_id_list))))
     print "Rows have correct length: {}".format(len(album_list) == len(_id_list))
-
-    #
-
 
     # Create SFrame
     sf = graphlab.SFrame({'_id': _id_list,
