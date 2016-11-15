@@ -6,4 +6,5 @@ pip install os
 pip install bs4
 pip install simplejson
 pip install demjson
+pip install seaborn
 sudo apt-get install mongodb-server
