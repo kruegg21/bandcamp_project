@@ -113,28 +113,31 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
 
-
-
+    # Status checks
     print "Number of unique albums: {}".format(len(set(album_list)))
     print "Number of unique users: {}".format(len(set(_id_list)))
-
     print "Number of filled cells: {}".format(len(rating_list))
     print "Matrix sparcity: {}".format(float(len(rating_list)) / \
                                     (len(set(album_list)) * len(set(_id_list))))
     print "Rows have correct length: {}".format(len(album_list) == len(_id_list))
-    raw_input()
 
-    # Remove DataFrame
-    del df
+    #
+
 
     # Create SFrame
     sf = graphlab.SFrame({'_id': _id_list,
                           'album_id': album_list,
                           'rating': rating_list})
 
+    # Albums counts
+    album_counts = sf.groupby(key_columns='album_id',
+                              operations={'count': agg.COUNT()})
+    if dump:
+        album_counts.save('data/albums_counts.csv', format = 'csv')
+
     # Dump
     if dump:
-        sf.save('data/{}.csv'.format(name), format='csv')
+        sf.save('data/{}.csv'.format(name), format = 'csv')
 
     return sf
 
