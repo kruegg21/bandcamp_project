@@ -165,7 +165,7 @@ def tags(df, row, i):
 
 
 @timeit
-def filter_album_counts(sf):
+def filter_album_counts(sf, cutoff = None, name = None, dump = True):
     # Show initial sparcity
     print "\nInitial SFrame sparcity"
     show_sframe_sparcity(sf)
@@ -175,10 +175,14 @@ def filter_album_counts(sf):
                               operations={'count': agg.COUNT()})
 
     # Make SArray of albums with high rating counts
-    high_album_counts = album_counts[album_counts['count'] > 10]['album_id']
+    high_album_counts = album_counts[album_counts['count'] > cutoff]['album_id']
 
     # Filter
     filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = False)
+
+    # Dump
+    if dump:
+        sf.save('data/{}_filtered.csv'.format(name), format = 'csv')
 
     # Show sparcity
     show_sframe_sparcity(filtered_sf)
@@ -208,7 +212,10 @@ def main_pipeline():
 def test():
     # Get databasea to read from
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
-    convert_to_gephi_format(sf)
+    sf = filter_album_counts(sf,
+                             cutoff = 10,
+                             name = 'user_to_album_sf',
+                             dump = True)
 
 if __name__ == "__main__":
     # main_pipeline()
