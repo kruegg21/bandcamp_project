@@ -134,19 +134,21 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     node_to_link_sf = sf.groupby(key_columns = node_column,
                                operations = agg.CONCAT(link_column))
 
-    link_to_node_sf = sf.groupby(key_columns = link_column,
-                                 operations = agg.CONCAT(node_column))
+    node_to_link_sf.save('node_to_link.csv', format = 'csv')
 
-    with open('data/album_node_gephi.csv', 'w+') as f:
-        counter = 0
-        print "Number of rows to search: {}".format(len(node_to_link_sf))
-        for row in node_to_link_sf:
-            for i in row['List of {}'.format(link_column)]:
-                for item in link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]:
-                    f.write('{},{}\n'.format(row['album_id'], item))
-            if counter % 100 == 0:
-                print counter
-            counter += 1
+    # link_to_node_sf = sf.groupby(key_columns = link_column,
+    #                              operations = agg.CONCAT(node_column))
+    #
+    # with open('data/album_node_gephi.csv', 'w+') as f:
+    #     counter = 0
+    #     print "Number of rows to search: {}".format(len(node_to_link_sf))
+    #     for row in node_to_link_sf:
+    #         for i in row['List of {}'.format(link_column)]:
+    #             for item in link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]:
+    #                 f.write('{},{}\n'.format(row['album_id'], item))
+    #         if counter % 100 == 0:
+    #             print counter
+    #         counter += 1
 
 
 
@@ -236,4 +238,4 @@ if __name__ == "__main__":
     # main_pipeline()
     # sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
     # filter_album_counts(sf)
-    gephi_test()
+    filter_test()
