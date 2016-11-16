@@ -205,12 +205,8 @@ def main_pipeline():
 
 def test():
     # Get databasea to read from
-    db = get_mongo_database('bandcamp')
-
-    df = update_dataframe(name = 'user_to_tags',
-                          feature_building_method = tags,
-                          database = db,
-                          dump = False)
+    sf = graphlab.SFrame.read_csv('user_to_album_sf.csv')
+    convert_to_gephi_format(sf)
 
 if __name__ == "__main__":
     # main_pipeline()
