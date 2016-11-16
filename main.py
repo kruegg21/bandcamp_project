@@ -205,7 +205,7 @@ def main_pipeline():
 
 def test():
     # Get databasea to read from
-    sf = graphlab.SFrame.read_csv('user_to_album_sf.csv')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
     convert_to_gephi_format(sf)
 
 if __name__ == "__main__":
