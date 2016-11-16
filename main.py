@@ -139,6 +139,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
 
     with open('data/album_node_gephi.csv', 'w+') as f:
         counter = 0
+        print "Number of rows to search: {}".format(len(node_to_link_sf))
         for row in node_to_link_sf:
             for i in row['List of {}'.format(link_column)]:
                 for item in link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]:
@@ -165,24 +166,24 @@ def tags(df, row, i):
 
 
 @timeit
-def filter_album_counts(sf, cutoff = None, name = None, dump = True):
+def low_pass_filter_on_counts(sf, column = None, cutoff = None, name = None, dump = True):
     # Show initial sparcity
     print "\nInitial SFrame sparcity"
     show_sframe_sparcity(sf)
 
     # Albums counts
-    album_counts = sf.groupby(key_columns='album_id',
-                              operations={'count': agg.COUNT()})
+    counts_sf = sf.groupby(key_columns = column,
+                           operations = {'count': agg.COUNT()})
 
     # Make SArray of albums with high rating counts
-    high_album_counts = album_counts[album_counts['count'] > cutoff]['album_id']
+    high_album_counts = counts_sf[counts_sf['count'] > cutoff][column]
 
     # Filter
-    filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = False)
+    filtered_sf = sf.filter_by(high_album_counts, column, exclude = False)
 
     # Dump
     if dump:
-        sf.save('data/{}_filtered.csv'.format(name), format = 'csv')
+        sf.save('data/{}{}_filtered.csv'.format(name, column), format = 'csv')
 
     # Show sparcity
     show_sframe_sparcity(filtered_sf)
@@ -212,10 +213,18 @@ def main_pipeline():
 def filter_test():
     # Get databasea to read from
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
-    sf = filter_album_counts(sf,
-                             cutoff = 10,
-                             name = 'user_to_album_sf',
-                             dump = True)
+
+    sf = low_pass_filter_on_counts(sf,
+                                   column = 'album_id'
+                                   cutoff = 10,
+                                   name = 'user_to_album_sf',
+                                   dump = True)
+
+    sf = low_pass_filter_on_counts(sf,
+                                   column = '_id'
+                                   cutoff = 10,
+                                   name = 'user_to_album_sf_album',
+                                   dump = True)
 
 def gephi_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_filtered.csv')
