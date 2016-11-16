@@ -226,9 +226,10 @@ def main_pipeline():
                                   dump = True,
                                   delimiter = '\', u\'')
 
-    sf_gephi = convert_to_gephi_format(sf,
-                                       node_column = 'album_id',
-                                       link_column = '_id')
+    # sf_gephi = convert_to_gephi_format(sf,
+    #                                    node_column = 'album_id',
+    #                                    link_column = '_id')
+
 
 
 def filter_test():
@@ -254,8 +255,5 @@ def gephi_test():
                             link_column = '_id')
 
 if __name__ == "__main__":
-    # main_pipeline()
-    # sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
-    # filter_album_counts(sf)
-    # filter_test()
-    gephi_test()
+    main_pipeline()
+    filter_test()
