@@ -215,13 +215,13 @@ def filter_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
 
     sf = low_pass_filter_on_counts(sf,
-                                   column = 'album_id'
+                                   column = 'album_id',
                                    cutoff = 10,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
-                                   column = '_id'
+                                   column = '_id',
                                    cutoff = 10,
                                    name = 'user_to_album_sf_album',
                                    dump = True)
