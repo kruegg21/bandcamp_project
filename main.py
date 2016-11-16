@@ -149,12 +149,29 @@ def album_list(df, row, i):
     df.loc[i, 'albums'] = albums
     df.loc[i, 'n_albums'] = len(albums)
 
+def show_sframe_sparcity(sf):
+    n_albums = len(filtered_sf['album_id'].unique())
+    n_users = len(filtered_sf['_id'].unique())
+
+    print "Number of unique albums: {}".format(n_albums)
+    print "Number of unique users: {}".format(n_users)
+    print "Number of filled cells: {}".format(len(sf))
+    print "Matrix sparcity: {}".format(float(len(sf)) / (n_albums * n_users))
+
+
 def filter_album_counts(sf):
     # Albums counts
     album_counts = sf.groupby(key_columns='album_id',
                               operations={'count': agg.COUNT()})
 
-    print album_counts[album_counts.album_id > 5].album_id
+    # Make SArray of albums with high rating counts
+    high_album_counts = album_counts[album_counts['count'] > 5]['album_id']
+
+    # Filter
+    filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = True))
+
+    # Show sparcity
+    show_sframe_sparcity(filtered_sf)
 
 # Pipelines
 def main_pipeline():
