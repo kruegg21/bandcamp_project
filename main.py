@@ -129,10 +129,9 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     Converts to list of tuples of 'album_id' to 'album_id' representing all
     single user connections between albums.
     """
-    node_column = 'album_id'
-    link_column = '_id'
+    # Create SFrames with node to link and link to node data
     node_to_link_sf = sf.groupby(key_columns = node_column,
-                               operations = agg.CONCAT(link_column))
+                                 operations = agg.CONCAT(link_column))
 
     node_to_link_sf.save('node_to_link.csv', format = 'csv')
 
@@ -146,7 +145,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
         counter = 0
         inner_list = list()
         for i in row['List of {}'.format(link_column)]:
-            node_list += link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]
+            inner_list += link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]
         outer_list.append(inner_list)
         if counter % 100 == 0:
             print counter
@@ -154,6 +153,10 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     node_to_link_sf['neighbors'] = outer_list
 
     print node_to_link_sf
+
+    node_to_link_sf = node_to_link_sf.remove_column('List of {}'.format(link_column))
+
+    print node_to_link_sf.unpack('neighbors')
 
 
     # with open('data/album_node_gephi.csv', 'w+') as f:
