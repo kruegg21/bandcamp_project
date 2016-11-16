@@ -133,13 +133,10 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     node_to_link_sf = sf.groupby(key_columns = node_column,
                                  operations = agg.CONCAT(link_column))
 
-    node_to_link_sf.save('node_to_link.csv', format = 'csv')
-
     link_to_node_sf = sf.groupby(key_columns = link_column,
                                  operations = agg.CONCAT(node_column))
 
-    link_to_node_sf.unpack('List of {}'.format(node_column)).save('link_to_node_sf.csv', format = 'csv')
-
+    # Conver to Gephi format
     outer_list = list()
     for row in node_to_link_sf:
         counter = 0
@@ -149,7 +146,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
         outer_list.append(inner_list)
         if counter % 100 == 0:
             print counter
-        count += 1
+        counter += 1
     node_to_link_sf['neighbors'] = outer_list
 
     print node_to_link_sf
