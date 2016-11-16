@@ -171,7 +171,7 @@ def filter_album_counts(sf):
     high_album_counts = album_counts[album_counts['count'] > 5]['album_id']
 
     # Filter
-    filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = True)
+    filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = False)
 
     # Show sparcity
     show_sframe_sparcity(filtered_sf)
