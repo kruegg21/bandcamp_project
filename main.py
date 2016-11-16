@@ -136,8 +136,10 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
 
     node_to_link_sf.save('node_to_link.csv', format = 'csv')
 
-    # link_to_node_sf = sf.groupby(key_columns = link_column,
-    #                              operations = agg.CONCAT(node_column))
+    link_to_node_sf = sf.groupby(key_columns = link_column,
+                                 operations = agg.CONCAT(node_column))
+
+    link_to_node_sf.save('link_to_node_sf.csv', format = 'csv')
     #
     # with open('data/album_node_gephi.csv', 'w+') as f:
     #     counter = 0
@@ -185,10 +187,12 @@ def low_pass_filter_on_counts(sf, column = None, cutoff = None, name = None, dum
 
     # Dump
     if dump:
-        sf.save('data/{}{}_filtered.csv'.format(name, column), format = 'csv')
+        filtered_sf.save('data/{}{}_filtered.csv'.format(name, column), format = 'csv')
 
     # Show sparcity
     show_sframe_sparcity(filtered_sf)
+
+    return filtered_sf
 
 # Pipelines
 def main_pipeline():
@@ -239,3 +243,4 @@ if __name__ == "__main__":
     # sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
     # filter_album_counts(sf)
     filter_test()
+    gephi_test()
