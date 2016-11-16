@@ -5,7 +5,6 @@ import numpy as np
 import os
 import pandas as pd
 import pymongo
-import seaborn
 import time # timeit
 from bandcamp_scraper import get_mongo_database
 
@@ -184,4 +183,4 @@ def test():
 
 if __name__ == "__main__":
     # main_pipeline()
-    sf = graphlab.SFrame.read_csv('data/user_to_album_list_sf.csv')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
