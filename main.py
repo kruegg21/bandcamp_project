@@ -183,4 +183,5 @@ def test():
     gl.SFrame()
 
 if __name__ == "__main__":
-    main_pipeline()
+    # main_pipeline()
+    sf = graphlab.SFrame.read_csv('data/user_to_album_list_sf.csv')
