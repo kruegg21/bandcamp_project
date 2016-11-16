@@ -145,7 +145,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
                     f.write('{},{}\n'.format(row['album_id'], item))
             if counter % 100 == 0:
                 print counter
-            count += 1
+            counter += 1
 
 
 
