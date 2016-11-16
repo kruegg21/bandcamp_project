@@ -150,15 +150,15 @@ def album_list(df, row, i):
     df.loc[i, 'n_albums'] = len(albums)
 
 def show_sframe_sparcity(sf):
-    n_albums = len(filtered_sf['album_id'].unique())
-    n_users = len(filtered_sf['_id'].unique())
+    n_albums = len(sf['album_id'].unique())
+    n_users = len(sf['_id'].unique())
 
     print "Number of unique albums: {}".format(n_albums)
     print "Number of unique users: {}".format(n_users)
     print "Number of filled cells: {}".format(len(sf))
     print "Matrix sparcity: {}".format(float(len(sf)) / (n_albums * n_users))
 
-
+@timeit
 def filter_album_counts(sf):
     # Show initial sparcity
     show_sframe_sparcity(sf)
