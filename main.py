@@ -156,11 +156,12 @@ def show_sframe_sparcity(sf):
     print "Number of unique albums: {}".format(n_albums)
     print "Number of unique users: {}".format(n_users)
     print "Number of filled cells: {}".format(len(sf))
-    print "Matrix sparcity: {}".format(float(len(sf)) / (n_albums * n_users))
+    print "Matrix sparcity: {}\n\n".format(float(len(sf)) / (n_albums * n_users))
 
 @timeit
 def filter_album_counts(sf):
     # Show initial sparcity
+    print "Initial SFrame sparcity"
     show_sframe_sparcity(sf)
 
     # Albums counts
@@ -168,7 +169,7 @@ def filter_album_counts(sf):
                               operations={'count': agg.COUNT()})
 
     # Make SArray of albums with high rating counts
-    high_album_counts = album_counts[album_counts['count'] > 5]['album_id']
+    high_album_counts = album_counts[album_counts['count'] > 10]['album_id']
 
     # Filter
     filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = False)
