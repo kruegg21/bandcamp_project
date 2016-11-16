@@ -138,8 +138,8 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
 
     # Conver to Gephi format
     outer_list = list()
+    counter = 0
     for row in node_to_link_sf:
-        counter = 0
         inner_list = list()
         for i in row['List of {}'.format(link_column)]:
             inner_list += link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]
