@@ -251,7 +251,7 @@ def crawler(roots):
             root_user = roots[1]
 
             # Web driver
-            driver = webdriver.Chrome(os.getcwd() + 'drivers/chromedriver_mac64')
+            driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
 
             # Get Mongo database to dump things into
             db = get_mongo_database('bandcamp')
@@ -285,8 +285,7 @@ def crawler(roots):
                 else:
                     print "Skipping key: {}".format(album_url)
         except:
-            pass
-            # driver.close()
+            driver.close()
 
 
 if __name__ == "__main__":

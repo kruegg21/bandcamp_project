@@ -61,6 +61,9 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     """
     Inputs:
         df -- DataFrame with '_id' column, list-like column, and count column
+        list_like_column -- string with name of list-like column
+        count_column -- column with counts for each albums
+        delimiter -- string with characters sequence to split on
         dump -- Bool if should dump to CSV
     Output:
         graphlab SFrame
@@ -116,6 +119,33 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
 
     return sf
 
+@timeit
+def convert_to_gephi_format(sf, node_column = None, link_column = None):
+    """
+    Inputs:
+        sf -- SFrame object with rows of '_id' and 'album_id'
+        node_column -- string of column that we want to use as our graph nodes
+
+    Converts to list of tuples of 'album_id' to 'album_id' representing all
+    single user connections between albums.
+    """
+    node_column = 'album_id'
+    link_column = '_id'
+    node_to_link_sf = sf.groupby(key_columns = node_column,
+                               operations = agg.CONCAT(link_column))
+    link_to_node_sf = sf.groupby(key_columns = link_column,
+                                 operations = agg.CONCAT(node_column))
+
+    with open('data/album_node_gephi.csv', 'w+') as f:
+        counter = 0
+        for row in node_to_link_sf:
+            for item in row['List of {}'.format(link_column)]:
+                f.write('{},{}\n',format(row['_id'], item)
+            if counter % 100 == 0:
+                print counter
+            count += 1
+
+
 
 # Feature building methods
 def album_list(df, row, i):
@@ -126,7 +156,7 @@ def album_list(df, row, i):
     df.loc[i, 'n_albums'] = len(albums)
 
 def tags(df, row, i):
-    _id = row['id']
+    _id = row['_id']
     tags = json.loads(row['data']).values()
     df.loc[i, '_id'] = _id
     df.loc[i, 'tags'] = tags
@@ -167,6 +197,10 @@ def main_pipeline():
                                   name = 'user_to_album_sf',
                                   dump = True,
                                   delimiter = '\', u\'')
+
+    sf_gephi = convert_to_gephi_format(sf,
+                                       node_column = 'album_id',
+                                       link_column = '_id')
 
 
 def test():
