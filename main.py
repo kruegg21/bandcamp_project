@@ -125,6 +125,12 @@ def album_list(df, row, i):
     df.loc[i, 'albums'] = albums
     df.loc[i, 'n_albums'] = len(albums)
 
+def tags(df, row, i):
+    _id = row['id']
+    tags = json.loads(row['data']).values()
+    df.loc[i, '_id'] = _id
+    df.loc[i, 'tags'] = tags
+
 
 @timeit
 def filter_album_counts(sf):
@@ -164,13 +170,16 @@ def main_pipeline():
 
 
 def test():
-    # Read subsetted data (only 200 rows)
-    subsetted_data = pd.read_csv('subsetted_data.csv')
+    # Get databasea to read from
+    db = get_mongo_database('bandcamp')
 
-    #
-    gl.SFrame()
+    df = update_dataframe(name = 'user_to_tags',
+                          feature_building_method = tags,
+                          database = db,
+                          dump = False)
 
 if __name__ == "__main__":
     # main_pipeline()
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
-    filter_album_counts(sf)
+    # sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
+    # filter_album_counts(sf)
+    test()
