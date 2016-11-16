@@ -142,7 +142,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
         for row in node_to_link_sf:
             for i in row['List of {}'.format(link_column)]:
                 for item in link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]:
-                    f.write('{},{}\n',format(row['album_id'], item))
+                    f.write('{},{}\n'.format(row['album_id'], item))
             if counter % 100 == 0:
                 print counter
             count += 1
