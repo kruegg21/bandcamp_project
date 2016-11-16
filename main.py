@@ -140,7 +140,22 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
                                  operations = agg.CONCAT(node_column))
 
     link_to_node_sf.unpack('List of {}'.format(node_column)).save('link_to_node_sf.csv', format = 'csv')
-    #
+
+    outer_list = list()
+    for row in node_to_link_sf:
+        counter = 0
+        inner_list = list()
+        for i in row['List of {}'.format(link_column)]:
+            node_list += link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]
+        outer_list.append(inner_list)
+        if counter % 100 == 0:
+            print counter
+        count += 1
+    node_to_link_sf['neighbors'] = outer_list
+
+    print node_to_link_sf
+
+
     # with open('data/album_node_gephi.csv', 'w+') as f:
     #     counter = 0
     #     print "Number of rows to search: {}".format(len(node_to_link_sf))
