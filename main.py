@@ -160,6 +160,9 @@ def show_sframe_sparcity(sf):
 
 
 def filter_album_counts(sf):
+    # Show initial sparcity
+    show_sframe_sparcity(sf)
+
     # Albums counts
     album_counts = sf.groupby(key_columns='album_id',
                               operations={'count': agg.COUNT()})
@@ -168,7 +171,7 @@ def filter_album_counts(sf):
     high_album_counts = album_counts[album_counts['count'] > 5]['album_id']
 
     # Filter
-    filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = True))
+    filtered_sf = sf.filter_by(high_album_counts, 'album_id', exclude = True)
 
     # Show sparcity
     show_sframe_sparcity(filtered_sf)
