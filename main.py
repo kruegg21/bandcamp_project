@@ -5,28 +5,8 @@ import numpy as np
 import os
 import pandas as pd
 import pymongo
-import time # timeit
 from bandcamp_scraper import get_mongo_database
 
-
-# Contains column names for DataFrames we are working with
-column_names_dict = {
-    'user_to_album_list' : ['_id', 'albums', 'n_albums']
-}
-
-# Timing function
-def timeit(method):
-    """
-    Timing wrapper
-    """
-    def timed(*args, **kw):
-        ts = time.time()
-        result = method(*args, **kw)
-        te = time.time()
-        print 'Running %r took %2.4f sec\n' % \
-              (method.__name__, te-ts)
-        return result
-    return timed
 
 def update_dataframe(name = None, feature_building_method = None,
                      database = None, dump = False):
@@ -73,11 +53,6 @@ def update_dataframe(name = None, feature_building_method = None,
         full_data_df.to_csv('data/{}.csv'.format(name), index = False)
 
     return full_data_df
-
-def add_row(r, d):
-    for item in r[c]:
-        d[r._id] = item
-    return d
 
 @timeit
 def convert_to_sframe_format(df, list_like_column = None, count_column = None,
@@ -149,19 +124,11 @@ def album_list(df, row, i):
     df.loc[i, 'albums'] = albums
     df.loc[i, 'n_albums'] = len(albums)
 
-def show_sframe_sparcity(sf):
-    n_albums = len(sf['album_id'].unique())
-    n_users = len(sf['_id'].unique())
-
-    print "Number of unique albums: {}".format(n_albums)
-    print "Number of unique users: {}".format(n_users)
-    print "Number of filled cells: {}".format(len(sf))
-    print "Matrix sparcity: {}\n\n".format(float(len(sf)) / (n_albums * n_users))
 
 @timeit
 def filter_album_counts(sf):
     # Show initial sparcity
-    print "Initial SFrame sparcity"
+    print "\nInitial SFrame sparcity"
     show_sframe_sparcity(sf)
 
     # Albums counts
