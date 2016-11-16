@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import pymongo
 from bandcamp_scraper import get_mongo_database
+from helper import *
 
 
 def update_dataframe(name = None, feature_building_method = None,
