@@ -248,7 +248,7 @@ def filter_test():
                                    dump = True)
 
 def gephi_test():
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_filtered.csv')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
     convert_to_gephi_format(sf,
                             node_column = 'album_id',
                             link_column = '_id')
