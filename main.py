@@ -141,7 +141,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
         counter = 0
         for row in node_to_link_sf:
             for i in row['List of {}'.format(link_column)]:
-                for item in link_to_node_sf[i]['List of {}'.format(node_column)]
+                for item in link_to_node_sf[i]['List of {}'.format(node_column)]:
                     f.write('{},{}\n',format(row['_id'], item))
             if counter % 100 == 0:
                 print counter
