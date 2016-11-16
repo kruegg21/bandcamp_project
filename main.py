@@ -150,6 +150,13 @@ def album_list(df, row, i):
     df.loc[i, 'albums'] = albums
     df.loc[i, 'n_albums'] = len(albums)
 
+def filter_album_counts(sf):
+    # Albums counts
+    album_counts = sf.groupby(key_columns='album_id',
+                              operations={'count': agg.COUNT()})
+
+    print album_counts[album_counts.album_id > 5].album_id
+
 # Pipelines
 def main_pipeline():
     # Get databasea to read from

@@ -9,9 +9,8 @@ def album_counts_eda(binwidth = None, cutoff = None):
         divide -- integer to decide what counts are high vs. low
     Output:
         None
-
-
     """
+    
     # Lower
     album_counts_df = pd.read_csv('data/album_counts.csv')
     counts = album_counts_df['count']
