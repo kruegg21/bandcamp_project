@@ -139,7 +139,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     link_to_node_sf = sf.groupby(key_columns = link_column,
                                  operations = agg.CONCAT(node_column))
 
-    link_to_node_sf.save('link_to_node_sf.csv', format = 'csv')
+    link_to_node_sf.unpack('List of {}'.format(node_column)).save('link_to_node_sf.csv', format = 'csv')
     #
     # with open('data/album_node_gephi.csv', 'w+') as f:
     #     counter = 0
@@ -223,7 +223,7 @@ def filter_test():
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    cutoff = 10,
-                                   name = 'user_to_album_sf',
+                                   name = 'user_to_album_sf_',
                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
@@ -242,5 +242,5 @@ if __name__ == "__main__":
     # main_pipeline()
     # sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
     # filter_album_counts(sf)
-    filter_test()
+    # filter_test()
     gephi_test()
