@@ -11,6 +11,11 @@ import pymongo
 from bandcamp_scraper import get_mongo_database
 from helper import *
 
+"""
+Notes:
+Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
+"""
+
 
 def update_dataframe(name = None, feature_building_method = None,
                      database = None, dump = False):
@@ -215,7 +220,7 @@ def graphlab_factorization_recommender(sf):
                                                    item_id = 'album_id',
                                                    target = 'rating')
 
-    print factorization_recommender.evaluate_rmse(sf, target = 'rating')
+    print factorization_recommender.predict(sf)
     print factorization_recommender.get_similar_items()
 
 
@@ -227,26 +232,36 @@ def album_list(df, row, i):
     df.loc[i, 'albums'] = albums
     df.loc[i, 'n_albums'] = len(albums)
 
-def tags(df, row, i):
+def album_art(df, row, i):
     _id = row['_id']
+    albums = json.loads(row['data']).keys()
     tags = json.loads(row['data']).values()
-    print tags
-    raw_input()
     df.loc[i, '_id'] = _id
-    df.loc[i, 'tags'] = tags
+    df.loc[i, 'albums'] = albums
+    df.loc[i, 'album_art_code'] = [item['item_art_id'] for item in tags]
 
 
 
 
 # Pipelines
-def build_from_database():
+def build_user_to_album_list_from_database():
     # Get databasea to read from
     db = get_mongo_database('bandcamp')
 
     df = update_dataframe(name = 'user_to_album_list',
-                          feature_building_method = tags,
+                          feature_building_method = album_list,
                           database = db,
                           dump = False)
+
+
+def build_user_to_album_art_from_database():
+    # Get databasea to read from
+    db = get_mongo_database('bandcamp')
+
+    df = update_dataframe(name = 'user_to_album_art',
+                          feature_building_method = album_art,
+                          database = db,
+                          dump = True)
 
 
 def build_from_album_list():
@@ -298,6 +313,8 @@ def build_gephi_data():
 
 def graphlab_recommender_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
+
+    # Make model
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ import time
 # Contains column names for DataFrames we are working with
 column_names_dict = {
     'user_to_album_list' : ['_id', 'albums', 'n_albums'],
-    'user_to_tags' : ['_id', 'tags']
+    'user_to_album_art' : ['_id', 'albums', 'album_art_code']
 }
 
 # Timing function
