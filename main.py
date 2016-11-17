@@ -119,6 +119,25 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
 
     return sf
 
+def convert_sframe_to_integer_ids(sf, column = None, dump = True):
+    """
+    Inputs:
+        sf -- SFrame with string entries
+        columns -- list of column with string entries to convert
+        dump -- Bool indicating whether or not to dump dictionary and SFrame
+    Output:
+        sf -- SFrame with string entries converted to integers
+        translation_dictionaries -- tuple of dictionaries that translate integers
+                                   back to string
+
+    """
+    translation_dictionaries = list()
+    for column in columns:
+        col_df = sf[column].to_dataframe()
+        col_dict = dict(enumerate(col_df.values))
+        print col_dict
+        col_dict.append(translation_dictionaries)
+
 @timeit
 def convert_to_gephi_format(sf, node_column = None, link_column = None):
     """
@@ -221,6 +240,12 @@ def low_pass_filter_on_counts(sf, column = None, cutoff = None, name = None, dum
 
     return filtered_sf
 
+
+
+
+
+
+
 # Pipelines
 def main_pipeline():
     # Get databasea to read from
@@ -259,6 +284,10 @@ def filter_test():
                                    cutoff = 10,
                                    name = 'user_to_album_sf_album',
                                    dump = True)
+
+    sf = convert_sframe_to_integer_ids(sf,
+                                       columns = ['album_id', '_id'],
+                                       dump = True)
 
 def gephi_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
