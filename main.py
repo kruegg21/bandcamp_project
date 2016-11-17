@@ -183,14 +183,18 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     joined_sf = correct_columns_sf.join(correct_columns_sf,
                                         on = link_column,
                                         how = 'inner')
+    joined_sf.remove_column(link_column)
 
     print "Joined successfully"
 
     subsetted_joined_sf = joined_sf.sample(edge_subset_proportion, seed = 5)
+    dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
 
     print "Subsetted successfully"
 
-    dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
+    dump_sf(joined_sf, 'data/gephi_graph_full.csv')
+
+
 
 def graphlab_factorization_recommender(sf):
     # Test train split
@@ -275,7 +279,7 @@ def build_from_album_list():
 
 
 
-def test_code():
+def build_gephi_data():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
 
     sf = convert_sframe_to_integer_ids(sf,
@@ -302,4 +306,4 @@ def graphlab_recommender_test():
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
-    graphlab_recommender_test()
+    build_gephi_data()
