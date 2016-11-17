@@ -8,6 +8,7 @@ import os
 import pandas as pd
 import pickle
 import pymongo
+import time
 from bandcamp_scraper import get_mongo_database
 
 # Contains column names for DataFrames we are working with
