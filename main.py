@@ -196,11 +196,20 @@ def graphlab_factorization_recommender(sf):
     # Test train split
     (train_set, test_set) = sf.random_split(0.8, seed=1)
 
-    recommender = recommender.create(sf,
-                                     user_id = '_id',
-                                     item_id = 'album_id')
-    print recommender.evaluate(sf)
+    # Collaborative filtering item similarity model
+    # https://turi.com/products/create/docs/generated/graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender.html#graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender
+    collaborative_filtering = recommender.create(sf,
+                                                 user_id = '_id',
+                                                 item_id = 'album_id')
 
+    # Factorization recommender
+    # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
+    factorization_recommender = recommender.create(sf,
+                                                   user_id = '_id',
+                                                   item_id = 'album_id',
+                                                   target = 'rating')
+
+    print graphlab.compare(sf, [collaborative_filtering, factorization_recommender])
 
 # Feature building methods
 def album_list(df, row, i):
