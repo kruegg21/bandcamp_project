@@ -213,11 +213,8 @@ def graphlab_factorization_recommender(sf):
                                                    item_id = 'album_id',
                                                    target = 'rating')
 
-    print graphlab.compare(sf,
-                           models = [collaborative_filtering, factorization_recommender],
-                           metric = 'rmse',
-                           target = 'rating',
-                           verbose = True)
+    factorization_recommender.evaluate_precision_recall(sf)
+    print factorization_recommender.evaluate_rmse(sf, target = 'rating')
 
 # Feature building methods
 def album_list(df, row, i):
