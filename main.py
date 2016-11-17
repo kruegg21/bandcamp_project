@@ -4,6 +4,7 @@ import json
 import numpy as np
 import os
 import pandas as pd
+import pickle
 import pymongo
 from bandcamp_scraper import get_mongo_database
 from helper import *
