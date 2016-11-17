@@ -147,15 +147,20 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
                                    back to string
 
     """
+    encoded_sf = sf
+    for column in columns
+        encoder = OneHotEncoder(features = [column],
+                                output_columns_name = column)
+        encoded_sf = encoder.fit_transform(encoded_sf)
 
-    encoder = OneHotEncoder(features = columns)
-    encoded_sf = encoder.fit_transform(sf)
+        if dump:
+            encoder.save('data/{}_one_hot_encoder.obj'.format(name))        
 
     print encoded_sf
     print encoder['feature_encoding']
+
     if dump:
         encoded_sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
-        encoder.save('data/{}_one_hot_encoder.obj'.format(name))
     return encoded_sf
 
 
