@@ -132,7 +132,7 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
 
     # Dump
     if dump:
-        sf.save('data/{}.csv'.format(name), format = 'csv')
+        dump_sf(sf, 'data/{}.csv'.format(name))
 
     return sf
 
@@ -162,12 +162,14 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
     print encoder['feature_encoding']
 
     if dump:
-        encoded_sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
+        dump_sf(encoded_sf, 'data/{}_integerified.csv'.format(name))
     return encoded_sf
 
 
+
 @timeit
-def convert_to_gephi_format(sf, node_column = None, link_column = None):
+def convert_to_gephi_format(sf, node_column = None, link_column = None,
+                            edge_subset_proportion = 0.3):
     """
     Inputs:
         sf -- SFrame object with rows of '_id' and 'album_id'
@@ -183,52 +185,11 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
 
     print "Joined successfully"
 
-    subsetted_joined_sf = joined_sf.sample(0.3, seed = 5)
+    subsetted_joined_sf = joined_sf.sample(edge_subset_proportion, seed = 5)
 
     print "Subsetted successfully"
 
-    subsetted_joined_sf.save('data/gephi_graph.csv', format = 'csv')
-
-    # # Create SFrames with node to link and link to node data
-    # node_to_link_sf = sf.groupby(key_columns = node_column,
-    #                              operations = agg.CONCAT(link_column))
-    #
-    # link_to_node_sf = sf.groupby(key_columns = link_column,
-    #                              operations = agg.CONCAT(node_column))
-    #
-    #
-    #
-    # # Conver to Gephi format
-    # outer_list = list()
-    # counter = 0
-    # for row in node_to_link_sf:
-    #     inner_list = list()
-    #     for i in row['List of {}'.format(link_column)]:
-    #         inner_list += link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]
-    #     outer_list.append(inner_list)
-    #     if counter % 100 == 0:
-    #         print counter
-    #     counter += 1
-    # node_to_link_sf['neighbors'] = outer_list
-    #
-    # print node_to_link_sf
-    #
-    # node_to_link_sf = node_to_link_sf.remove_column('List of {}'.format(link_column))
-    #
-    # print node_to_link_sf.unpack('neighbors')
-
-
-    # with open('data/album_node_gephi.csv', 'w+') as f:
-    #     counter = 0
-    #     print "Number of rows to search: {}".format(len(node_to_link_sf))
-    #     for row in node_to_link_sf:
-    #         for i in row['List of {}'.format(link_column)]:
-    #             for item in link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]:
-    #                 f.write('{},{}\n'.format(row['album_id'], item))
-    #         if counter % 100 == 0:
-    #             print counter
-    #         counter += 1
-
+    dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
 
 
 # Feature building methods
@@ -291,7 +252,10 @@ def build_from_album_list():
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
-    convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
+    convert_to_gephi_format(sf,
+                            node_column = 'album_id',
+                            link_column = '_id',
+                            edge_subset_proportion = 0.1)
 
 
 
@@ -312,5 +276,4 @@ def test_code():
     convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
 
 if __name__ == "__main__":
-    # build_from_album_list()
-    test_code()
+    build_from_album_list()

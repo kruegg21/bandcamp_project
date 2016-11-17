@@ -23,6 +23,10 @@ def timeit(method):
         return result
     return timed
 
+@timeit
+def dump_sf(sf, name):
+    sf.save(name, format = 'csv')
+
 def show_sframe_sparcity(sf):
     n_albums = len(sf['album_id'].unique())
     n_users = len(sf['_id'].unique())
