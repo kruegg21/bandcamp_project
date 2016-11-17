@@ -1,6 +1,7 @@
 import graphlab
 graphlab.set_runtime_config('GRAPHLAB_DEFAULT_NUM_PYLAMBDA_WORKERS', 64)
 from graphlab.toolkits.feature_engineering import OneHotEncoder
+from graphlab.recommender import factorization_recommender
 import json
 import numpy as np
 import os
@@ -191,6 +192,16 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 
     dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
 
+def graphlab_factorization_recommender(sf):
+    # Test train split
+    (train_set, test_set) = sf.random_split(0.8, seed=1)
+
+    recommender = factorization_recommender.create(sf,
+                                                   user_id = '_id',
+                                                   item_id = 'album_id',
+                                                   target = 'rating')
+    print recommender.evaluate(sf)
+
 
 # Feature building methods
 def album_list(df, row, i):
@@ -252,10 +263,7 @@ def build_from_album_list():
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
-    convert_to_gephi_format(sf,
-                            node_column = 'album_id',
-                            link_column = '_id',
-                            edge_subset_proportion = 0.1)
+
 
 
 
@@ -273,7 +281,17 @@ def test_code():
                                    name = 'user_to_album_sf_',
                                    dump = True)
 
+    sf = low_pass_filter_on_counts(sf,
+                                   column = '_id',
+                                   cutoff = 10,
+                                   name = 'user_to_album_sf_album',
+                                   dump = True)
+
     convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
 
+def graphlab_recommender_test():
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv')
+    graphlab_factorization_recommender(sf)
+
 if __name__ == "__main__":
-    build_from_album_list()
+    graphlab_recommender_test()
