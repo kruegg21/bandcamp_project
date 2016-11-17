@@ -1,5 +1,6 @@
 import graphlab
 import graphlab.aggregate as agg
+from graphlab.toolkits.feature_engineering import OneHotEncoder
 import json
 import numpy as np
 import os
@@ -146,21 +147,26 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
                                    back to string
 
     """
-    translation_dictionaries = list()
-    df = sf.to_dataframe()
-    for column in columns:
-        # Make dictionary
-        col_dict = {value: key for (key, value) in enumerate(df[column].values)}
-        translation_dictionaries.append(col_dict)
 
-        print col_dict.popitem()
+    encoder = OneHotEncoder(features = ['_id', 'album_id'])
+    encoded_sf = encoder.transform(sf)
 
-        # Replace
-        df.replace(col_dict, inplace = True)
-        sf[colunn] = df[column]
-
-    if dump:
-        sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
+    print encoded_sf
+    # translation_dictionaries = list()
+    # df = sf.to_dataframe()
+    # for column in columns:
+    #     # Make dictionary
+    #     col_dict = {value: key for (key, value) in enumerate(df[column].values)}
+    #     translation_dictionaries.append(col_dict)
+    #
+    #     print col_dict.popitem()
+    #
+    #     # Replace
+    #     df.replace(col_dict, inplace = True)
+    #     sf[colunn] = df[column]
+    #
+    # if dump:
+    #     sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
     return sf
 
 
