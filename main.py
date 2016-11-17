@@ -213,7 +213,7 @@ def graphlab_factorization_recommender(sf):
                                                    item_id = 'album_id',
                                                    target = 'rating')
 
-    print factorization_recommender.evaluate_precision_recall(sf, target = 'rating')
+    print factorization_recommender.evaluate_precision_recall(sf)
 
 
 # Feature building methods
