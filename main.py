@@ -270,7 +270,7 @@ def build_from_album_list():
 
     sf = convert_sframe_to_integer_ids(sf,
                                        columns = ['album_id', '_id'],
-                                       name = 'user_to_album_sf'
+                                       name = 'user_to_album_sf',
                                        dump = True)
 
 
