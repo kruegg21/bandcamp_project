@@ -176,7 +176,8 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     Converts to list of tuples of 'album_id' to 'album_id' representing all
     single user connections between albums.
     """
-    joined_sf = sf.join(sf, on = '_id', how = 'inner')
+    correct_columns_sf = sf[[node_column, link_column]]
+    joined_sf = sf.join(sf, on = link_column, how = 'inner')
 
     print "Joined successfully"
 
