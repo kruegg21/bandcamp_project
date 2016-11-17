@@ -155,7 +155,8 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
     print encoder['feature_encoding']
     if dump:
         encoded_sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
-        pickle.dump(encoder, '{}_one_hot_encoder.obj'.format(name))
+        with open('{}_one_hot_encoder.obj'.format(name), 'w+') as f:
+            pickle.dump(encoder, f)
     return encoded_sf
 
 
