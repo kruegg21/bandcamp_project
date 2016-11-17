@@ -283,15 +283,15 @@ def build_from_album_list():
 
 
 
-def gephi_test():
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
-    convert_to_gephi_format(sf,
-                            node_column = 'album_id',
-                            link_column = '_id')
-
 def test_code():
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
-    sf = sf.remove_column('rating')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv.csv')
+    print sf
+    sf = low_pass_filter_on_counts(sf,
+                                   column = 'album_id',
+                                   cutoff = 10,
+                                   name = 'user_to_album_sf_',
+                                   dump = True)
 
 if __name__ == "__main__":
-    build_from_album_list()
+    # build_from_album_list()
+    test_code()
