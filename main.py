@@ -284,6 +284,4 @@ def test_code():
     sf = sf.remove_column('rating')
 
 if __name__ == "__main__":
-    main_pipeline()
-    # filter_test()
-    filter_test()
+    build_from_album_list()
