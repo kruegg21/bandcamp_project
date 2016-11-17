@@ -213,8 +213,8 @@ def graphlab_factorization_recommender(sf):
                                                    item_id = 'album_id',
                                                    target = 'rating')
 
-    factorization_recommender.evaluate_precision_recall(sf)
     print factorization_recommender.evaluate_rmse(sf, target = 'rating')
+
 
 # Feature building methods
 def album_list(df, row, i):
@@ -301,7 +301,7 @@ def build_gephi_data():
     convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
 
 def graphlab_recommender_test():
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
