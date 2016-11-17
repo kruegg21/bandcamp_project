@@ -298,13 +298,13 @@ def test_code():
                                        name = 'user_to_album_sf',
                                        dump = True)
 
-    # sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv')
-
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    cutoff = 10,
                                    name = 'user_to_album_sf_',
                                    dump = True)
+
+    convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
 
 if __name__ == "__main__":
     # build_from_album_list()
