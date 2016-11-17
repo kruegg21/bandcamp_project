@@ -129,31 +129,43 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     Converts to list of tuples of 'album_id' to 'album_id' representing all
     single user connections between albums.
     """
-    # Create SFrames with node to link and link to node data
-    node_to_link_sf = sf.groupby(key_columns = node_column,
-                                 operations = agg.CONCAT(link_column))
+    joined_sf = sf.join(sf, on = '_id', how = 'inner')
 
-    link_to_node_sf = sf.groupby(key_columns = link_column,
-                                 operations = agg.CONCAT(node_column))
+    print "Joined successfully"
 
-    # Conver to Gephi format
-    outer_list = list()
-    counter = 0
-    for row in node_to_link_sf:
-        inner_list = list()
-        for i in row['List of {}'.format(link_column)]:
-            inner_list += link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]
-        outer_list.append(inner_list)
-        if counter % 100 == 0:
-            print counter
-        counter += 1
-    node_to_link_sf['neighbors'] = outer_list
+    subsetted_joined_sf = joined_sf.sample(0.3, seed = 5)
 
-    print node_to_link_sf
+    print "Subsetted successfully"
 
-    node_to_link_sf = node_to_link_sf.remove_column('List of {}'.format(link_column))
+    joined_sf.save('data/gephi_graph.csv', format = 'csv')
 
-    print node_to_link_sf.unpack('neighbors')
+    # # Create SFrames with node to link and link to node data
+    # node_to_link_sf = sf.groupby(key_columns = node_column,
+    #                              operations = agg.CONCAT(link_column))
+    #
+    # link_to_node_sf = sf.groupby(key_columns = link_column,
+    #                              operations = agg.CONCAT(node_column))
+    #
+    #
+    #
+    # # Conver to Gephi format
+    # outer_list = list()
+    # counter = 0
+    # for row in node_to_link_sf:
+    #     inner_list = list()
+    #     for i in row['List of {}'.format(link_column)]:
+    #         inner_list += link_to_node_sf[link_to_node_sf[link_column] == i]['List of {}'.format(node_column)][0]
+    #     outer_list.append(inner_list)
+    #     if counter % 100 == 0:
+    #         print counter
+    #     counter += 1
+    # node_to_link_sf['neighbors'] = outer_list
+    #
+    # print node_to_link_sf
+    #
+    # node_to_link_sf = node_to_link_sf.remove_column('List of {}'.format(link_column))
+    #
+    # print node_to_link_sf.unpack('neighbors')
 
 
     # with open('data/album_node_gephi.csv', 'w+') as f:
@@ -254,6 +266,11 @@ def gephi_test():
                             node_column = 'album_id',
                             link_column = '_id')
 
+def test_code():
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
+    sf = sf.remove_column('rating')
+
 if __name__ == "__main__":
-    main_pipeline()
-    filter_test()
+    # main_pipeline()
+    # filter_test()
+    gephi_test()
