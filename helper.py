@@ -1,4 +1,5 @@
 import graphlab
+graphlab.set_runtime_config('GRAPHLAB_DEFAULT_NUM_PYLAMBDA_WORKERS', 64)
 import graphlab.aggregate as agg
 import time
 
