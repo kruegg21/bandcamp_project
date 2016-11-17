@@ -61,11 +61,9 @@ def graphlab_factorization_recommender(sf):
     # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
     factorization_recommender = recommender.create(sf,
                                                    user_id = '_id',
-                                                   item_id = 'album_id',
-                                                   target = 'rating')
+                                                   item_id = 'album_id')
 
-    prec_recall_dict = factorization_recommender.evaluate_precision_recall(sf,
-                                                                           cutoffs = [0.5])
+    prec_recall_dict = factorization_recommender.evaluate_precision_recall(sf)
     print prec_recall_dict.popitem()
     print factorization_recommender.get_similar_items()
 
