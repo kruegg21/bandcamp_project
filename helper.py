@@ -29,3 +29,30 @@ def show_sframe_sparcity(sf):
     print "Number of unique users: {}".format(n_users)
     print "Number of filled cells: {}".format(len(sf))
     print "Matrix sparcity: {}\n\n".format(float(len(sf)) / (n_albums * n_users))
+
+
+
+@timeit
+def low_pass_filter_on_counts(sf, column = None, cutoff = None, name = None, dump = True):
+    # Show initial sparcity
+    print "\nInitial SFrame sparcity"
+    show_sframe_sparcity(sf)
+
+    # Albums counts
+    counts_sf = sf.groupby(key_columns = column,
+                           operations = {'count': agg.COUNT()})
+
+    # Make SArray of albums with high rating counts
+    high_album_counts = counts_sf[counts_sf['count'] > cutoff][column]
+
+    # Filter
+    filtered_sf = sf.filter_by(high_album_counts, column, exclude = False)
+
+    # Dump
+    if dump:
+        filtered_sf.save('data/{}{}_filtered.csv'.format(name, column), format = 'csv')
+
+    # Show sparcity
+    show_sframe_sparcity(filtered_sf)
+
+    return filtered_sf

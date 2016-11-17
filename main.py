@@ -11,6 +11,19 @@ from helper import *
 
 def update_dataframe(name = None, feature_building_method = None,
                      database = None, dump = False):
+    """
+    Input:
+        name -- string of the name of the DataFrame
+        feature_building_method -- function indicating how to build each row
+        database -- MongoDB client to draw data from
+        dump -- Bool indicating whether or not to dump resulting DataFrame
+    Output:
+        None
+
+    Checks to see if a DataFrame with 'name' already exists and updates it with
+    any new data found in our database.
+    """
+
     # Read in old DataFrame if we have already built it
     if os.path.isfile('data/{}.csv'.format(name)):
         old_data_df = pd.read_csv('data/{}.csv'.format(name))
@@ -215,39 +228,12 @@ def tags(df, row, i):
     df.loc[i, 'tags'] = tags
 
 
-@timeit
-def low_pass_filter_on_counts(sf, column = None, cutoff = None, name = None, dump = True):
-    # Show initial sparcity
-    print "\nInitial SFrame sparcity"
-    show_sframe_sparcity(sf)
-
-    # Albums counts
-    counts_sf = sf.groupby(key_columns = column,
-                           operations = {'count': agg.COUNT()})
-
-    # Make SArray of albums with high rating counts
-    high_album_counts = counts_sf[counts_sf['count'] > cutoff][column]
-
-    # Filter
-    filtered_sf = sf.filter_by(high_album_counts, column, exclude = False)
-
-    # Dump
-    if dump:
-        filtered_sf.save('data/{}{}_filtered.csv'.format(name, column), format = 'csv')
-
-    # Show sparcity
-    show_sframe_sparcity(filtered_sf)
-
-    return filtered_sf
-
-
-
 
 
 
 
 # Pipelines
-def main_pipeline():
+def build_from_database():
     # Get databasea to read from
     db = get_mongo_database('bandcamp')
 
@@ -256,6 +242,11 @@ def main_pipeline():
                           database = db,
                           dump = False)
 
+
+def build_from_album_list():
+    df = pd.read_csv('data/user_to_album_list.csv')
+
+    # Convert to SFrame
     sf = convert_to_sframe_format(df,
                                   list_like_column = 'albums',
                                   count_column = 'n_albums',
@@ -263,15 +254,10 @@ def main_pipeline():
                                   dump = True,
                                   delimiter = '\', u\'')
 
-    # sf_gephi = convert_to_gephi_format(sf,
-    #                                    node_column = 'album_id',
-    #                                    link_column = '_id')
+    sf = convert_sframe_to_integer_ids(sf,
+                                       columns = ['album_id', '_id'],
+                                       dump = True)
 
-
-
-def filter_test():
-    # Get databasea to read from
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
@@ -285,9 +271,7 @@ def filter_test():
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
-    sf = convert_sframe_to_integer_ids(sf,
-                                       columns = ['album_id', '_id'],
-                                       dump = True)
+
 
 def gephi_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
@@ -300,6 +284,6 @@ def test_code():
     sf = sf.remove_column('rating')
 
 if __name__ == "__main__":
-    # main_pipeline()
+    main_pipeline()
     # filter_test()
-    gephi_test()
+    filter_test()
