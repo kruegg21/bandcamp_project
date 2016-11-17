@@ -44,8 +44,8 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
                                 node_column + '.1': 'target'})
 
     # Get edge weights
-    subsetted_joined_sf.groupby(key_columns = ['source', 'target'],
-                                operations = {'weight': agg.COUNT()})
+    subsetted_joined_sf = subsetted_joined_sf.groupby(key_columns = ['source', 'target'],
+                                                      operations = {'weight': agg.COUNT()})
 
     dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
 
@@ -128,21 +128,21 @@ def build_from_album_list():
 def build_gephi_data():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
 
-    sf = convert_sframe_to_integer_ids(sf,
-                                       columns = ['album_id', '_id'],
-                                       name = 'user_to_album_sf',
-                                       dump = True)
+    # sf = convert_sframe_to_integer_ids(sf,
+    #                                    columns = ['album_id', '_id'],
+    #                                    name = 'user_to_album_sf',
+    #                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    cutoff = 100,
-                                   name = 'user_to_album_sf_integerified_',
+                                   name = 'user_to_album_sf',
                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = '_id',
                                    cutoff = 100,
-                                   name = 'user_to_album_sf_album_integerified_',
+                                   name = 'user_to_album_sf_album',
                                    dump = True)
 
     convert_to_gephi_format(sf,
