@@ -1,7 +1,7 @@
 import graphlab
 graphlab.set_runtime_config('GRAPHLAB_DEFAULT_NUM_PYLAMBDA_WORKERS', 64)
 from graphlab.toolkits.feature_engineering import OneHotEncoder
-from graphlab.recommender.factorization_recommender import FactorizationRecommender
+from graphlab import recommender
 import json
 import numpy as np
 import os
@@ -196,10 +196,9 @@ def graphlab_factorization_recommender(sf):
     # Test train split
     (train_set, test_set) = sf.random_split(0.8, seed=1)
 
-    recommender = FactorizationRecommender.create(sf,
-                                                  user_id = '_id',
-                                                  item_id = 'album_id',
-                                                  target = 'rating')
+    recommender = recommender.create(sf,
+                                     user_id = '_id',
+                                     item_id = 'album_id')
     print recommender.evaluate(sf)
 
 
