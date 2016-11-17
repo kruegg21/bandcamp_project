@@ -259,12 +259,6 @@ def build_from_album_list():
                                   verbose = False,
                                   delimiter = '\', u\'')
 
-    sf = convert_sframe_to_integer_ids(sf,
-                                       columns = ['album_id', '_id'],
-                                       name = 'user_to_album_sf',
-                                       dump = True)
-
-
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    cutoff = 10,
@@ -276,9 +270,6 @@ def build_from_album_list():
                                    cutoff = 10,
                                    name = 'user_to_album_sf_album',
                                    dump = True)
-
-
-
 
 
 def build_gephi_data():
@@ -292,20 +283,20 @@ def build_gephi_data():
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    cutoff = 10,
-                                   name = 'user_to_album_sf_',
+                                   name = 'user_to_album_sf_integerified_',
                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = '_id',
                                    cutoff = 10,
-                                   name = 'user_to_album_sf_album',
+                                   name = 'user_to_album_sf_album_integerified_',
                                    dump = True)
 
-    # convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
+    convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
 
 def graphlab_recommender_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
-    build_gephi_data()
+    build_from_album_list()
