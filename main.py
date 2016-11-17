@@ -150,7 +150,7 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
     encoded_sf = sf
     for column in columns:
         encoder = OneHotEncoder(features = [column],
-                                output_columns_name = column)
+                                output_column_name = column)
         encoded_sf = encoder.fit_transform(encoded_sf)
 
         if dump:
@@ -289,8 +289,15 @@ def build_from_album_list():
 
 
 def test_code():
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
+
+    sf = convert_sframe_to_integer_ids(sf,
+                                       columns = ['album_id', '_id'],
+                                       name = 'user_to_album_sf',
+                                       dump = True)
+
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv')
-    print sf
+
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    cutoff = 10,
@@ -298,5 +305,5 @@ def test_code():
                                    dump = True)
 
 if __name__ == "__main__":
-    build_from_album_list()
-    # test_code()
+    # build_from_album_list()
+    test_code()
