@@ -70,7 +70,8 @@ def update_dataframe(name = None, feature_building_method = None,
 
 @timeit
 def convert_to_sframe_format(df, list_like_column = None, count_column = None,
-                             name = None, dump = True, delimiter = None):
+                             name = None, dump = True, verbose = True,
+                             delimiter = None):
     """
     Inputs:
         df -- DataFrame with '_id' column, list-like column, and count column
@@ -102,10 +103,11 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
         rating_list += [1] * n_albums
         album_list += albums
 
-        # Progress counter
-        if i % 100 == 0:
-            print "{} complete".format(round(float(i) / count, 2))
-        i += 1
+        if verbose:
+            # Progress counter
+            if i % 100 == 0:
+                print "{} complete".format(round(float(i) / count, 2))
+            i += 1
 
     # Status checks
     print "Number of unique albums: {}".format(len(set(album_list)))
@@ -253,6 +255,7 @@ def build_from_album_list():
                                   count_column = 'n_albums',
                                   name = 'user_to_album_sf',
                                   dump = False,
+                                  verbose = False,
                                   delimiter = '\', u\'')
 
     sf = convert_sframe_to_integer_ids(sf,
