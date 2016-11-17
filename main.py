@@ -177,7 +177,9 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
     single user connections between albums.
     """
     correct_columns_sf = sf[[node_column, link_column]]
-    joined_sf = sf.join(sf, on = link_column, how = 'inner')
+    joined_sf = correct_columns_sf.join(correct_columns_sf,
+                                        on = link_column,
+                                        how = 'inner')
 
     print "Joined successfully"
 
@@ -185,7 +187,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None):
 
     print "Subsetted successfully"
 
-    joined_sf.save('data/gephi_graph.csv', format = 'csv')
+    subsetted_joined_sf.save('data/gephi_graph.csv', format = 'csv')
 
     # # Create SFrames with node to link and link to node data
     # node_to_link_sf = sf.groupby(key_columns = node_column,
@@ -288,6 +290,8 @@ def build_from_album_list():
                                    cutoff = 10,
                                    name = 'user_to_album_sf_album',
                                    dump = True)
+
+    convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
 
 
 
