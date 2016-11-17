@@ -145,8 +145,9 @@ def convert_sframe_to_integer_ids(sf, columns = None, dump = True):
 
     """
     translation_dictionaries = list()
+    df = sf.to_dataframe()
     for column in columns:
-        col_df = sf[column].to_dataframe()
+        col_df = df[column]
         col_dict = dict(enumerate(col_df.values))
         print col_dict
         col_dict.append(translation_dictionaries)
@@ -251,7 +252,7 @@ def build_from_album_list():
                                   list_like_column = 'albums',
                                   count_column = 'n_albums',
                                   name = 'user_to_album_sf',
-                                  dump = True,
+                                  dump = False,
                                   delimiter = '\', u\'')
 
     sf = convert_sframe_to_integer_ids(sf,
