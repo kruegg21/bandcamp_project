@@ -148,8 +148,8 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
 
     """
 
-    encoder = OneHotEncoder(features = ['_id', 'album_id'])
-    encoded_sf = encoder.transform(sf)
+    encoder = OneHotEncoder(features = columns)
+    encoded_sf = encoder.fit_transform(sf)
 
     print encoded_sf
     # translation_dictionaries = list()
