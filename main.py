@@ -156,6 +156,8 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
         encoded_sf = encoder.fit_transform(encoded_sf)
         encoded_sf[column] = encoded_sf[column].apply(lambda x: x.keys()[0])
 
+        print encoder.list_fields()
+
         if dump:
             encoder.save('data/{}_one_hot_encoder.obj'.format(name))
 
@@ -213,7 +215,8 @@ def graphlab_factorization_recommender(sf):
                                                    item_id = 'album_id',
                                                    target = 'rating')
 
-    print factorization_recommender.evaluate_precision_recall(sf)
+    print factorization_recommender.evaluate_rmse(sf, target = 'rating')
+    print factorization_recommender.get_similar_items()
 
 
 # Feature building methods
@@ -298,11 +301,11 @@ def build_gephi_data():
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
-    convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
+    # convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
 
 def graphlab_recommender_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
-    graphlab_recommender_test()
+    build_gephi_data()
