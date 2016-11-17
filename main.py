@@ -18,7 +18,7 @@ Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
 
 
 def update_dataframe(name = None, feature_building_method = None,
-                     database = None, dump = False):
+                     database = None, dump = False, test = False):
     """
     Input:
         name -- string of the name of the DataFrame
@@ -65,6 +65,10 @@ def update_dataframe(name = None, feature_building_method = None,
         if i % 100 == 0:
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
+
+        if test:
+            if i > 200:
+                print new_data_df
 
     # Stack DataFrames
     full_data_df = pd.concat([old_data_df, new_data_df]).reset_index(drop = True).dropna()
@@ -220,7 +224,7 @@ def graphlab_factorization_recommender(sf):
                                                    item_id = 'album_id',
                                                    target = 'rating')
 
-    print factorization_recommender.predict(sf)
+    print factorization_recommender.predict(sf).size()
     print factorization_recommender.get_similar_items()
 
 
@@ -261,7 +265,8 @@ def build_user_to_album_art_from_database():
     df = update_dataframe(name = 'user_to_album_art',
                           feature_building_method = album_art,
                           database = db,
-                          dump = True)
+                          dump = True,
+                          test = False)
 
 
 def build_from_album_list():
