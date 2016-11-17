@@ -39,6 +39,14 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     print "Joined successfully"
 
     subsetted_joined_sf = joined_sf.sample(edge_subset_proportion, seed = 5)
+
+    subsetted_joined_sf.rename({node_column: 'source',
+                                node_column + '.1': 'target'})
+
+    # Get edge weights
+    subsetted_joined_sf.groupby(key_columns = ['source', 'target'],
+                                operations = {'weight': agg.COUNT()})
+
     dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
 
     print "Subsetted successfully"
@@ -127,17 +135,20 @@ def build_gephi_data():
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   cutoff = 10,
+                                   cutoff = 100,
                                    name = 'user_to_album_sf_integerified_',
                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = '_id',
-                                   cutoff = 10,
+                                   cutoff = 100,
                                    name = 'user_to_album_sf_album_integerified_',
                                    dump = True)
 
-    convert_to_gephi_format(sf, node_column = 'album_id', link_column = '_id')
+    convert_to_gephi_format(sf,
+                            node_column = 'album_id',
+                            link_column = '_id',
+                            edge_subset_proportion = 0.01)
 
 def graphlab_recommender_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
@@ -146,4 +157,4 @@ def graphlab_recommender_test():
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
-    graphlab_recommender_test()
+    build_gephi_data()
