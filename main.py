@@ -152,6 +152,7 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
         encoder = OneHotEncoder(features = [column],
                                 output_column_name = column)
         encoded_sf = encoder.fit_transform(encoded_sf)
+        encoded_sf[column] = encoded_sf[column].apply(lambda x: x.keys()[0])
 
         if dump:
             encoder.save('data/{}_one_hot_encoder.obj'.format(name))
@@ -296,7 +297,7 @@ def test_code():
                                        name = 'user_to_album_sf',
                                        dump = True)
 
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv')
+    # sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv')
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
