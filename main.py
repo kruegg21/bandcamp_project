@@ -132,7 +132,7 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
 
     return sf
 
-def convert_sframe_to_integer_ids(sf, column = None, dump = True):
+def convert_sframe_to_integer_ids(sf, columns = None, dump = True):
     """
     Inputs:
         sf -- SFrame with string entries
