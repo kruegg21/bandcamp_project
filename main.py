@@ -284,7 +284,7 @@ def build_from_album_list():
 
 
 def test_code():
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv.csv')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_integerified.csv')
     print sf
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
