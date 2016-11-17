@@ -150,7 +150,8 @@ def convert_sframe_to_integer_ids(sf, columns = None, dump = True):
     df = sf.to_dataframe()
     for column in columns:
         col_df = df[column]
-        col_dict = dict(enumerate(col_df.values))
+        col_dict = {value: key for (key, value) in enumerate(col_df.values))}
+
         print col_dict
         col_dict.append(translation_dictionaries)
 
