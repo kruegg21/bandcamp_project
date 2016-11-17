@@ -1,5 +1,4 @@
 import graphlab
-import graphlab.aggregate as agg
 from graphlab.toolkits.feature_engineering import OneHotEncoder
 import json
 import numpy as np
@@ -127,7 +126,7 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     album_counts = sf.groupby(key_columns='album_id',
                               operations={'count': agg.COUNT()})
     if dump:
-        album_counts.save('data/{}album_counts.csv', format = 'csv')
+        album_counts.save('data/{}_album_counts.csv'.format(name), format = 'csv')
 
     # Dump
     if dump:
@@ -153,22 +152,10 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
 
     print encoded_sf
     print encoder['feature_encoding']
-    # translation_dictionaries = list()
-    # df = sf.to_dataframe()
-    # for column in columns:
-    #     # Make dictionary
-    #     col_dict = {value: key for (key, value) in enumerate(df[column].values)}
-    #     translation_dictionaries.append(col_dict)
-    #
-    #     print col_dict.popitem()
-    #
-    #     # Replace
-    #     df.replace(col_dict, inplace = True)
-    #     sf[colunn] = df[column]
-    #
-    # if dump:
-    #     sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
-    return sf
+    if dump:
+        encoded_sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
+        pickle.dump(encoder, '{}_one_hot_encoder.obj'.format(name))
+    return encoded_sf
 
 
 @timeit
