@@ -148,13 +148,13 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
 
     """
     encoded_sf = sf
-    for column in columns
+    for column in columns:
         encoder = OneHotEncoder(features = [column],
                                 output_columns_name = column)
         encoded_sf = encoder.fit_transform(encoded_sf)
 
         if dump:
-            encoder.save('data/{}_one_hot_encoder.obj'.format(name))        
+            encoder.save('data/{}_one_hot_encoder.obj'.format(name))
 
     print encoded_sf
     print encoder['feature_encoding']
@@ -298,5 +298,5 @@ def test_code():
                                    dump = True)
 
 if __name__ == "__main__":
-    # build_from_album_list()
-    test_code()
+    build_from_album_list()
+    # test_code()
