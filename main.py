@@ -63,8 +63,7 @@ def graphlab_factorization_recommender(sf):
                                                    user_id = '_id',
                                                    item_id = 'album_id')
 
-    prec_recall_dict = factorization_recommender.evaluate_precision_recall(sf)
-    print prec_recall_dict.popitem()
+    print factorization_recommender.predict(sf)
     print factorization_recommender.get_similar_items()
 
 
