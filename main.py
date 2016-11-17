@@ -230,6 +230,8 @@ def album_list(df, row, i):
 def tags(df, row, i):
     _id = row['_id']
     tags = json.loads(row['data']).values()
+    print tags
+    raw_input()
     df.loc[i, '_id'] = _id
     df.loc[i, 'tags'] = tags
 
@@ -242,7 +244,7 @@ def build_from_database():
     db = get_mongo_database('bandcamp')
 
     df = update_dataframe(name = 'user_to_album_list',
-                          feature_building_method = album_list,
+                          feature_building_method = tags,
                           database = db,
                           dump = False)
 
@@ -299,4 +301,4 @@ def graphlab_recommender_test():
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
-    build_from_album_list()
+    graphlab_recommender_test()
