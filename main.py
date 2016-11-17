@@ -134,7 +134,7 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
 
     return sf
 
-def convert_sframe_to_integer_ids(sf, columns = None, dump = True):
+def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
     """
     Inputs:
         sf -- SFrame with string entries
@@ -149,11 +149,18 @@ def convert_sframe_to_integer_ids(sf, columns = None, dump = True):
     translation_dictionaries = list()
     df = sf.to_dataframe()
     for column in columns:
-        col_df = df[column]
-        col_dict = {value: key for (key, value) in enumerate(col_df.values))}
-
-        print col_dict
+        # Make dictionary
+        col_dict = {value: key for (key, value) in enumerate(df[column].values))}
         col_dict.append(translation_dictionaries)
+
+        # Replace
+        df.replace(col_dict, inplace = True)
+        sf[colunn] = df[column]
+
+    if dump:
+        sf.save('data/{}_integerified.csv'.format(name), format = 'csv')
+    return sf
+
 
 @timeit
 def convert_to_gephi_format(sf, node_column = None, link_column = None):
@@ -261,6 +268,7 @@ def build_from_album_list():
 
     sf = convert_sframe_to_integer_ids(sf,
                                        columns = ['album_id', '_id'],
+                                       name = 'user_to_album_sf'
                                        dump = True)
 
 
