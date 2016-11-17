@@ -152,6 +152,7 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
     encoded_sf = encoder.fit_transform(sf)
 
     print encoded_sf
+    print encoder['feature_encoding']
     # translation_dictionaries = list()
     # df = sf.to_dataframe()
     # for column in columns:
