@@ -213,7 +213,11 @@ def graphlab_factorization_recommender(sf):
                                                    item_id = 'album_id',
                                                    target = 'rating')
 
-    print graphlab.compare(sf, [collaborative_filtering, factorization_recommender])
+    print graphlab.compare(sf,
+                           models = [collaborative_filtering, factorization_recommender],
+                           metric = 'rmse',
+                           target = 'rating',
+                           verbose = True)
 
 # Feature building methods
 def album_list(df, row, i):
@@ -228,8 +232,6 @@ def tags(df, row, i):
     tags = json.loads(row['data']).values()
     df.loc[i, '_id'] = _id
     df.loc[i, 'tags'] = tags
-
-
 
 
 
@@ -306,4 +308,4 @@ def graphlab_recommender_test():
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
-    build_gephi_data()
+    graphlab_recommender_test()
