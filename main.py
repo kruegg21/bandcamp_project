@@ -150,7 +150,7 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
     df = sf.to_dataframe()
     for column in columns:
         # Make dictionary
-        col_dict = {value: key for (key, value) in enumerate(df[column].values))}
+        col_dict = {value: key for (key, value) in enumerate(df[column].values)}
         col_dict.append(translation_dictionaries)
 
         print col_dict.popitem()
