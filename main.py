@@ -165,7 +165,8 @@ def convert_to_truncated_string_ids(sf):
     sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/', ''))
     sf['album_id'] = sf.apply(lambda x: x['album_id'] \
                        .replace('com/album/', '') \
-                       .replace('http://', ''))
+                       .replace('http://', '')
+                       .replace('https://', ''))
     return sf
 
 
@@ -231,7 +232,7 @@ def graphlab_recommender_test():
 
     # Get keys in correct format
     album_list = [mongo_key_formatting(x) for x in album_list]
-    _id_list = [mongo_key_formatting(x) for x in album_list]
+    _id_list = [mongo_key_formatting(x) for x in _id_list]
 
     # Create SFrame
     prediction_sf = graphlab.SFrame({'_id': _id_list,
