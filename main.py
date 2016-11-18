@@ -21,7 +21,8 @@ Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
 
 @timeit
 def convert_to_gephi_format(sf, node_column = None, link_column = None,
-                            edge_subset_proportion = 0.3):
+                            edge_subset_proportion = 0.3,
+                            dump_full_graph = False):
     """
     Inputs:
         sf -- SFrame object with rows of '_id' and 'album_id'
@@ -47,11 +48,15 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     subsetted_joined_sf = subsetted_joined_sf.groupby(key_columns = ['source', 'target'],
                                                       operations = {'weight': agg.COUNT()})
 
-    dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
+    # Add column specifying undirected
+    subsetted_joined_sf['type'] = 'undirected'
 
+    # Dump
+    dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
     print "Subsetted successfully"
 
-    dump_sf(joined_sf, 'data/gephi_graph_full.csv')
+    if dump_full_graph:
+        dump_sf(joined_sf, 'data/gephi_graph_full.csv')
 
 
 
@@ -124,6 +129,21 @@ def build_from_album_list():
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
+@timeit
+def convert_to_truncated_string_ids(sf):
+    """
+    Input:
+        sf -- SFrame
+
+    Converts the columns '_id' and 'album_id' to shortened versions
+    """
+
+    sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/'), '')
+    sf['album_id'] = sf.apply(lambda x: x['album_id'] \
+                       .replace('bandcamp_com/album/', '') \
+                       .replace('http://', ''))
+    return sf
+
 
 def build_gephi_data():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
@@ -135,7 +155,7 @@ def build_gephi_data():
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   cutoff = 100,
+                                   cutoff = 10,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
@@ -145,10 +165,13 @@ def build_gephi_data():
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
+    sf = convert_to_truncated_string_ids(sf)
+
     convert_to_gephi_format(sf,
                             node_column = 'album_id',
                             link_column = '_id',
-                            edge_subset_proportion = 0.01)
+                            edge_subset_proportion = 0.01,
+                            dump_full_graph = False)
 
 def graphlab_recommender_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
