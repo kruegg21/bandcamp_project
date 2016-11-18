@@ -217,4 +217,3 @@ def graphlab_recommender_test():
 
 if __name__ == "__main__":
     graphlab_recommender_test()
-    build_gephi_data()
