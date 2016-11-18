@@ -82,7 +82,7 @@ def graphlab_factorization_recommender(sf):
     print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
     print factorization_recommender.get_similar_items()
 
-
+    return factorization_recommender
 
 
 # Pipelines
