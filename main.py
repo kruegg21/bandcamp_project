@@ -205,13 +205,14 @@ def graphlab_recommender_test():
     # Filter to make data more dense
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   cutoff = 100,
+                                   min_cutoff = 100,
+                                   max_cutoff = 1000,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = '_id',
-                                   cutoff = 100,
+                                   min_cutoff = 100,
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
@@ -224,7 +225,7 @@ def graphlab_recommender_test():
                                                train = True)
 
     # Make predictions
-    album_list = ['https://girlslivingoutsidesocietysshit.bandcamp.com/album/demo', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
+    album_list = ['https://miloraps.bandcamp.com/album/so-the-flies-dont-come', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
     rating_list = [1] * len(album_list)
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
@@ -233,6 +234,8 @@ def graphlab_recommender_test():
                           'album_id': album_list,
                           'rating': rating_list})
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
+
+    print prediction_sf
 
     # Make recommendations
     recommendations_sf = model.recommend(users = _id_list,
