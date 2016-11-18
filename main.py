@@ -91,7 +91,8 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
                                                                       binary_target = True,
-                                                                      nmf = True)
+                                                                      nmf = True,
+                                                                      num_sampled_negative_examples = 2000)
 
         # Data print out
         print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
