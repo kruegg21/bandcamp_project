@@ -16,7 +16,11 @@ Notes:
 Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
 """
 
-
+class model_specifications(object):
+    def __init__(self):
+        self.user_count_cutoff = None
+        self.album_count_cutoff = None
+        self
 
 
 @timeit
@@ -79,11 +83,15 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
                                                    user_id = '_id',
                                                    item_id = 'album_id')
 
+    # Data print out
     print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
     print factorization_recommender.get_similar_items()
 
+    # Dump
     if dump:
         factorization_recommender.save('factorization_recommender')
+
+    return factorization_recommender
 
 
 # Pipelines
