@@ -27,6 +27,7 @@ class model_specifications(object):
         self.n_albums = None
         self.n_users = None
         self.model = None
+        self.params
 
 
 @timeit
@@ -71,7 +72,16 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     if dump_full_graph:
         dump_sf(joined_sf, 'data/gephi_graph_full.csv')
 
+def graphlab_grid_search(sf, model_specifications = None):
+    folds = gl.cross_validation.KFold(sf, 5)
 
+    params = dict([('target', 'Y'),
+                   ('step_size', [0.01, 0.1]),
+                   ('max_depth', [5, 7])])
+    job = gl.grid_search.create(folds,
+                                gl.ranking_factorization_recommender.create,
+                                params)
+    job.get_results()
 
 def graphlab_factorization_recommender(sf, dump = True, train = True):
     if train:
@@ -95,7 +105,7 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
                                                                       ranking_regularization = 0.1)
 
         # Data print out
-        print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
+        return rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
         print rec_model.get_similar_items()
     else:
         rec_model = graphlab.load_model('factorization_recommender')
@@ -103,8 +113,8 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
     # Dump
     if dump:
         rec_model.save('factorization_recommender')
-
-    return rec_model
+    #
+    # return rec_model
 
 
 # Pipelines
@@ -249,6 +259,7 @@ def graphlab_recommender_test(should_filter = True):
     model = graphlab_factorization_recommender(sf,
                                                dump = True,
                                                train = True)
+    return model
 
     # Make predictions
     album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
@@ -308,5 +319,5 @@ def split_into_artist_album(sf):
     return sf
 
 if __name__ == "__main__":
-    # recommendations = graphlab_recommender_test(should_filter = False)
-    build_from_album_art_list()
+    recommendations = graphlab_recommender_test(should_filter = False)
+    # build_user_to_album_art_from_database()

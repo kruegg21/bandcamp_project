@@ -97,7 +97,7 @@ def update_dataframe(name = None, feature_building_method = None,
         old_data_df = pd.DataFrame(columns = column_names_dict[name])
 
     # List of '_id's we already have
-    _id_list = old_data_df._id.tolist()
+    _id_list = list(set(old_data_df._id.tolist()))
 
     # Specify collection
     collection = 'user_collections_new'
@@ -209,7 +209,7 @@ def convert_to_sframe_format(df, list_like_columns = None,
     sframe_dict = {'_id': _id_list,
                   'rating': rating_list}
     for column, resulting_name in zip(list_like_columns, resulting_column_names):
-        sframe_dict = {resulting_name: list_columns[column]}
+        sframe_dict[resulting_name] = list_columns[column]
     sf = graphlab.SFrame(sframe_dict)
 
     # Albums counts
@@ -274,8 +274,6 @@ def album_list(df, row, i):
 
 def album_art(df, row, i):
     _id = row['_id']
-    albums = json.loads(row['data']).keys()
-    tags = json.loads(row['data']).values()
+    json_dict = json.loads(row['data'])
     df.loc[i, '_id'] = _id
-    df.loc[i, 'albums'] = albums
-    df.loc[i, 'album_art_code'] = [item['item_art_id'] for item in tags]
+    df.loc[i, 'album_art_code'] = [(key, value['item_art_id']) for key, value in json_dict.iteritems()]
