@@ -95,7 +95,7 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
                                                                       ranking_regularization = 0.1)
 
         # Data print out
-        print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
+        print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
         print rec_model.get_similar_items()
     else:
         rec_model = graphlab.load_model('factorization_recommender')
