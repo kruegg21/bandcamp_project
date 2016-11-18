@@ -22,7 +22,7 @@ Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
 @timeit
 def convert_to_gephi_format(sf, node_column = None, link_column = None,
                             edge_subset_proportion = 0.3,
-                            dump_full_graph = False):
+                            dump_full_graph = False, edge_weight_cutoff = 10):
     """
     Inputs:
         sf -- SFrame object with rows of '_id' and 'album_id'
@@ -47,6 +47,9 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     # Get edge weights
     subsetted_joined_sf = subsetted_joined_sf.groupby(key_columns = ['source', 'target'],
                                                       operations = {'weight': agg.COUNT()})
+
+    # Cutoff based on edge weights
+    subsetted_joined_sf = subsetted_joined_sf[subsetted_joined_sf['weight'] > edge_weight_cutoff]
 
     # Add column specifying undirected
     subsetted_joined_sf['type'] = 'undirected'
@@ -174,6 +177,7 @@ def build_gephi_data():
                             node_column = 'album_id',
                             link_column = '_id',
                             edge_subset_proportion = 0.01,
+                            edge_weight_cutoff = 10
                             dump_full_graph = False)
 
 # DO THIS ON EC2
@@ -183,7 +187,7 @@ def graphlab_recommender_test():
     # Filter to make data more dense
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   cutoff = 30,
+                                   cutoff = 100,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
@@ -201,3 +205,4 @@ def graphlab_recommender_test():
 
 if __name__ == "__main__":
     graphlab_recommender_test()
+    build_gephi_data()
