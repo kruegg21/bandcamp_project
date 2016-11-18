@@ -7,4 +7,6 @@ pip install bs4
 pip install simplejson
 pip install demjson
 pip install seaborn
+pip install flask
+pip install gunicorn
 sudo apt-get install mongodb-server
