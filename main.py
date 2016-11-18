@@ -291,4 +291,4 @@ def build_gephi_data():
 
 if __name__ == "__main__":
     # recommendations = graphlab_recommender_test(should_filter = False)
-    build_user_to_album_art_from_database()
+    build_from_album_art_list()
