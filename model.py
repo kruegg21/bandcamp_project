@@ -69,9 +69,9 @@ def graphlab_grid_search(sf, specs = None):
     #                ('ranking_regularization', [0.1, 0.2])
     #               ])
     params = specs.param_grid
-    job = graphlab.grid_search.create(data = folds,
-                                      model_factory = graphlab.ranking_factorization_recommender.create,
-                                      model_parameters = params,
+    job = graphlab.grid_search.create(dfolds,
+                                      graphlab.ranking_factorization_recommender.create,
+                                      params,
                                       evaluator = custom_evaluation)
     print job.get_results()
 
