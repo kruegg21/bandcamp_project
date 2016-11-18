@@ -63,7 +63,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 
 
 
-def graphlab_factorization_recommender(sf):
+def graphlab_factorization_recommender(sf, dump = True, train = True):
     # Test train split
     (train_set, test_set) = sf.random_split(0.8, seed=1)
 
@@ -82,7 +82,8 @@ def graphlab_factorization_recommender(sf):
     print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
     print factorization_recommender.get_similar_items()
 
-    return factorization_recommender
+    if dump:
+        factorization_recommender.save('factorization_recommender')
 
 
 # Pipelines
@@ -200,7 +201,9 @@ def graphlab_recommender_test():
     sf = convert_to_truncated_string_ids(sf)
 
     # Make model
-    model = graphlab_factorization_recommender(sf)
+    model = graphlab_factorization_recommender(sf,
+                                               dump = True,
+                                               train = True)
 
     # Make predictions
     album_list = ['https://girlslivingoutsidesocietysshit.bandcamp.com/album/demo', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
