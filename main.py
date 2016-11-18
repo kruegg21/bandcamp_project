@@ -142,7 +142,7 @@ def build_from_album_art_list():
                                   name = 'user_to_album_art_sf',
                                   dump = True,
                                   verbose = True,
-                                  get_album_counts = True)
+                                  get_album_counts = False)
 
 
 # DO THIS ON EC2

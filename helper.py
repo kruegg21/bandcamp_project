@@ -152,6 +152,8 @@ def convert_to_sframe_format(df, list_like_columns = None,
         dump -- Bool if should dump to CSV
     Output:
         graphlab SFrame
+
+
     """
     _id_list = list()
     list_columns = {column: list() for column in list_like_columns}
@@ -192,7 +194,6 @@ def convert_to_sframe_format(df, list_like_columns = None,
     n_filled = len(rating_list)
     n_users = len(set(_id_list))
     n_albums = len(set(list_columns[list_like_columns[0]]))
-    n_users = len(_id_list)
     for column, resulting_name in zip(list_like_columns, resulting_column_names):
         print "Number of unique {}: {}".format(resulting_name,
                                                len(set(list_columns[column])))
