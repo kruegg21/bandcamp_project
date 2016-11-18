@@ -228,7 +228,7 @@ def graphlab_recommender_test():
                                                train = False)
 
     # Make predictions
-    album_list = ['https://miloraps.bandcamp.com/album/so-the-flies-dont-come', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
+    album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by']
     rating_list = [1] * len(album_list)
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
