@@ -8,6 +8,7 @@ import os
 import pandas as pd
 import pickle
 import pymongo
+from model import graphlab_factorization_recommender, graphlab_grid_search
 from bandcamp_scraper import get_mongo_database
 from helper import *
 
@@ -16,18 +17,7 @@ Notes:
 Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
 """
 
-class model_specifications(object):
-    """
-    Object to contain information about model building to make things easy
-    to change and log.
-    """
-    def __init__(self):
-        self.user_count_cutoff = None
-        self.album_count_cutoff = None
-        self.n_albums = None
-        self.n_users = None
-        self.model = None
-        self.params
+
 
 
 @timeit
@@ -72,49 +62,9 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     if dump_full_graph:
         dump_sf(joined_sf, 'data/gephi_graph_full.csv')
 
-def graphlab_grid_search(sf, model_specifications = None):
-    folds = gl.cross_validation.KFold(sf, 5)
 
-    params = dict([('target', 'Y'),
-                   ('step_size', [0.01, 0.1]),
-                   ('max_depth', [5, 7])])
-    job = gl.grid_search.create(folds,
-                                gl.ranking_factorization_recommender.create,
-                                params)
-    job.get_results()
 
-def graphlab_factorization_recommender(sf, dump = True, train = True):
-    if train:
-        # Test train split
-        (train_set, test_set) = sf.random_split(0.8, seed=1)
 
-        # # Collaborative filtering item similarity model
-        # # https://turi.com/products/create/docs/generated/graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender.html#graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender
-        # collaborative_filtering = recommender.create(sf,
-        #                                              user_id = '_id',
-        #                                              item_id = 'album_id')
-
-        # Factorization recommender
-        # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
-        rec_model = graphlab.ranking_factorization_recommender.create(sf,
-                                                                      target='rating',
-                                                                      user_id = '_id',
-                                                                      item_id = 'album_id',
-                                                                      binary_target = True,
-                                                                      max_iterations = 200,
-                                                                      ranking_regularization = 0.1)
-
-        # Data print out
-        return rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
-        print rec_model.get_similar_items()
-    else:
-        rec_model = graphlab.load_model('factorization_recommender')
-
-    # Dump
-    if dump:
-        rec_model.save('factorization_recommender')
-    #
-    # return rec_model
 
 
 # Pipelines
@@ -140,6 +90,7 @@ def build_user_to_album_art_from_database():
                           dump = True,
                           test = False)
 
+# DO THIS ON EC2
 def build_from_album_art_list():
     df = pd.read_csv('data/user_to_album_art.csv')
 
@@ -309,15 +260,7 @@ def graphlab_recommender_test(should_filter = True):
     # Dump recommendations to CSV
     dump_sf(recommendations_sf, 'data/recommendations.csv')
 
-def split_into_artist_album(sf):
-    """
-    Splits 'album_id' column into artist and album
-    """
-    sf['artist'] = sf['album_id'].apply(lambda x: x.split('_bandcamp_')[0])
-    sf['album'] = sf['album_id'].apply(lambda x: x.split('_bandcamp_')[-1])
-
-    return sf
 
 if __name__ == "__main__":
-    recommendations = graphlab_recommender_test(should_filter = False)
-    # build_user_to_album_art_from_database()
+    # recommendations = graphlab_recommender_test(should_filter = False)
+    build_user_to_album_art_from_database()

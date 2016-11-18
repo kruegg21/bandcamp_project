@@ -15,7 +15,7 @@ import time
 # Contains column names for DataFrames we are working with
 column_names_dict = {
     'user_to_album_list' : ['_id', 'albums', 'n_albums'],
-    'user_to_album_art' : ['_id', 'albums', 'album_art_code']
+    'user_to_album_art' : ['_id', 'album_art_code']
 }
 
 # Timing function
@@ -35,6 +35,15 @@ def timeit(method):
 @timeit
 def dump_sf(sf, name):
     sf.save(name, format = 'csv')
+
+def split_into_artist_album(sf):
+    """
+    Splits 'album_id' column into artist and album
+    """
+    sf['artist'] = sf['album_id'].apply(lambda x: x.split('_bandcamp_')[0])
+    sf['album'] = sf['album_id'].apply(lambda x: x.split('_bandcamp_')[-1])
+
+    return sf
 
 def show_sframe_sparcity(sf):
     n_albums = len(sf['album_id'].unique())
@@ -127,6 +136,7 @@ def update_dataframe(name = None, feature_building_method = None,
         if test:
             if i > 200:
                 print new_data_df
+                break
 
     # Stack DataFrames
     full_data_df = pd.concat([old_data_df, new_data_df]).reset_index(drop = True).dropna()
