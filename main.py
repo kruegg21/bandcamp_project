@@ -250,7 +250,7 @@ def graphlab_recommender_test(should_filter = True):
 
     album_list = album_list1 + album_list2
     rating_list = [1] * len(album_list1) + [1] * len(album_list2)
-    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list1) + \
+    _id_list = ['https://bandcamp.com/kruegg1'] * len(album_list1) + \
                ['https://bandcamp.com/kruegg2'] * len(album_list2)
 
     # Get keys in correct format
@@ -259,15 +259,12 @@ def graphlab_recommender_test(should_filter = True):
 
     # Create SFrame
     prediction_sf = graphlab.SFrame({'_id': _id_list,
-                          'album_id': album_list,
-                          'rating': rating_list})
+                                     'album_id': album_list,
+                                     'rating': rating_list})
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
 
-    print sf[sf['album_id'] == prediction_sf['album_id'][0]]
-
-
     # Make recommendations
-    recommendations_sf = model.recommend(users = _id_list,
+    recommendations_sf = model.recommend(users = ['https://bandcamp.com/kruegg1', 'https://bandcamp.com/kruegg2'],
                                          k = 20,
                                          new_user_data = prediction_sf)
 
