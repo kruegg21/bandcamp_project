@@ -142,7 +142,7 @@ def update_dataframe(name = None, feature_building_method = None,
 def convert_to_sframe_format(df, list_like_columns = None,
                              resulting_column_names = None, count_column = None,
                              name = None, dump = True, verbose = True,
-                             delimiters = None):
+                             delimiters = None, get_album_counts = True):
     """
     Inputs:
         df -- DataFrame with '_id' column, list-like column, and count column
@@ -191,7 +191,7 @@ def convert_to_sframe_format(df, list_like_columns = None,
     # Sanity checks
     n_filled = len(rating_list)
     n_users = len(set(_id_list))
-    n_albums = len(list_columns[list_like_columns[0]])
+    n_albums = len(set(list_columns[list_like_columns[0]]))
     n_users = len(_id_list)
     for column, resulting_name in zip(list_like_columns, resulting_column_names):
         print "Number of unique {}: {}".format(resulting_name,
@@ -212,10 +212,11 @@ def convert_to_sframe_format(df, list_like_columns = None,
     sf = graphlab.SFrame(sframe_dict)
 
     # Albums counts
-    album_counts = sf.groupby(key_columns='album_id',
-                              operations={'count': agg.COUNT()})
-    if dump:
-        album_counts.save('data/{}_album_counts.csv'.format(name), format = 'csv')
+    if get_album_counts:
+        album_counts = sf.groupby(key_columns = resulting_column_names[0],
+                                  operations = {'count': agg.COUNT()})
+        album_counts.save('data/{}_album_counts.csv'.format(name),
+                          format = 'csv')
 
     # Dump
     if dump:

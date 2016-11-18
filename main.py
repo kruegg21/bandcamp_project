@@ -141,7 +141,8 @@ def build_from_album_art_list():
                                   count_column = 'n_albums',
                                   name = 'user_to_album_art_sf',
                                   dump = True,
-                                  verbose = True)
+                                  verbose = True,
+                                  get_album_counts = True)
 
 
 # DO THIS ON EC2
@@ -156,7 +157,8 @@ def build_from_album_list():
                                   count_column = 'n_albums',
                                   name = 'user_to_album_sf',
                                   dump = False,
-                                  verbose = False)
+                                  verbose = False,
+                                  get_album_counts = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
