@@ -235,19 +235,19 @@ def graphlab_recommender_test(should_filter = True):
                                                train = True)
 
     # Make predictions
-    # album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
-    #               'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
-    #               'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
-    #               'https://miloraps.bandcamp.com/album/plain-speaking',
-    #               'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
-    #               'https://openmikeeagle360.bandcamp.com/album/time-materials',
-    #               'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
+    album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
+                  'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
+                  'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
+                  'https://miloraps.bandcamp.com/album/plain-speaking',
+                  'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
+                  'https://openmikeeagle360.bandcamp.com/album/time-materials',
+                  'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
 
-    album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
-                  'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
-                  'https://deafheavens.bandcamp.com/album/sunbather',
-                  'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
-                  'https://deafheavens.bandcamp.com/album/new-bermuda']
+    # album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
+    #               'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
+    #               'https://deafheavens.bandcamp.com/album/sunbather',
+    #               'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
+    #               'https://deafheavens.bandcamp.com/album/new-bermuda']
 
     album_list = album_list
     rating_list = [1] * len(album_list)
