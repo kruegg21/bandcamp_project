@@ -60,19 +60,12 @@ def graphlab_grid_search(sf, specs = None):
     # Create K-Folds splits
     folds = graphlab.cross_validation.KFold(sf, specs.folds)
 
-    # Define parameters to grid search
-    # params = dict([('target', 'rating'),
-    #                ('user_id', '_id'),
-    #                ('item_id', 'album_id'),
-    #                ('binary_target', True),
-    #                ('max_iterations', 200),
-    #                ('ranking_regularization', [0.1, 0.2])
-    #               ])
-    params = specs.param_grid
+    # Run Grid Search
     job = graphlab.grid_search.create(folds,
                                       graphlab.ranking_factorization_recommender.create,
-                                      params,
+                                      specs.param_grid,
                                       evaluator = custom_evaluation)
+    print jobs.get_metrics()
     print job.get_results()
 
     # Put optimal parameters in specifications
@@ -98,7 +91,7 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
 
         # Factorization recommender
         # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
-        rec_model = graphlab.ranking_factorization_recommender.create(train_sf,
+        rec_model = graphlab.ranking_factorization_recommender.create(train_set,
                                                                       target='rating',
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
