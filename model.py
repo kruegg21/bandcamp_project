@@ -12,11 +12,11 @@ class model_specifications(object):
         self.album_count_max_cutoff = kwargs['album_count_max_cutoff']
         self.album_count_min_cutoff = kwargs['album_count_min_cutoff']
         self.n_albums = kwargs.get('n_albums')
-        self.n_users = kwargs['n_users']
-        self.model = kwargs['model']
-        self.param_grid = kwargs['param_grid']
-        self.params = kwargs['params']
-        self.folds = kwargs['folds']
+        self.n_users = kwargs.get('n_users')
+        self.model = kwargs.get('model')
+        self.param_grid = kwargs.get('param_grid')
+        self.params = kwargs.get('params')
+        self.folds = kwargs.get('folds')
 
 def build_model(should_grid_search = True, should_filter = True,
                 specs = None):
