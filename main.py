@@ -252,9 +252,13 @@ def graphlab_recommender_test():
     # Split into logical columns
     recommendations_sf = split_into_artist_album(recommendations_sf)
 
+    print recommendations_sf
+
     # Sample
     recommendations_sf = graphlab.SFrame(recommendations_sf.to_dataframe().
-                            drop_duplicates(subset = ['artist'], inplace = True))
+                            drop_duplicates(subset = ['artist']))
+
+    print recommendations_sf
 
     # Dump recommendations to CSV
     dump_sf(recommendations_sf, 'data/recommendations.csv')
