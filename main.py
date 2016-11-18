@@ -121,7 +121,7 @@ def build_from_album_art_list(verbose = True):
             i += 1
 
     sf = graphlab.SFrame({'album_url': album_url_dict.keys(),
-                          'art_id': album_url_dict.items()})
+                          'art_id': album_url_dict.values()})
 
     # Sanity checks
     n_albums = len(sf)
