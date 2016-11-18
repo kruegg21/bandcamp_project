@@ -268,7 +268,7 @@ def graphlab_recommender_test(should_filter = True):
 
     # Make recommendations
     recommendations_sf = model.recommend(users = _id_list,
-                                         k = 1000,
+                                         k = 20,
                                          new_user_data = prediction_sf)
 
     # Split into logical columns
