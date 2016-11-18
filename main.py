@@ -86,12 +86,12 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
 
         # Factorization recommender
         # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
-        rec_model = graphlab.factorization_recommender.create(sf,
-                                                              target='rating',
-                                                              user_id = '_id',
-                                                              item_id = 'album_id',
-                                                              binary_target = True,
-                                                              nmf = True)
+        rec_model = graphlab.ranking_factorization_recommender.create(sf,
+                                                                      target='rating',
+                                                                      user_id = '_id',
+                                                                      item_id = 'album_id',
+                                                                      binary_target = True,
+                                                                      nmf = True)
 
         # Data print out
         print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
