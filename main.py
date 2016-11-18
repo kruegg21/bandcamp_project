@@ -74,24 +74,27 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 
 
 def graphlab_factorization_recommender(sf, dump = True, train = True):
-    # Test train split
-    (train_set, test_set) = sf.random_split(0.8, seed=1)
+    if train:
+        # Test train split
+        (train_set, test_set) = sf.random_split(0.8, seed=1)
 
-    # # Collaborative filtering item similarity model
-    # # https://turi.com/products/create/docs/generated/graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender.html#graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender
-    # collaborative_filtering = recommender.create(sf,
-    #                                              user_id = '_id',
-    #                                              item_id = 'album_id')
+        # # Collaborative filtering item similarity model
+        # # https://turi.com/products/create/docs/generated/graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender.html#graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender
+        # collaborative_filtering = recommender.create(sf,
+        #                                              user_id = '_id',
+        #                                              item_id = 'album_id')
 
-    # Factorization recommender
-    # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
-    factorization_recommender = recommender.create(train_set,
-                                                   user_id = '_id',
-                                                   item_id = 'album_id')
+        # Factorization recommender
+        # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
+        factorization_recommender = recommender.create(train_set,
+                                                       user_id = '_id',
+                                                       item_id = 'album_id')
 
-    # Data print out
-    print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
-    print factorization_recommender.get_similar_items()
+        # Data print out
+        print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
+        print factorization_recommender.get_similar_items()
+    else:
+        factorization_recommender = graphlab.load('factorization_recommender')
 
     # Dump
     if dump:
@@ -201,7 +204,7 @@ def graphlab_recommender_test():
     # Filter to make data more dense
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   cutoff = 100,
+                                   min_cutoff = 100,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
@@ -216,8 +219,8 @@ def graphlab_recommender_test():
 
     # Make model
     model = graphlab_factorization_recommender(sf,
-                                               dump = True,
-                                               train = True)
+                                               dump = False,
+                                               train = False)
 
     # Make predictions
     album_list = ['https://girlslivingoutsidesocietysshit.bandcamp.com/album/demo', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
