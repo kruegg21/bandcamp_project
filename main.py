@@ -216,7 +216,8 @@ def graphlab_recommender_test():
                           'rating': rating_list})
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
 
-    print model.recommend(new_observation_data = prediction_sf)
+    print model.recommend(users = _id_list,
+                          new_observation_data = prediction_sf)
 
 if __name__ == "__main__":
     graphlab_recommender_test()
