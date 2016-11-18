@@ -91,6 +91,7 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
                                                                       binary_target = True,
+                                                                      max_iterations = 200,
                                                                       ranking_regularization = 0.1)
 
         # Data print out
