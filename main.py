@@ -86,22 +86,23 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
 
         # Factorization recommender
         # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
-        factorization_recommender = recommender.create(train_set,
-                                                       user_id = '_id',
-                                                       item_id = 'album_id',
-                                                       target = 'rating')
+        rec_model = graphlab.factorization_recommender.create(sf,
+                                                              target='rating',
+                                                              user_id = '_id',
+                                                              item_id = 'album_id',
+                                                              target = 'rating')
 
         # Data print out
-        print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
-        print factorization_recommender.get_similar_items()
+        print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
+        print rec_model.get_similar_items()
     else:
-        factorization_recommender = graphlab.load_model('factorization_recommender')
+        rec_model = graphlab.load_model('factorization_recommender')
 
     # Dump
     if dump:
-        factorization_recommender.save('factorization_recommender')
+        rec_model.save('factorization_recommender')
 
-    return factorization_recommender
+    return rec_model
 
 
 # Pipelines
