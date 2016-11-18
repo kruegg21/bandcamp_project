@@ -72,9 +72,9 @@ def graphlab_grid_search(sf, specs = None):
 
 
 def custom_evaluation(model, train, test):
-    recommendations = evaluate_precision_recall(test,
-                                                cutoffs = [100,200,1000],
-                                                exclude_known = False)
+    recommendations = model.evaluate_precision_recall(test,
+                                                      cutoffs = [100,200,1000],
+                                                      exclude_known = False)
     score = recommendations['precision_recall_overall']['recall'][0]
     return {'recall_100': score}
 
