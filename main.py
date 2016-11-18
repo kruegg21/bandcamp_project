@@ -165,6 +165,7 @@ def convert_to_truncated_string_ids(sf):
     sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/', '') \
                                            .replace('https://bandcamp_com/', ''))
     sf['album_id'] = sf.apply(lambda x: x['album_id'] \
+                       .replace('/album/', '') \
                        .replace('com/album/', '') \
                        .replace('http://', '') \
                        .replace('https://', ''))
@@ -207,7 +208,7 @@ def graphlab_recommender_test():
     # Filter to make data more dense
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   min_cutoff = 50,
+                                   min_cutoff = 40,
                                    max_cutoff = 1500,
                                    name = 'user_to_album_sf',
                                    dump = True)
@@ -223,8 +224,8 @@ def graphlab_recommender_test():
 
     # Make model
     model = graphlab_factorization_recommender(sf,
-                                               dump = True,
-                                               train = True)
+                                               dump = False,
+                                               train = False)
 
     # Make predictions
     album_list = ['https://miloraps.bandcamp.com/album/so-the-flies-dont-come', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
@@ -248,8 +249,24 @@ def graphlab_recommender_test():
                                          k = 200,
                                          new_observation_data = prediction_sf)
 
+    # Split into logical columns
+    recommendations_sf = split_into_artist_album(recommendations_sf)
+
+    # Sample
+    recommendations_sf = graphlab.SFrame(recommendations_sf.to_dataframe().
+                            drop_duplicates(subset = ['artist'], inplace = True))
+
     # Dump recommendations to CSV
     dump_sf(recommendations_sf, 'data/recommendations.csv')
+
+def split_into_artist_album(sf):
+    """
+    Splits 'album_id' column into artist and album
+    """
+    sf['artist'] = sf['album_id'].apply(lambda x: x.split('_bandcamp_')[0])
+    sf['album'] = sf['album_id'].apply(lambda x: x.split('_bandcamp_')[-1])
+
+    return sf
 
 if __name__ == "__main__":
     recommendations = graphlab_recommender_test()
