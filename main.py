@@ -140,7 +140,7 @@ def convert_to_truncated_string_ids(sf):
 
     sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/', ''))
     sf['album_id'] = sf.apply(lambda x: x['album_id'] \
-                       .replace('bandcamp_com/album/', '') \
+                       .replace('com/album/', '') \
                        .replace('http://', ''))
     return sf
 
@@ -155,7 +155,7 @@ def build_gephi_data():
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   cutoff = 10,
+                                   cutoff = 20,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
