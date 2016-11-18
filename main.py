@@ -205,7 +205,7 @@ def graphlab_recommender_test():
     # Make predictions
     album_list = ['https://girlslivingoutsidesocietysshit.bandcamp.com/album/demo', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
     rating_list = [1] * len(album_list)
-    id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
+    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
     # Create SFrame
     prediction_sf = graphlab.SFrame({'_id': _id_list,
