@@ -75,11 +75,11 @@ def graphlab_factorization_recommender(sf):
 
     # Factorization recommender
     # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
-    factorization_recommender = recommender.create(train,
+    factorization_recommender = recommender.create(train_set,
                                                    user_id = '_id',
                                                    item_id = 'album_id')
 
-    print factorization_recommender.evaluate_precision_recall(test, cutoffs = [100,200,1000])
+    print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
     print factorization_recommender.get_similar_items()
 
 
