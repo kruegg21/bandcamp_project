@@ -71,7 +71,8 @@ def graphlab_grid_search(sf, specs = None):
     params = specs.param_grid
     job = graphlab.grid_search.create(folds,
                                       graphlab.ranking_factorization_recommender.create,
-                                      params)
+                                      params
+                                      evaluator = custom_evaluation)
     print job.get_results()
 
     # Put optimal parameters in specifications
@@ -84,7 +85,7 @@ def custom_evaluation(model, train, test):
     score = recommendations['precision_recall_overall']['recall'][0]
     return {'recall_100': score}
 
-def graphlab_factorization_recommender(sf, dump = True, train = True):
+def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
     if train:
         # Test train split
         (train_set, test_set) = sf.random_split(0.8, seed=1)
@@ -123,8 +124,9 @@ if __name__ == "__main__":
                                                     ('item_id', 'album_id'),
                                                     ('binary_target', True),
                                                     ('max_iterations', 200),
-                                                    ('ranking_regularization', [0.1, 0.2])
-                                                    ]),
+                                                    ('regularization', [0.1, 0.2]),
+                                                    ('linear_regularization', [0.1, 0.2])
+                                                   ]),
                                  user_count_min_cutoff = 100,
                                  user_count_max_cutoff = np.inf,
                                  album_count_max_cutoff = 1200,
