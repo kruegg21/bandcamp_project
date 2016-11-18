@@ -177,7 +177,7 @@ def build_gephi_data():
                             node_column = 'album_id',
                             link_column = '_id',
                             edge_subset_proportion = 0.01,
-                            edge_weight_cutoff = 10
+                            edge_weight_cutoff = 10,
                             dump_full_graph = False)
 
 # DO THIS ON EC2
