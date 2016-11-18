@@ -6,9 +6,7 @@ class model_specifications(object):
     Object to contain information about model building to make things easy
     to change and log.
     """
-    def __init__(self, user_count_max_cutoff, user_count_min_cutoff,
-                 album_count_max_cutoff, album_count_min_cutoff, n_albums,
-                 n_users, model, param_grid, params, folds):
+    def __init__(self, **kwargs):
         self.user_count_max_cutoff = user_count_max_cutoff
         self.user_count_min_cutoff = user_count_min_cutoff
         self.album_count_max_cutoff = album_count_max_cutoff
