@@ -188,7 +188,7 @@ def convert_to_sframe_format(df, list_like_columns = None,
                 print "{} complete".format(round(float(i) / count, 2))
             i += 1
 
-    # Status checks
+    # Sanity checks
     n_filled = len(rating_list)
     n_users = len(set(_id_list))
     n_albums = len(list_columns[list_like_columns[0]])
@@ -201,8 +201,8 @@ def convert_to_sframe_format(df, list_like_columns = None,
     print "Matrix sparcity: {}".format(float(n_filled) / (n_albums * n_users))
     print "Rows have correct length: {}".format(n_albums == n_users)
     if len(list_like_columns) > 1:
-        print "List like column have same length: {}".format(n_albums) == \
-                                    len(list_columns[list_like_columns[1]]))
+        n_albums_secondary = len(list_columns[list_like_columns[1]])
+        print "List like column have same length: {}".format(n_albums == n_albums_secondary)
 
     # Create SFrame
     sframe_dict = {'_id': _id_list,
