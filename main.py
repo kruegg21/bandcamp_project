@@ -94,7 +94,7 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
         print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
         print factorization_recommender.get_similar_items()
     else:
-        factorization_recommender = graphlab.load('factorization_recommender')
+        factorization_recommender = graphlab.load_model('factorization_recommender')
 
     # Dump
     if dump:
