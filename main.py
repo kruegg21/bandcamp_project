@@ -130,6 +130,19 @@ def build_user_to_album_art_from_database():
                           dump = True,
                           test = False)
 
+def build_from_album_art_list():
+    df = pd.read_csv('data/user_to_album_art.csv')
+
+    # Convert to SFrame
+    sf = convert_to_sframe_format(df,
+                                  list_like_columns = ['albums', 'album_art_code'],
+                                  resulting_column_names = ['album_id', 'album_art_id'],
+                                  delimiters = ['\', u\'', ', '],
+                                  count_column = 'n_albums',
+                                  name = 'user_to_album_art_sf',
+                                  dump = True,
+                                  verbose = True)
+
 
 # DO THIS ON EC2
 def build_from_album_list():
@@ -293,4 +306,5 @@ def split_into_artist_album(sf):
     return sf
 
 if __name__ == "__main__":
-    recommendations = graphlab_recommender_test(should_filter = False)
+    # recommendations = graphlab_recommender_test(should_filter = False)
+    build_from_album_art_list()
