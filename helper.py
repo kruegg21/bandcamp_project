@@ -139,9 +139,10 @@ def update_dataframe(name = None, feature_building_method = None,
     return full_data_df
 
 @timeit
-def convert_to_sframe_format(df, list_like_column = None, count_column = None,
+def convert_to_sframe_format(df, list_like_columns = None,
+                             resulting_column_names = None, count_column = None,
                              name = None, dump = True, verbose = True,
-                             delimiter = None):
+                             delimiters = None):
     """
     Inputs:
         df -- DataFrame with '_id' column, list-like column, and count column
@@ -153,25 +154,33 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
         graphlab SFrame
     """
     _id_list = list()
-    album_list = list()
+    list_columns = {column: list() for column in list_like_columns}
     rating_list = list()
 
     i = 0
     count = len(df)
     for index, row in df.iterrows():
-        albums_string = row[list_like_column]
+        for column, delimiter in zip(list_like_columns, delimiters):
+            list_string = row[column]
 
-        # Strip list symbols
-        if albums_string[:3] == '[u\'':
-            albums_string = albums_string[3:]
-        if albums_string[-2:] == '\']':
-            albums_string = albums_string[:-2]
+            # Strip list symbols
+            if list_string[:3] == '[u\'':
+                list_string = list_string[3:]
+            if list_string[-2:] == '\']':
+                list_string = list_string[:-2]
+            if list_string[0] == '[':
+                list_string = list_string[1:]
+            if list_string[-1] == ']':
+                list_string = list_string[:-1]
 
-        albums = albums_string.split(delimiter)
-        n_albums = len(albums)
-        _id_list += [row._id] * n_albums
-        rating_list += [1] * n_albums
-        album_list += albums
+            # Split list string into list
+            list_ = list_string.split(delimiter)
+            n_albums = len(list_)
+
+            #
+            _id_list += [row._id] * n_albums
+            rating_list += [1] * n_albums
+            list_columns[column] += list_
 
         if verbose:
             # Progress counter
@@ -188,9 +197,11 @@ def convert_to_sframe_format(df, list_like_column = None, count_column = None,
     print "Rows have correct length: {}".format(len(album_list) == len(_id_list))
 
     # Create SFrame
-    sf = graphlab.SFrame({'_id': _id_list,
-                          'album_id': album_list,
-                          'rating': rating_list})
+    sframe_dict = {'_id': _id_list,
+                  'rating': rating_list}
+    for zip(list_like_columns, resulting_column_names):
+        sframe_dict = {resulting_column_names: list_columns[list_like_columns]}
+    sf = graphlab.SFrame(sframe_dict)
 
     # Albums counts
     album_counts = sf.groupby(key_columns='album_id',

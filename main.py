@@ -137,12 +137,13 @@ def build_from_album_list():
 
     # Convert to SFrame
     sf = convert_to_sframe_format(df,
-                                  list_like_column = 'albums',
+                                  list_like_columns = ['albums'],
+                                  resulting_column_names = ['album_id'],
+                                  delimiters = ['\', u\''],
                                   count_column = 'n_albums',
                                   name = 'user_to_album_sf',
                                   dump = False,
-                                  verbose = False,
-                                  delimiter = '\', u\'')
+                                  verbose = False)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
