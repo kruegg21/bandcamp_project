@@ -235,7 +235,7 @@ def graphlab_recommender_test():
                   'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
                   'https://openmikeeagle360.bandcamp.com/album/time-materials',
                   'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
-                  
+
     rating_list = [1] * len(album_list)
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
@@ -255,7 +255,7 @@ def graphlab_recommender_test():
     # Make recommendations
     recommendations_sf = model.recommend(users = _id_list,
                                          k = 200,
-                                         new_observation_data = prediction_sf)
+                                         new_user_data = prediction_sf)
 
     # Split into logical columns
     recommendations_sf = split_into_artist_album(recommendations_sf)
