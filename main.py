@@ -235,6 +235,7 @@ def graphlab_recommender_test():
 
     # Make recommendations
     recommendations_sf = model.recommend(users = _id_list,
+                                         k = 200,
                                          new_observation_data = prediction_sf)
 
     # Dump recommendations to CSV

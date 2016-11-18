@@ -311,7 +311,7 @@ def main_scraper():
 
 def album_metadata_scraper():
     df = pd.read_csv('data/user_to_album_sf.csv')
-    album_list = df['album_id'].unique().values
+    album_list = df['album_id'].unique()
 
     n = 8
     album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
@@ -328,7 +328,7 @@ def album_scraper_worker(album_urls):
 
     for album_url in album_urls:
         if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
-            _ = get_album_data(album_url, driver, db)
+            _ = get_album_data(reverse_mongo_key_formatting(album_url), driver, db)
 
 
 if __name__ == "__main__":
