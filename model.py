@@ -65,7 +65,6 @@ def graphlab_grid_search(sf, specs = None):
                                       graphlab.ranking_factorization_recommender.create,
                                       specs.param_grid,
                                       evaluator = custom_evaluation)
-    print job.get_metrics()
     print job.get_results()
 
     # Put optimal parameters in specifications
