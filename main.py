@@ -175,7 +175,7 @@ def build_gephi_data():
     convert_to_gephi_format(sf,
                             node_column = 'album_id',
                             link_column = '_id',
-                            edge_subset_proportion = 0.01,
+                            edge_subset_proportion = 0.20,
                             edge_weight_cutoff = 10,
                             dump_full_graph = False)
 
@@ -200,7 +200,20 @@ def graphlab_recommender_test():
     sf = convert_to_truncated_string_ids(sf)
 
     # Make model
-    graphlab_factorization_recommender(sf)
+    model = graphlab_factorization_recommender(sf)
+
+    # Make predictions
+    album_list = ['https://girlslivingoutsidesocietysshit.bandcamp.com/album/demo', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
+    rating_list = [1] * len(album_list)
+    id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
+
+    # Create SFrame
+    prediction_sf = graphlab.SFrame({'_id': _id_list,
+                          'album_id': album_list,
+                          'rating': rating_list})
+    prediction_sf = convert_to_truncated_string_ids(prediction_sf)
+
+    print model.recommend(prediction_sf)
 
 if __name__ == "__main__":
     graphlab_recommender_test()
