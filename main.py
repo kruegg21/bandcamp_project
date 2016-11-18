@@ -230,8 +230,12 @@ def graphlab_recommender_test():
                           'rating': rating_list})
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
 
-    return model.recommend(users = _id_list,
-                          new_observation_data = prediction_sf)
+    # Make recommendations
+    recommendations_sf = model.recommend(users = _id_list,
+                                         new_observation_data = prediction_sf)
+
+    # Dump recommendations to CSV
+    dump_sf(recommendations_sf, 'data/recommendations.csv')
 
 if __name__ == "__main__":
     recommendations = graphlab_recommender_test()
