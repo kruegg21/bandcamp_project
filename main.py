@@ -91,7 +91,6 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
                                                                       binary_target = True,
-                                                                      nmf = True,
                                                                       ranking_regularization = 0.1)
 
         # Data print out
@@ -296,4 +295,4 @@ def split_into_artist_album(sf):
     return sf
 
 if __name__ == "__main__":
-    recommendations = graphlab_recommender_test(should_filter = True)
+    recommendations = graphlab_recommender_test(should_filter = False)
