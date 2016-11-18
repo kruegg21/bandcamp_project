@@ -11,7 +11,6 @@ import numpy as np
 import pickle
 import pymongo
 import time
-from bandcamp_scraper import mongo_key_formatting
 
 # Contains column names for DataFrames we are working with
 column_names_dict = {
