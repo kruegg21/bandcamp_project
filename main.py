@@ -264,7 +264,7 @@ def graphlab_recommender_test(should_filter = True):
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
 
     # Make recommendations
-    recommendations_sf = model.recommend(users = ['https://bandcamp.com/kruegg1', 'https://bandcamp.com/kruegg2'],
+    recommendations_sf = model.recommend(users = ['https://bandcamp.com/kruegg'],
                                          k = 20,
                                          new_user_data = prediction_sf)
 
