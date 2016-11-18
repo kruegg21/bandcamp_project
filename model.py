@@ -8,15 +8,15 @@ class model_specifications(object):
     """
     def __init__(self, **kwargs):
         self.user_count_max_cutoff = kwargs['user_count_max_cutoff']
-        self.user_count_min_cutoff = user_count_min_cutoff
-        self.album_count_max_cutoff = album_count_max_cutoff
-        self.album_count_min_cutoff = album_count_min_cutoff
-        self.n_albums = n_albums
-        self.n_users = n_users
-        self.model = model
-        self.param_grid = param_grid
-        self.params = params
-        self.folds = folds
+        self.user_count_min_cutoff = kwargs['user_count_min_cutoff']
+        self.album_count_max_cutoff = kwargs['album_count_max_cutoff']
+        self.album_count_min_cutoff = kwargs['album_count_min_cutoff']
+        self.n_albums = kwargs['n_albums']
+        self.n_users = kwargs['n_users']
+        self.model = kwargs['model']
+        self.param_grid = kwargs['param_grid']
+        self.params = kwargs['params']
+        self.folds = kwargs['folds']
 
 def build_model(should_grid_search = True, should_filter = True,
                 specs = None):
