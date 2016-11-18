@@ -189,17 +189,20 @@ def convert_to_sframe_format(df, list_like_columns = None,
             i += 1
 
     # Status checks
+    n_filled = len(rating_list)
+    n_users = len(set(_id_list))
+    n_albums = len(list_columns[list_like_columns[0]])
+    n_users = len(_id_list)
     for column, resulting_name in zip(list_like_columns, resulting_column_names):
         print "Number of unique {}: {}".format(resulting_name,
                                                len(set(list_columns[column])))
-    print "Number of unique users: {}".format(len(set(_id_list)))
-    print "Number of filled cells: {}".format(len(rating_list))
-    print "Matrix sparcity: {}".format(float(len(rating_list)) / \
-           (len(set(list_columns[list_like_columns[0]])) * len(set(_id_list))))
-    print "Rows have correct length: {}".format(len(album_list) == len(_id_list))
+    print "Number of unique users: {}".format(n_users)
+    print "Number of filled cells: {}".format(n_filled)
+    print "Matrix sparcity: {}".format(float(n_filled) / (n_albums * n_users))
+    print "Rows have correct length: {}".format(n_albums == n_users)
     if len(list_like_columns) > 1:
-        print "List like column have same length: {}".format(len(list_columns[list_like_columns[0]]) ==
-                                                             len(list_columns[list_like_columns[1]]))
+        print "List like column have same length: {}".format(n_albums) == \
+                                    len(list_columns[list_like_columns[1]]))
 
     # Create SFrame
     sframe_dict = {'_id': _id_list,
