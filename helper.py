@@ -32,6 +32,12 @@ def timeit(method):
         return result
     return timed
 
+def merge_two_dicts(x, y):
+    '''Given two dicts, merge them into a new dict as a shallow copy.'''
+    z = x.copy()
+    z.update(y)
+    return z
+
 @timeit
 def dump_sf(sf, name):
     sf.save(name, format = 'csv')
