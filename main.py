@@ -220,8 +220,8 @@ def graphlab_recommender_test():
 
     # Make model
     model = graphlab_factorization_recommender(sf,
-                                               dump = False,
-                                               train = False)
+                                               dump = True,
+                                               train = True)
 
     # Make predictions
     album_list = ['https://girlslivingoutsidesocietysshit.bandcamp.com/album/demo', 'https://openmikeeagle360.bandcamp.com/album/dark-comedy', 'https://toucheamore.bandcamp.com/album/is-survived-by']
