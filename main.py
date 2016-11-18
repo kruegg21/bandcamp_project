@@ -84,6 +84,7 @@ def graphlab_factorization_recommender(sf):
 
 
 # Pipelines
+# DO THIS ON LOCAL
 def build_user_to_album_list_from_database():
     # Get databasea to read from
     db = get_mongo_database('bandcamp')
@@ -94,6 +95,7 @@ def build_user_to_album_list_from_database():
                           dump = False)
 
 
+# DO THIS ON LOCAL
 def build_user_to_album_art_from_database():
     # Get databasea to read from
     db = get_mongo_database('bandcamp')
@@ -105,6 +107,7 @@ def build_user_to_album_art_from_database():
                           test = False)
 
 
+# DO THIS ON EC2
 def build_from_album_list():
     df = pd.read_csv('data/user_to_album_list.csv')
 
@@ -173,11 +176,28 @@ def build_gephi_data():
                             edge_subset_proportion = 0.01,
                             dump_full_graph = False)
 
+# DO THIS ON EC2
 def graphlab_recommender_test():
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
+
+    # Filter to make data more dense
+    sf = low_pass_filter_on_counts(sf,
+                                   column = 'album_id',
+                                   cutoff = 30,
+                                   name = 'user_to_album_sf',
+                                   dump = True)
+
+    sf = low_pass_filter_on_counts(sf,
+                                   column = '_id',
+                                   cutoff = 100,
+                                   name = 'user_to_album_sf_album',
+                                   dump = True)
+
+    # Convert ids from URLs to more readable format
+    sf = convert_to_truncated_string_ids(sf)
 
     # Make model
     graphlab_factorization_recommender(sf)
 
 if __name__ == "__main__":
-    build_gephi_data()
+    graphlab_recommender_test()

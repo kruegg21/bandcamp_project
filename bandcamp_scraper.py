@@ -8,6 +8,7 @@ import random
 import json
 import demjson
 import re
+import pandas as pd
 import simplejson
 from bs4 import BeautifulSoup
 from HTMLParser import HTMLParser
@@ -133,15 +134,16 @@ def get_user_collection(url, driver, db):
             pass
     return album_list
 
-def get_album_data(url, driver, db):
+def get_album_data(url, driver, db, click_through = True):
     # Search URL
     driver.get(url)
 
-    # Click to bottom of writing button
-    driver = click_through_more_button(driver, 'more-writing')
+    if click_through:
+        # Click to bottom of writing button
+        driver = click_through_more_button(driver, 'more-writing')
 
-    # Click to bottom of 'more' button
-    driver = click_through_more_button(driver, 'more-thumbs')
+        # Click to bottom of 'more' button
+        driver = click_through_more_button(driver, 'more-thumbs')
 
     # Get raw HTML
     html = driver.page_source
@@ -150,11 +152,11 @@ def get_album_data(url, driver, db):
     soup = BeautifulSoup(html, 'lxml')
 
 
-
-    # Get list of user URLs
-    user_urls = list()
-    for user in soup.find_all('a', {'class': 'pic'}):
-        user_urls.append(user['href'][:-15])
+    if click_through:
+        # Get list of user URLs
+        user_urls = list()
+        for user in soup.find_all('a', {'class': 'pic'}):
+            user_urls.append(user['href'][:-15])
 
     # Get link to album artwork
     album_artwork_tag = soup.find('a', {'class': 'popupImage'})
@@ -287,8 +289,7 @@ def crawler(roots):
         except:
             driver.close()
 
-
-if __name__ == "__main__":
+def main_scraper():
     params = [('https://preoccupations.bandcamp.com/',
                'https://bandcamp.com/charlesquinn'),
               ('https://inquisitionbm.bandcamp.com/album/obscure-verses-for-the-multiverse',
@@ -307,3 +308,28 @@ if __name__ == "__main__":
                'https://bandcamp.com/danielashton')]
     p = Pool(8)
     p.map(crawler, params)
+
+def album_metadata_scraper():
+    df = pd.read_csv('data/user_to_album_sf.csv')
+    album_list = df['album_id'].unique().values
+
+    n = 8
+    album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
+
+    p = Pool(8)
+    p.map(album_scraper_worker, album_url_chunks)
+
+def album_scraper_worker(album_urls):
+    # Web driver
+    driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
+
+    # Get Mongo database to dump things into
+    db = get_mongo_database('bandcamp')
+
+    for album_url in album_urls:
+        if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
+            _ = get_album_data(album_url, driver, db)
+
+
+if __name__ == "__main__":
+    album_metadata_scraper()
