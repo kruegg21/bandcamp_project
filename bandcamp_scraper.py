@@ -240,7 +240,7 @@ def translate_url_to_tag(url):
     return url.split('/')[-1]
 
 def crawler(roots):
-    for i in xrange(9999):
+    while True:
         try:
             # Unpack tuple
             root_album = roots[0]
@@ -307,22 +307,26 @@ def album_metadata_scraper():
     df = pd.read_csv('data/user_to_album_sf.csv')
     album_list = df['album_id'].unique()
 
-    n = 8
+    n = len(album_list) / 8
     album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
 
     p = Pool(8)
     p.map(album_scraper_worker, album_url_chunks)
 
 def album_scraper_worker(album_urls):
-    # Web driver
-    driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
+    while True:
+        try:
+            # Web driver
+            driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
 
-    # Get Mongo database to dump things into
-    db = get_mongo_database('bandcamp')
+            # Get Mongo database to dump things into
+            db = get_mongo_database('bandcamp')
 
-    for album_url in album_urls:
-        if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
-            _ = get_album_data(reverse_mongo_key_formatting(album_url), driver, db)
+            for album_url in album_urls:
+                if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
+                    _ = get_album_data(reverse_mongo_key_formatting(album_url), driver, db)
+        except:
+            driver.close()
 
 
 if __name__ == "__main__":
