@@ -7,6 +7,7 @@ import json
 import numpy as np
 import os
 import pandas as pd
+import numpy as np
 import pickle
 import pymongo
 import time
@@ -48,7 +49,8 @@ def show_sframe_sparcity(sf):
 
 
 @timeit
-def low_pass_filter_on_counts(sf, column = None, cutoff = None, name = None, dump = True):
+def low_pass_filter_on_counts(sf, column = None, min_cutoff = 0,
+                              max_cutoff = np.inf, name = None, dump = True):
     # Show initial sparcity
     print "\nInitial SFrame sparcity"
     show_sframe_sparcity(sf)
@@ -58,7 +60,8 @@ def low_pass_filter_on_counts(sf, column = None, cutoff = None, name = None, dum
                            operations = {'count': agg.COUNT()})
 
     # Make SArray of albums with high rating counts
-    high_album_counts = counts_sf[counts_sf['count'] > cutoff][column]
+    high_album_counts = counts_sf[(counts_sf['count'] > min_cutoff) & \
+                        (counts_sf['count'] < max_cutoff)][column]
 
     # Filter
     filtered_sf = sf.filter_by(high_album_counts, column, exclude = False)
