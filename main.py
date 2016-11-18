@@ -205,19 +205,22 @@ def build_gephi_data():
 def graphlab_recommender_test():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
 
-    # Filter to make data more dense
-    sf = low_pass_filter_on_counts(sf,
-                                   column = 'album_id',
-                                   min_cutoff = 40,
-                                   max_cutoff = 1500,
-                                   name = 'user_to_album_sf',
-                                   dump = True)
+    if should_filter:
+        # Filter to make data more dense
+        sf = low_pass_filter_on_counts(sf,
+                                       column = 'album_id',
+                                       min_cutoff = 40,
+                                       max_cutoff = 1500,
+                                       name = 'user_to_album_sf',
+                                       dump = True)
 
-    sf = low_pass_filter_on_counts(sf,
-                                   column = '_id',
-                                   min_cutoff = 100,
-                                   name = 'user_to_album_sf_album',
-                                   dump = True)
+        sf = low_pass_filter_on_counts(sf,
+                                       column = '_id',
+                                       min_cutoff = 100,
+                                       name = 'user_to_album_sf_album',
+                                       dump = True)
+    else:
+        sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
 
     # Convert ids from URLs to more readable format
     sf = convert_to_truncated_string_ids(sf)
