@@ -228,7 +228,14 @@ def graphlab_recommender_test():
                                                train = False)
 
     # Make predictions
-    album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy']
+    album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
+                  'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
+                  'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
+                  'https://miloraps.bandcamp.com/album/plain-speaking',
+                  'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
+                  'https://openmikeeagle360.bandcamp.com/album/time-materials',
+                  'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
+                  
     rating_list = [1] * len(album_list)
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
@@ -245,24 +252,24 @@ def graphlab_recommender_test():
     print sf[sf['album_id'] == prediction_sf['album_id'][0]]
 
 
-    # # Make recommendations
-    # recommendations_sf = model.recommend(users = _id_list,
-    #                                      k = 200,
-    #                                      new_observation_data = prediction_sf)
-    #
-    # # Split into logical columns
-    # recommendations_sf = split_into_artist_album(recommendations_sf)
-    #
-    # print recommendations_sf
-    #
-    # # Sample
-    # recommendations_sf = graphlab.SFrame(recommendations_sf.to_dataframe().
-    #                         drop_duplicates(subset = ['artist']))
-    #
-    # print recommendations_sf
-    #
-    # # Dump recommendations to CSV
-    # dump_sf(recommendations_sf, 'data/recommendations.csv')
+    # Make recommendations
+    recommendations_sf = model.recommend(users = _id_list,
+                                         k = 200,
+                                         new_observation_data = prediction_sf)
+
+    # Split into logical columns
+    recommendations_sf = split_into_artist_album(recommendations_sf)
+
+    print recommendations_sf
+
+    # Sample
+    recommendations_sf = graphlab.SFrame(recommendations_sf.to_dataframe().
+                            drop_duplicates(subset = ['artist']))
+
+    print recommendations_sf
+
+    # Dump recommendations to CSV
+    dump_sf(recommendations_sf, 'data/recommendations.csv')
 
 def split_into_artist_album(sf):
     """
