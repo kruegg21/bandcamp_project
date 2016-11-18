@@ -17,10 +17,16 @@ Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
 """
 
 class model_specifications(object):
+    """
+    Object to contain information about model building to make things easy
+    to change and log.
+    """
     def __init__(self):
         self.user_count_cutoff = None
         self.album_count_cutoff = None
-        self
+        self.n_albums = None
+        self.n_users = None
+        self.model = None
 
 
 @timeit
@@ -224,8 +230,8 @@ def graphlab_recommender_test():
                           'rating': rating_list})
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
 
-    print model.recommend(users = _id_list,
+    return model.recommend(users = _id_list,
                           new_observation_data = prediction_sf)
 
 if __name__ == "__main__":
-    graphlab_recommender_test()
+    recommendations = graphlab_recommender_test()
