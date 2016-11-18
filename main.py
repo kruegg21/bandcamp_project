@@ -204,7 +204,7 @@ def graphlab_recommender_test():
     # Filter to make data more dense
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   min_cutoff = 100,
+                                   cutoff = 100,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
