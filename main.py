@@ -242,26 +242,27 @@ def graphlab_recommender_test():
                           'rating': rating_list})
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
 
-    print prediction_sf
+    print sf[sf['album_id'] == prediction_sf['album_id'][0]]
 
-    # Make recommendations
-    recommendations_sf = model.recommend(users = _id_list,
-                                         k = 200,
-                                         new_observation_data = prediction_sf)
 
-    # Split into logical columns
-    recommendations_sf = split_into_artist_album(recommendations_sf)
-
-    print recommendations_sf
-
-    # Sample
-    recommendations_sf = graphlab.SFrame(recommendations_sf.to_dataframe().
-                            drop_duplicates(subset = ['artist']))
-
-    print recommendations_sf
-
-    # Dump recommendations to CSV
-    dump_sf(recommendations_sf, 'data/recommendations.csv')
+    # # Make recommendations
+    # recommendations_sf = model.recommend(users = _id_list,
+    #                                      k = 200,
+    #                                      new_observation_data = prediction_sf)
+    #
+    # # Split into logical columns
+    # recommendations_sf = split_into_artist_album(recommendations_sf)
+    #
+    # print recommendations_sf
+    #
+    # # Sample
+    # recommendations_sf = graphlab.SFrame(recommendations_sf.to_dataframe().
+    #                         drop_duplicates(subset = ['artist']))
+    #
+    # print recommendations_sf
+    #
+    # # Dump recommendations to CSV
+    # dump_sf(recommendations_sf, 'data/recommendations.csv')
 
 def split_into_artist_album(sf):
     """
