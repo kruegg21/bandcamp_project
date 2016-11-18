@@ -228,8 +228,8 @@ def graphlab_recommender_test(should_filter = True):
 
     # Make model
     model = graphlab_factorization_recommender(sf,
-                                               dump = False,
-                                               train = False)
+                                               dump = True,
+                                               train = True)
 
     # Make predictions
     album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
