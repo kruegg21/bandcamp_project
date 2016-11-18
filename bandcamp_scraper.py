@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from HTMLParser import HTMLParser
 from selenium import webdriver
 from multiprocessing import Pool
+from helper import mongo_key_formatting
 
 def random_sleep():
     sleep_time = random.uniform(10,15)
@@ -231,13 +232,6 @@ def check_for_key(collection, key):
         Bool indicating if key exists in collection
     """
     return collection.find({key : {'$exists': True}}).limit(1)
-
-def mongo_key_formatting(s):
-    """
-    MongoDB requires keys to not have periods in them. This function replace
-    '.' with '_' to make MongoDB happy
-    """
-    return s.replace('.', '_')
 
 def reverse_mongo_key_formatting(s):
     return s.replace('_', '.')

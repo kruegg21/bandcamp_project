@@ -236,7 +236,12 @@ def convert_sframe_to_integer_ids(sf, name = None, columns = None, dump = True):
         dump_sf(encoded_sf, 'data/{}_integerified.csv'.format(name))
     return encoded_sf
 
-
+def mongo_key_formatting(s):
+    """
+    MongoDB requires keys to not have periods in them. This function replace
+    '.' with '_' to make MongoDB happy
+    """
+    return s.replace('.', '_')
 
 
 # Feature building methods

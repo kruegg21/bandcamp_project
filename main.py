@@ -229,6 +229,10 @@ def graphlab_recommender_test():
     rating_list = [1] * len(album_list)
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
+    # Get keys in correct format
+    album_list = [mongo_key_formatting(x) for x in album_list]
+    _id_list = [mongo_key_formatting(x) for x in album_list]
+
     # Create SFrame
     prediction_sf = graphlab.SFrame({'_id': _id_list,
                           'album_id': album_list,
