@@ -11,7 +11,7 @@ class model_specifications(object):
         self.user_count_min_cutoff = kwargs['user_count_min_cutoff']
         self.album_count_max_cutoff = kwargs['album_count_max_cutoff']
         self.album_count_min_cutoff = kwargs['album_count_min_cutoff']
-        self.n_albums = kwargs['n_albums']
+        self.n_albums = kwargs.get('n_albums')
         self.n_users = kwargs['n_users']
         self.model = kwargs['model']
         self.param_grid = kwargs['param_grid']
