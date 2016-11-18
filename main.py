@@ -88,7 +88,8 @@ def graphlab_factorization_recommender(sf, dump = True, train = True):
         # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
         factorization_recommender = recommender.create(train_set,
                                                        user_id = '_id',
-                                                       item_id = 'album_id')
+                                                       item_id = 'album_id',
+                                                       target = 'rating')
 
         # Data print out
         print factorization_recommender.evaluate_precision_recall(test_set, cutoffs = [100,200,1000])
