@@ -162,8 +162,8 @@ def convert_to_truncated_string_ids(sf):
     Converts the columns '_id' and 'album_id' to shortened versions
     """
 
-    sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/', '')) \
-                                           .replace('https://bandcamp_com/', '')
+    sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/', '') \
+                                           .replace('https://bandcamp_com/', ''))
     sf['album_id'] = sf.apply(lambda x: x['album_id'] \
                        .replace('com/album/', '') \
                        .replace('http://', '') \
