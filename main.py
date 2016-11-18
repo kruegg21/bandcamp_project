@@ -250,7 +250,7 @@ def graphlab_recommender_test(should_filter = True):
 
     album_list = album_list1 + album_list2
     rating_list = [1] * len(album_list1) + [1] * len(album_list2)
-    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list1) +
+    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list1) + \
                ['https://bandcamp.com/kruegg2'] * len(album_list2)
 
     # Get keys in correct format
