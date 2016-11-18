@@ -202,7 +202,7 @@ def build_gephi_data():
                             dump_full_graph = False)
 
 # DO THIS ON EC2
-def graphlab_recommender_test():
+def graphlab_recommender_test(should_filter = True):
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
 
     if should_filter:
@@ -284,4 +284,4 @@ def split_into_artist_album(sf):
     return sf
 
 if __name__ == "__main__":
-    recommendations = graphlab_recommender_test()
+    recommendations = graphlab_recommender_test(should_filter = False)
