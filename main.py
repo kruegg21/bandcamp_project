@@ -234,22 +234,24 @@ def graphlab_recommender_test(should_filter = True):
                                                train = True)
 
     # Make predictions
-    # album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
-    #               'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
-    #               'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
-    #               'https://miloraps.bandcamp.com/album/plain-speaking',
-    #               'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
-    #               'https://openmikeeagle360.bandcamp.com/album/time-materials',
-    #               'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
+    album_list1 = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
+                  'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
+                  'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
+                  'https://miloraps.bandcamp.com/album/plain-speaking',
+                  'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
+                  'https://openmikeeagle360.bandcamp.com/album/time-materials',
+                  'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
 
-    album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
+    album_list2 = ['https://toucheamore.bandcamp.com/album/is-survived-by',
                   'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
                   'https://deafheavens.bandcamp.com/album/sunbather',
                   'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
                   'https://deafheavens.bandcamp.com/album/new-bermuda']
 
-    rating_list = [1] * len(album_list)
-    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
+    album_list = album_list1 + album_list2
+    rating_list = [1] * len(album_list1) + [1] * len(album_list2)
+    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list1) +
+               ['https://bandcamp.com/kruegg2'] * len(album_list2)
 
     # Get keys in correct format
     album_list = [mongo_key_formatting(x) for x in album_list]
@@ -293,4 +295,4 @@ def split_into_artist_album(sf):
     return sf
 
 if __name__ == "__main__":
-    recommendations = graphlab_recommender_test(should_filter = True)
+    recommendations = graphlab_recommender_test(should_filter = False)
