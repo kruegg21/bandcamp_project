@@ -91,7 +91,7 @@ def build_user_to_album_art_from_database():
                           test = False)
 
 # DO THIS ON EC2
-def build_from_album_art_list():
+def build_from_album_art_list(verbose = True):
     """
     Input:
         None
