@@ -199,8 +199,8 @@ def convert_to_sframe_format(df, list_like_columns = None,
     # Create SFrame
     sframe_dict = {'_id': _id_list,
                   'rating': rating_list}
-    for zip(list_like_columns, resulting_column_names):
-        sframe_dict = {resulting_column_names: list_columns[list_like_columns]}
+    for column, resulting_name in zip(list_like_columns, resulting_column_names):
+        sframe_dict = {resulting_name: list_columns[column]}
     sf = graphlab.SFrame(sframe_dict)
 
     # Albums counts
