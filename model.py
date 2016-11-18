@@ -7,7 +7,7 @@ class model_specifications(object):
     to change and log.
     """
     def __init__(self, **kwargs):
-        self.user_count_max_cutoff = user_count_max_cutoff
+        self.user_count_max_cutoff = kwargs['user_count_max_cutoff']
         self.user_count_min_cutoff = user_count_min_cutoff
         self.album_count_max_cutoff = album_count_max_cutoff
         self.album_count_min_cutoff = album_count_min_cutoff
