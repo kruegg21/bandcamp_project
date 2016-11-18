@@ -210,8 +210,8 @@ def graphlab_recommender_test(should_filter = True):
         # Filter to make data more dense
         sf = low_pass_filter_on_counts(sf,
                                        column = 'album_id',
-                                       min_cutoff = 40,
-                                       max_cutoff = 1500,
+                                       min_cutoff = 30,
+                                       max_cutoff = 1300,
                                        name = 'user_to_album_sf',
                                        dump = True)
 
@@ -285,4 +285,4 @@ def split_into_artist_album(sf):
     return sf
 
 if __name__ == "__main__":
-    recommendations = graphlab_recommender_test(should_filter = False)
+    recommendations = graphlab_recommender_test(should_filter = True)
