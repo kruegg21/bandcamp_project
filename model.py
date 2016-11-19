@@ -116,8 +116,8 @@ if __name__ == "__main__":
                                                     ('item_id', 'album_id'),
                                                     ('binary_target', True),
                                                     ('max_iterations', 200),
-                                                    ('regularization', [0.1, 0.2]),
-                                                    ('linear_regularization', [0.1, 0.2])
+                                                    ('regularization', [0.05, 0.1]),
+                                                    ('linear_regularization', [0.2, 0.3])
                                                    ]),
                                  user_count_min_cutoff = 100,
                                  user_count_max_cutoff = np.inf,
