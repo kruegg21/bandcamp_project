@@ -9,4 +9,5 @@ pip install demjson
 pip install seaborn
 pip install flask
 pip install gunicorn
+pip install flask-bootstrap
 sudo apt-get install mongodb-server
