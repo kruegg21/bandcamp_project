@@ -9,5 +9,5 @@ def index():
 
 @app.route('/dashboard')
 def dashboard():
-    rendered_template = render_template('dashboard_template.html')
+    rendered_template = render_template('index.html')
     return rendered_template
