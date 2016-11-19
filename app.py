@@ -8,6 +8,6 @@ def index():
     return "hello"
 
 @app.route('/dashboard')
-def html_greeting_via_template(name):
+def dashboard():
     rendered_template = render_template('dashboard_template.html')
     return rendered_template
