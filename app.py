@@ -9,5 +9,5 @@ def index():
 
 @app.route('/dashboard')
 def html_greeting_via_template(name):
-    rendered_template = render_template('templates/dashboard_template.html')
+    rendered_template = render_template('dashboard_template.html')
     return rendered_template
