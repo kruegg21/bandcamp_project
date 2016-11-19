@@ -72,10 +72,10 @@ def graphlab_grid_search(sf, specs = None):
 
 def custom_evaluation(model, train, test):
     recommendations = model.evaluate_precision_recall(test,
-                                                      cutoffs = [100,200,1000],
+                                                      cutoffs = [10,200,1000],
                                                       exclude_known = False)
-    score = recommendations['precision_recall_overall']['recall'][0]
-    return {'recall_100': score}
+    score = recommendations['precision_recall_overall']['precision'][0]
+    return {'precision_10': score}
 
 def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
     if train:
