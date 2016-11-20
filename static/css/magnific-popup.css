@@ -2,9 +2,9 @@
 .mfp-bg {
   top: 0;
   left: 0;
-  width: 100%;
+  width: 70%;
   height: 100%;
-  z-index: 104;
+  z-index: 10;
   overflow: hidden;
   position: fixed;
   background: #0b0b0b;
@@ -297,7 +297,7 @@ img.mfp-img {
 .mfp-gallery .mfp-image-holder .mfp-figure {
   cursor: pointer; }
 
-@media screen and (max-width: 288px) and (orientation: landscape), screen and (max-height: 300px) {
+@media screen and (max-width: 800px) and (orientation: landscape), screen and (max-height: 300px) {
   /**
        * Remove all paddings around the image on small screen
        */
