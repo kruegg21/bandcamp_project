@@ -61,13 +61,14 @@ def build_model(should_grid_search = True, should_filter = True,
 
 @timeit
 def sparse_matrix_tfidf(sf):
-    for column in sf.column_names():
-        N = len(sf)
-        n_t = sf[column].sum()
-        sf[column] = sf[column] * np.log(float(N)/n_t)
-    return sf
+    # Transform to DataFrame
+    df = sf.to_dataframe()
 
+    # Get TF-IDF scores of ratings
+    df['tfidf_rating'] = df.apply(lambda column: column * \
+                                    np.log(float(len(df))/np.sum(column)))
 
+    return graphlab.SFrame(df)
 
 def graphlab_grid_search(sf, specs = None):
     # Create K-Folds splits
@@ -105,11 +106,13 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
         # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
         if specs.should_tfidf:
             binary_target = False
+            target = 'tfidf_rating'
         else:
             binary_target = True
+            target = 'rating'
 
         rec_model = graphlab.ranking_factorization_recommender.create(train_set,
-                                                                      target='rating',
+                                                                      target = target,
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
                                                                       binary_target = binary_target,
