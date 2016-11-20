@@ -682,7 +682,7 @@ button[disabled], html input[disabled] {
 .white-popup {
   position: relative;
   background: #FFF;
-  width: 288px;
+  width: auto;
   max-width: 1150px;
 }
 
@@ -710,7 +710,7 @@ button[disabled], html input[disabled] {
     opacity: 0.8;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 288px) {
 	.a a .img-hover {
 	top: 0px;
 	bottom: 0px;
