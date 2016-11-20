@@ -49,7 +49,7 @@ pre {
 	color: #eb7f36;
 }
 .checkbox-inline, .radio-inline {
-	
+
 	font-size: 15px;
 	margin: 25px 0px 0px 0px;
 }
@@ -406,19 +406,19 @@ img.img-responsive {
 	color: #fff;
 	padding: 13px 40px;
 	border-radius: 20px;
-	
-	
+
+
 }
 
 button[disabled], html input[disabled] {
 	cursor: not-allowed;
 }
 .btn-disabled-white {
-	
+
 	color: #c1c1c1;
 	padding: 13px 40px;
 	border-radius: 20px;
-	
+
 }
 .btn-action-small {
 	background-color: #333;
@@ -682,7 +682,7 @@ button[disabled], html input[disabled] {
 .white-popup {
   position: relative;
   background: #FFF;
-  width: auto;
+  width: 288px;
   max-width: 1150px;
 }
 
