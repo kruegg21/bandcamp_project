@@ -57,16 +57,25 @@ def build_model(should_grid_search = True, should_filter = True,
         graphlab_grid_search(sf, specs)
 
     # Train
-    graphlab_factorization_recommender(sf, specs, dump = True)
+    model = graphlab_factorization_recommender(sf, specs, dump = True)
+
+    if should_make_test_predictions:
+        make_test_predictions(model)
 
 @timeit
 def sparse_matrix_tfidf(sf):
+    print "Starting TF-IFD"
+
     # Transform to DataFrame
     df = sf.to_dataframe()
+
+    print "Transformed to DataFrame"
 
     # Get TF-IDF scores of ratings
     df['tfidf_rating'] = df.apply(lambda column: column * \
                                     np.log(float(len(df))/np.sum(column)))
+
+    print "Created TFIDF ratings"
 
     return graphlab.SFrame(df)
 
@@ -90,6 +99,55 @@ def custom_evaluation(model, train, test):
                                                       exclude_known = False)
     score = recommendations['precision_recall_overall']['precision'][0]
     return {'precision_10': score}
+
+def make_test_predictions(model):
+    # Make predictions
+    album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
+                  'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
+                  'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
+                  'https://miloraps.bandcamp.com/album/plain-speaking',
+                  'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
+                  'https://openmikeeagle360.bandcamp.com/album/time-materials',
+                  'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
+
+    # album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
+    #               'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
+    #               'https://deafheavens.bandcamp.com/album/sunbather',
+    #               'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
+    #               'https://deafheavens.bandcamp.com/album/new-bermuda']
+
+    album_list = album_list
+    rating_list = [1] * len(album_list)
+    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
+
+    # Get keys in correct format
+    album_list = [mongo_key_formatting(x) for x in album_list]
+    _id_list = [mongo_key_formatting(x) for x in _id_list]
+
+    # Create SFrame
+    prediction_sf = graphlab.SFrame({'_id': _id_list,
+                                     'album_id': album_list,
+                                     'rating': rating_list})
+    prediction_sf = convert_to_truncated_string_ids(prediction_sf)
+
+    # Make recommendations
+    recommendations_sf = model.recommend(users = ['https://bandcamp.com/kruegg'],
+                                         k = 20,
+                                         new_user_data = prediction_sf)
+
+    # Split into logical columns
+    recommendations_sf = split_into_artist_album(recommendations_sf)
+
+    print recommendations_sf
+
+    # Sample
+    recommendations_sf = graphlab.SFrame(recommendations_sf.to_dataframe().
+                            drop_duplicates(subset = ['artist']))
+
+    print recommendations_sf
+
+    # Dump recommendations to CSV
+    dump_sf(recommendations_sf, 'data/recommendations.csv')
 
 def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
     if train:
@@ -150,4 +208,5 @@ if __name__ == "__main__":
 
     build_model(should_grid_search = False,
                 should_filter = True,
+                should_make_test_predictions = True,
                 specs = specs)
