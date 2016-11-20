@@ -1,5 +1,6 @@
 import graphlab
 import numpy as np
+from sklearn.feature_extraction.text import TfidfTransformer
 from helper import *
 
 class model_specifications(object):
@@ -72,12 +73,18 @@ def sparse_matrix_tfidf(sf):
     print "Transformed to DataFrame"
 
     # Get TF-IDF scores of ratings
-    df['tfidf_rating'] = df.apply(lambda column: column * \
-                                    np.log(float(len(df))/np.sum(column)))
+    transformer = TfidfTransformer()
+    columns = df.columns
+    index = df.index
+
+    print columns
+    print index
+
+    tfidf_array = transformer.fit_transform(df.values)
 
     print "Created TFIDF ratings"
 
-    return graphlab.SFrame(df)
+    return graphlab.SFrame(pd.DataFrame(tfidf_array, columns = columns, index = index))
 
 def graphlab_grid_search(sf, specs = None):
     # Create K-Folds splits
