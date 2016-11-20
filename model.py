@@ -18,6 +18,7 @@ class model_specifications(object):
         self.param_grid = kwargs.get('param_grid')
         self.params = kwargs.get('params')
         self.folds = kwargs.get('folds')
+        self.should_tfidf = kwargs.get('should_tfidf')
 
 def build_model(should_grid_search = True, should_filter = True,
                 specs = None):
@@ -48,12 +49,24 @@ def build_model(should_grid_search = True, should_filter = True,
     else:
         sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
 
+    if should_tfidf:
+        sf = sparse_matrix_tfidf(sf)
+
     # Grid Search
     if should_grid_search:
         graphlab_grid_search(sf, specs)
 
     # Train
     graphlab_factorization_recommender(sf, specs, dump = True)
+
+@timeit
+def sparse_matrix_tfidf(sf):
+    for column in sf.column_names():
+        N = len(sf)
+        n_t = sf[column].sum()
+        sf[column] = sf[column] * np.log(float(N)/n_t)
+    return sf
+
 
 
 def graphlab_grid_search(sf, specs = None):
@@ -90,11 +103,16 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
 
         # Factorization recommender
         # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
+        if specs.should_tfidf:
+            binary_target = False
+        else:
+            binary_target = True
+
         rec_model = graphlab.ranking_factorization_recommender.create(train_set,
                                                                       target='rating',
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
-                                                                      binary_target = True,
+                                                                      binary_target = binary_target,
                                                                       max_iterations = 200,
                                                                       ranking_regularization = 0.1)
 
@@ -124,8 +142,9 @@ if __name__ == "__main__":
                                  user_count_max_cutoff = np.inf,
                                  album_count_max_cutoff = 1200,
                                  album_count_min_cutoff = 40,
-                                 folds = 10)
+                                 folds = 10,
+                                 should_tfidf = True)
 
-    build_model(should_grid_search = True,
+    build_model(should_grid_search = False,
                 should_filter = True,
                 specs = specs)

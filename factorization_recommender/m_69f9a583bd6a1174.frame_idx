@@ -1,0 +1,13 @@
+[sframe]
+version=0
+num_segments=0
+num_columns=3
+nrows=26055
+[column_names]
+0000=album_id
+0001=linear_terms
+0002=factors
+[column_files]
+0000=m_69f9a583bd6a1174.sidx:0
+0001=m_69f9a583bd6a1174.sidx:1
+0002=m_69f9a583bd6a1174.sidx:2
