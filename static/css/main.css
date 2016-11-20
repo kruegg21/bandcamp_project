@@ -683,7 +683,7 @@ button[disabled], html input[disabled] {
   position: relative;
   background: #FFF;
   width: auto;
-  max-width: 288px;
+  max-width: 1150px;
 }
 
 .a a img.img-responsive {
