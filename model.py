@@ -115,9 +115,10 @@ if __name__ == "__main__":
                                                     ('user_id', '_id'),
                                                     ('item_id', 'album_id'),
                                                     ('binary_target', True),
-                                                    ('max_iterations', 200),
-                                                    ('regularization', [0.05, 0.1]),
-                                                    ('linear_regularization', [0.2, 0.3])
+                                                    ('max_iterations', 500),
+                                                    ('regularization', [0.1]),
+                                                    ('linear_regularization', [0.2]),
+                                                    ('num_sampled_negative_examples', [4, 20, 50])
                                                    ]),
                                  user_count_min_cutoff = 100,
                                  user_count_max_cutoff = np.inf,
