@@ -49,7 +49,7 @@ def build_model(should_grid_search = True, should_filter = True,
     else:
         sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
 
-    if should_tfidf:
+    if specs.should_tfidf:
         sf = sparse_matrix_tfidf(sf)
 
     # Grid Search
