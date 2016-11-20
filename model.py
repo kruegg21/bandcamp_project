@@ -21,7 +21,7 @@ class model_specifications(object):
         self.should_tfidf = kwargs.get('should_tfidf')
 
 def build_model(should_grid_search = True, should_filter = True,
-                specs = None):
+                specs = None, should_make_test_predictions = True):
     """
     Input:
         should_grid_search -- Bool indicating if we should grid search or not
