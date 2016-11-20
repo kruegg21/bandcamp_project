@@ -912,7 +912,7 @@ textarea#message {
 	.mfp-arrow {
 	top: 56%;
 }
-@media screen and (min-width: 288px) {
+@media screen and (min-width: 601px) {
 	.mfp-arrow {
 	top: 40%;
 }
