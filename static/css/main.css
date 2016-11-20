@@ -596,11 +596,11 @@ button[disabled], html input[disabled] {
 			}
 
 			#menu > .close:hover:before {
-				opacity: 0;
+				opacity: 1;
 			}
 
 			#menu > .close:hover:after {
-				opacity: 1;
+				opacity: 0;
 			}
 
 		@media screen and (max-width: 736px) {
@@ -687,7 +687,7 @@ button[disabled], html input[disabled] {
 }
 
 .a a img.img-responsive {
-	opacity: 0.5;
+	opacity: 0.9;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
 	-ms-transition: all 0.5s ease-in-out;
