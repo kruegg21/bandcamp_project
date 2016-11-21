@@ -71,6 +71,8 @@ def sparse_matrix_tfidf(sf):
     # Transform to DataFrame
     df = sf.to_dataframe()
 
+    print df
+
     print "Translatedd to DF"
 
     # Make translation dictionaries for '_id' and 'album_id'
@@ -85,7 +87,7 @@ def sparse_matrix_tfidf(sf):
 
     row = df['_id'].values
     col = df['album_id'].values
-    data = df['ratings'].values
+    data = df['rating'].values
 
     print "Replaced with translated values"
 
