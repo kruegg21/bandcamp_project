@@ -71,8 +71,6 @@ def sparse_matrix_tfidf(sf):
     # Transform to DataFrame
     df = sf.to_dataframe()
 
-    print df
-
     print "Translated to DF"
 
     # Make translation dictionaries for '_id' and 'album_id'
@@ -84,16 +82,13 @@ def sparse_matrix_tfidf(sf):
     # Create scipy sparse matrix
     df['_id'].replace(_id_translation_dict, inplace = True)
     df['album_id'].replace(album_translation_dict, inplace = True)
-
     row = df['_id'].values
     col = df['album_id'].values
     data = df['rating'].values
-
     print "Replaced with translated values"
-
     sparse_mat = coo_matrix((data, (row, col)), shape = (row.shape[0], col.shape[0]))
-
     print "Converted to scipy matrix"
+    save_sparse_coo('sparse_mat_dump.coo' sparse_mat)
 
     # TF-IDF scores
     transformer = TfidfTransformer()
@@ -101,9 +96,6 @@ def sparse_matrix_tfidf(sf):
     print "Transformed to TF-IDF scores"
     print sparse_mat.data
     print tfidf_sparse_mat.data
-
-    with open('matrix_dump.obj', 'w+') as f:
-        pickle.dump(tfidf_sparse_mat, f)
 
     print "Created TFIDF ratings"
 

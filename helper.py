@@ -41,6 +41,16 @@ def merge_two_dicts(x, y):
 def reverse_dict(d):
     return {value: key for key, value in d.iteritems()}
 
+# Functions to read and save numpy sparse coo matrix
+def save_sparse_coo(filename, array):
+    np.savez(filename, data = array.data , indices=array.row,
+             indptr =array.col, shape=array.shape )
+
+def load_sparse_csr(filename):
+    loader = np.load(filename)
+    return coo_matrix((loader['data'], (loader['row'], loader['col'])),
+                      shape = loader['shape'])
+
 @timeit
 def dump_sf(sf, name):
     sf.save(name, format = 'csv')
