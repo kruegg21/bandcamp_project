@@ -40,6 +40,14 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 
     print "Joined successfully"
 
+    # Get list of nodes
+    node_list = set(subsetted_joined_sf.iloc[:,0].values)
+
+    print len(node_list)
+    node_list.update(set(subsetted_joined_sf.iloc[:,1].values))
+
+    print len(node_list)
+
     subsetted_joined_sf = joined_sf.sample(edge_subset_proportion, seed = 5)
 
     subsetted_joined_sf.rename({node_column: 'source',
