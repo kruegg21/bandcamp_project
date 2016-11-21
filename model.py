@@ -97,7 +97,7 @@ def sparse_matrix_tfidf(sf):
 
     # TF-IDF scores
     transformer = TfidfTransformer()
-    tfidf_sparse_mat = transformer.fit_transform(sparse_mat)
+    tfidf_sparse_mat = transformer.fit_transform(sparse_mat).tocoo()
     print "Transformed to TF-IDF scores"
     print sparse_mat.data
     print tfidf_sparse_mat.data
