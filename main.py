@@ -45,7 +45,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     node_set = set()
     for column in joined_sf.column_names():
         node_set.update(joined_sf[column])
-        print len(node_list)
+        print len(node_set)
 
     # Get proportion of nodes
     node_subset_proportion = 0.3
