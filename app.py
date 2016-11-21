@@ -19,3 +19,7 @@ def index():
 def dashboard():
     rendered_template = render_template('index.html')
     return rendered_template
+
+@app.route('/results')
+def results():
+    return 'results'
