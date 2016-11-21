@@ -53,6 +53,7 @@ def build_model(should_grid_search = True, should_filter = True,
 
     if specs.should_tfidf:
         sf = sparse_matrix_tfidf(sf)
+        dump_sf(sf, 'data/tfidf_sf.csv')
 
     # Grid Search
     if should_grid_search:
