@@ -66,12 +66,20 @@ def build_model(should_grid_search = True, should_filter = True,
 @timeit
 def sparse_matrix_tfidf(sf):
     print "Starting TF-IFD"
-    print sf
 
     # Transform to DataFrame
     df = sf.to_dataframe()
 
+    # Make translation dictionaries for '_id' and 'album_id'
+    _id_translation_dict = dict(enumerate(df['_id'].unique()))
+    album_id_translation_dict = dict(enumerate(df['album_id'].unique()))
+
+    print _id_translation_dict
+    print album_id_translation_dict
+
     print "Transformed to DataFrame"
+
+
 
     # Get TF-IDF scores of ratings
     transformer = TfidfTransformer()
