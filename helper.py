@@ -38,6 +38,9 @@ def merge_two_dicts(x, y):
     z.update(y)
     return z
 
+def reverse_dict(d):
+    return {value: key for key, value in d.iteritems()}
+
 @timeit
 def dump_sf(sf, name):
     sf.save(name, format = 'csv')

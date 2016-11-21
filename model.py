@@ -1,6 +1,7 @@
 import graphlab
 import numpy as np
 from sklearn.feature_extraction.text import TfidfTransformer
+from scipy.sparse import coo_matrix
 from helper import *
 
 class model_specifications(object):
@@ -71,23 +72,22 @@ def sparse_matrix_tfidf(sf):
     df = sf.to_dataframe()
 
     # Make translation dictionaries for '_id' and 'album_id'
-    _id_translation_dict = dict(enumerate(df['_id'].unique()))
-    album_id_translation_dict = dict(enumerate(df['album_id'].unique()))
+    _id_translation_dict = reverse_dict(dict(enumerate(df['_id'].unique())))
+    album_translation_dict = reverse_dict(dict(enumerate(df['album_id'].unique())))
 
-    print _id_translation_dict
-    print album_id_translation_dict
+    # Create scipy sparse matrix
+    row = df['_id'].replace(_id_translation_dict).values
+    col = df['album_id'].replace(album_translation_dict).values
+    data = df['ratings'].values
+    sparse_mat = coo_matrix((data, (row, col)), shape = (row.shape[0], col.shape[0]))
 
-    print "Transformed to DataFrame"
-
-
-
-    # Get TF-IDF scores of ratings
+    # TF-IDF scores
     transformer = TfidfTransformer()
-    columns = df.columns
-    index = df.index
+    tf_idf_sparse_mat = transformer.fit_transform(sparse_mat)
+    print sparse_mat.data
 
-
-
+    # Transform back to SFrame
+    print tf_idf_sparse_mat.data
     tfidf_array = transformer.fit_transform(df.values)
 
 
