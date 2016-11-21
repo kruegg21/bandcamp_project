@@ -88,7 +88,7 @@ def sparse_matrix_tfidf(sf):
     print "Replaced with translated values"
     sparse_mat = coo_matrix((data, (row, col)), shape = (row.shape[0], col.shape[0]))
     print "Converted to scipy matrix"
-    save_sparse_coo('sparse_mat_dump.coo' sparse_mat)
+    save_sparse_coo('sparse_mat_dump.coo', sparse_mat)
 
     # TF-IDF scores
     transformer = TfidfTransformer()
