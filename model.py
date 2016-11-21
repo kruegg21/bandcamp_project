@@ -66,6 +66,7 @@ def build_model(should_grid_search = True, should_filter = True,
 @timeit
 def sparse_matrix_tfidf(sf):
     print "Starting TF-IFD"
+    print sf
 
     # Transform to DataFrame
     df = sf.to_dataframe()
@@ -77,10 +78,10 @@ def sparse_matrix_tfidf(sf):
     columns = df.columns
     index = df.index
 
-    print columns
-    print index
+
 
     tfidf_array = transformer.fit_transform(df.values)
+
 
     print "Created TFIDF ratings"
 
