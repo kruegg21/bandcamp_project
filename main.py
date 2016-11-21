@@ -45,7 +45,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     node_set = set()
     for column in joined_sf.column_names():
         node_set.update(joined_sf[column])
-        print len(node_set)
+        print len(node_list)
 
     # Get proportion of nodes
     node_subset_proportion = 0.3
@@ -300,4 +300,4 @@ def build_gephi_data():
 
 if __name__ == "__main__":
     # recommendations = graphlab_recommender_test(should_filter = False)
-    build_gephi_data()
+    build_gephi_dataf()
