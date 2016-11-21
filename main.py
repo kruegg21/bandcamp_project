@@ -8,6 +8,7 @@ import os
 import pandas as pd
 import pickle
 import pymongo
+import random
 from model import graphlab_factorization_recommender, graphlab_grid_search
 from bandcamp_scraper import get_mongo_database
 from helper import *
@@ -40,31 +41,36 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 
     print "Joined successfully"
 
-    # Get list of nodes
-    node_list = set(subsetted_joined_sf.iloc[:,0].values)
+    # Make set of nodes
+    node_set = set()
+    for column in joined_sf.column_names():
+        node_set.update(joined_sf[column])
+        print len(node_list)
 
-    print len(node_list)
-    node_list.update(set(subsetted_joined_sf.iloc[:,1].values))
+    # Get proportion of nodes
+    node_subset_proportion = 0.3
+    node_list = node_set.sample(node_set, len(node_set * node_subset_proportion))
 
-    print len(node_list)
+    print "Number of elements before filter: {}".format(len(joined_sf))
+    for column in joined_sf.column_names():
+        joined_sf = joined_sf.filter_by(node_list, column)
+        print "Number of elements after filter: {}".format(len(joined_sf))
 
-    subsetted_joined_sf = joined_sf.sample(edge_subset_proportion, seed = 5)
-
-    subsetted_joined_sf.rename({node_column: 'source',
+    joined_sf.rename({node_column: 'source',
                                 node_column + '.1': 'target'})
 
     # Get edge weights
-    subsetted_joined_sf = subsetted_joined_sf.groupby(key_columns = ['source', 'target'],
-                                                      operations = {'weight': agg.COUNT()})
+    joined_sf = joined_sf.groupby(key_columns = ['source', 'target'],
+                                  operations = {'weight': agg.COUNT()})
 
     # Cutoff based on edge weights
-    subsetted_joined_sf = subsetted_joined_sf[subsetted_joined_sf['weight'] > edge_weight_cutoff]
+    joined_sf = joined_sf[joined_sf['weight'] > edge_weight_cutoff]
 
     # Add column specifying undirected
-    subsetted_joined_sf['type'] = 'undirected'
+    joined_sf['type'] = 'undirected'
 
     # Dump
-    dump_sf(subsetted_joined_sf, 'data/gephi_graph_subsetted.csv')
+    dump_sf(joined_sf, 'data/gephi_graph_subsetted.csv')
     print "Subsetted successfully"
 
     if dump_full_graph:
@@ -214,7 +220,7 @@ def build_gephi_data():
     convert_to_gephi_format(sf,
                             node_column = 'album_id',
                             link_column = '_id',
-                            edge_subset_proportion = 0.20,
+                            edge_subset_proportion = 0.50,
                             edge_weight_cutoff = 10,
                             dump_full_graph = False)
 
