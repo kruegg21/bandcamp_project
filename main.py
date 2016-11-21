@@ -200,13 +200,13 @@ def build_gephi_data():
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
-                                   cutoff = 20,
+                                   min_cutoff = 20,
                                    name = 'user_to_album_sf',
                                    dump = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = '_id',
-                                   cutoff = 100,
+                                   min_cutoff = 100,
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
@@ -300,4 +300,4 @@ def build_gephi_data():
 
 if __name__ == "__main__":
     # recommendations = graphlab_recommender_test(should_filter = False)
-    build_gephi_data()
+    build_gephi_dataf()

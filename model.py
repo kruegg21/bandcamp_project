@@ -73,7 +73,7 @@ def sparse_matrix_tfidf(sf):
 
     print df
 
-    print "Translatedd to DF"
+    print "Translated to DF"
 
     # Make translation dictionaries for '_id' and 'album_id'
     _id_translation_dict = reverse_dict(dict(enumerate(df['_id'].unique())))
