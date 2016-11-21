@@ -198,11 +198,6 @@ def convert_to_truncated_string_ids(sf):
 def build_gephi_data():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
 
-    # sf = convert_sframe_to_integer_ids(sf,
-    #                                    columns = ['album_id', '_id'],
-    #                                    name = 'user_to_album_sf',
-    #                                    dump = True)
-
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    cutoff = 20,
@@ -305,4 +300,4 @@ def build_gephi_data():
 
 if __name__ == "__main__":
     # recommendations = graphlab_recommender_test(should_filter = False)
-    build_from_album_art_list()
+    build_gephi_data()
