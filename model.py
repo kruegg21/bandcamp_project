@@ -80,8 +80,11 @@ def sparse_matrix_tfidf(sf):
     print "Translation dictionaries made"
 
     # Create scipy sparse matrix
-    row = df['_id'].replace(_id_translation_dict).values
-    col = df['album_id'].replace(album_translation_dict).values
+    df['_id'].replace(_id_translation_dict, inplace = True)
+    df['album_id'].replace(album_translation_dict, inplace = True)
+
+    row = df['_id'].values
+    col = df['album_id'].values
     data = df['ratings'].values
 
     print "Replaced with translated values"
