@@ -97,18 +97,26 @@ def sparse_matrix_tfidf(sf):
 
     # TF-IDF scores
     transformer = TfidfTransformer()
-    tf_idf_sparse_mat = transformer.fit_transform(sparse_mat)
+    tfidf_sparse_mat = transformer.fit_transform(sparse_mat)
     print "Transformed to TF-IDF scores"
     print sparse_mat.data
+    print tfidf_sparse_mat.data
 
-    # Transform back to SFrame
-    print tf_idf_sparse_mat.data
-    tfidf_array = transformer.fit_transform(df.values)
-
+    with open('matrix_dump.obj', 'w+') as f:
+        pickle.dump(tfidf_sparse_mat, f)
 
     print "Created TFIDF ratings"
 
-    return graphlab.SFrame(pd.DataFrame(tfidf_array, columns = columns, index = index))
+    tfidf_df = pd.DataFrame()
+    tfidf_df['rating'] = tfidf_sparse_mat.data
+    tfidf_df['_id'] = tfidf_sparse_mat.row
+    tfidf_df['album_id'] = tfidf_sparse_mat.col
+    tfidf_df['_id'].replace(reverse_dict(_id_translation_dict), inplace = True)
+    tfidf_df['album_id'].replace(reverse_dict(album_translation_dict), inplace = True)
+
+    print "Make secondary dataframe"
+
+    return graphlab.SFrame(tfidf_df)
 
 def graphlab_grid_search(sf, specs = None):
     # Create K-Folds splits

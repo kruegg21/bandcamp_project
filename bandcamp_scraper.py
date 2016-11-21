@@ -210,15 +210,15 @@ def get_album_data(url, driver, db, click_through = True):
     # Dump to MongoDB
     final_dict = {'_id': mongo_key_formatting(url),
                   'album_data' : simplejson.dumps(album_data)}
-    if not db.albums.find_one({"_id": mongo_key_formatting(url)}):
+    if not db.albums.find_one({"_id": mongo_key_formatting(url)}) and user_urls:
         db.albums.insert(final_dict)
 
-    # Error checking
-    print "Number of users supporting: {}".format(len(user_urls))
-    print "Link to album artwork: {}".format(album_artwork_url)
-    print "Album tags: {}".format([translate_url_to_tag(url) for url in album_tags])
-    print "Price: {}".format(price)
-    print "Currency: {}\n\n\n".format(currency)
+        # Error checking
+        print "Number of users supporting: {}".format(len(user_urls))
+        print "Link to album artwork: {}".format(album_artwork_url)
+        print "Album tags: {}".format([translate_url_to_tag(url) for url in album_tags])
+        print "Price: {}".format(price)
+        print "Currency: {}\n\n\n".format(currency)
 
     return user_urls
 
@@ -275,7 +275,7 @@ def crawler(roots):
                         print "Skipping key: {}".format(user_url)
 
                 album_url = album_urls.pop()
-                if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
+                if not db.albums.find_one({"_id": mongo_key_formatting(album_url)}):
                     new_user_urls = get_album_data(album_url, driver, db)
                     user_urls.update(new_user_urls)
                 else:
@@ -323,7 +323,7 @@ def album_scraper_worker(album_urls):
             db = get_mongo_database('bandcamp')
 
             for album_url in album_urls:
-                if not db.user.collections.find_one({"_id": mongo_key_formatting(album_url)}):
+                if not db.albums.find_one({"_id": mongo_key_formatting(album_url)}):
                     _ = get_album_data(reverse_mongo_key_formatting(album_url), driver, db)
         except:
             driver.close()
