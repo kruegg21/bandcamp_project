@@ -49,7 +49,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 
     # Get proportion of nodes
     node_subset_proportion = 0.3
-    node_list = node_set.sample(node_set, len(node_set * node_subset_proportion))
+    node_list = random.sample(node_set, len(node_set * node_subset_proportion))
 
     print "Number of elements before filter: {}".format(len(joined_sf))
     for column in joined_sf.column_names():
