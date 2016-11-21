@@ -83,6 +83,9 @@ def sparse_matrix_tfidf(sf):
     row = df['_id'].replace(_id_translation_dict).values
     col = df['album_id'].replace(album_translation_dict).values
     data = df['ratings'].values
+
+    print "Replaced with translated values"
+
     sparse_mat = coo_matrix((data, (row, col)), shape = (row.shape[0], col.shape[0]))
 
     print "Converted to scipy matrix"
