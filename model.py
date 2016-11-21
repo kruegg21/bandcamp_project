@@ -71,9 +71,13 @@ def sparse_matrix_tfidf(sf):
     # Transform to DataFrame
     df = sf.to_dataframe()
 
+    print "Translatedd to DF"
+
     # Make translation dictionaries for '_id' and 'album_id'
     _id_translation_dict = reverse_dict(dict(enumerate(df['_id'].unique())))
     album_translation_dict = reverse_dict(dict(enumerate(df['album_id'].unique())))
+
+    print "Translation dictionaries made"
 
     # Create scipy sparse matrix
     row = df['_id'].replace(_id_translation_dict).values
@@ -81,9 +85,12 @@ def sparse_matrix_tfidf(sf):
     data = df['ratings'].values
     sparse_mat = coo_matrix((data, (row, col)), shape = (row.shape[0], col.shape[0]))
 
+    print "Converted to scipy matrix"
+
     # TF-IDF scores
     transformer = TfidfTransformer()
     tf_idf_sparse_mat = transformer.fit_transform(sparse_mat)
+    print "Transformed to TF-IDF scores"
     print sparse_mat.data
 
     # Transform back to SFrame
