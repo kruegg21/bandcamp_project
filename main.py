@@ -174,24 +174,6 @@ def build_from_album_list():
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
-@timeit
-def convert_to_truncated_string_ids(sf):
-    """
-    Input:
-        sf -- SFrame
-
-    Converts the columns '_id' and 'album_id' to shortened versions
-    """
-
-    sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/', '') \
-                                           .replace('https://bandcamp_com/', ''))
-    sf['album_id'] = sf.apply(lambda x: x['album_id'] \
-                       .replace('/album/', '') \
-                       .replace('com/album/', '') \
-                       .replace('http://', '') \
-                       .replace('https://', ''))
-    return sf
-
 
 def build_gephi_data():
     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')

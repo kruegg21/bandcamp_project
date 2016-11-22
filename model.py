@@ -60,7 +60,7 @@ def build_model(should_grid_search = True, should_filter = True,
     #     graphlab_grid_search(sf, specs)
 
     # Train
-    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
+    sf = graphlab.SFrame.read_csv('data/tfidf_sf.csv')
     model = graphlab_factorization_recommender(sf, specs, dump = True)
 
     if should_make_test_predictions:
