@@ -187,23 +187,14 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
         # Test train split
         (train_set, test_set) = sf.random_split(0.8, seed=1)
 
-        # # Collaborative filtering item similarity model
-        # # https://turi.com/products/create/docs/generated/graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender.html#graphlab.recommender.item_similarity_recommender.ItemSimilarityRecommender
-        # collaborative_filtering = recommender.create(sf,
-        #                                              user_id = '_id',
-        #                                              item_id = 'album_id')
-
-        # Factorization recommender
-        # https://turi.com/products/create/docs/generated/graphlab.recommender.factorization_recommender.FactorizationRecommender.html#graphlab.recommender.factorization_recommender.FactorizationRecommender
+        # Create model
         if specs.should_tfidf:
             binary_target = False
-            target = 'tfidf_rating'
         else:
             binary_target = True
-            target = 'rating'
 
         rec_model = graphlab.ranking_factorization_recommender.create(train_set,
-                                                                      target = target,
+                                                                      target = 'rating',
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
                                                                       binary_target = binary_target,
