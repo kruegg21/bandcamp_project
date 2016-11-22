@@ -32,30 +32,30 @@ def build_model(should_grid_search = True, should_filter = True,
         specs -- model_specifications Object with info about data
     """
     # Filter
-    # if should_filter:
-    #     # Starting data
-    #     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
-    #
-    #     # Filter to make data more dense
-    #     sf = low_pass_filter_on_counts(sf,
-    #                                    column = 'album_id',
-    #                                    min_cutoff = specs.album_count_min_cutoff,
-    #                                    max_cutoff = specs.album_count_max_cutoff,
-    #                                    name = 'user_to_album_sf',
-    #                                    dump = True)
-    #
-    #     sf = low_pass_filter_on_counts(sf,
-    #                                    column = '_id',
-    #                                    min_cutoff = specs.user_count_min_cutoff,
-    #                                    max_cutoff = specs.user_count_max_cutoff,
-    #                                    name = 'user_to_album_sf_album',
-    #                                    dump = True)
-    # else:
-    #     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
-    #
-    # if specs.should_tfidf:
-    #     sf = sparse_matrix_tfidf(sf)
-    #     dump_sf(sf, 'data/tfidf_sf.csv')
+    if should_filter:
+        # Starting data
+        sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
+
+        # Filter to make data more dense
+        sf = low_pass_filter_on_counts(sf,
+                                       column = 'album_id',
+                                       min_cutoff = specs.album_count_min_cutoff,
+                                       max_cutoff = specs.album_count_max_cutoff,
+                                       name = 'user_to_album_sf',
+                                       dump = True)
+
+        sf = low_pass_filter_on_counts(sf,
+                                       column = '_id',
+                                       min_cutoff = specs.user_count_min_cutoff,
+                                       max_cutoff = specs.user_count_max_cutoff,
+                                       name = 'user_to_album_sf_album',
+                                       dump = True)
+    else:
+        sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
+
+    if specs.should_tfidf:
+        sf = sparse_matrix_tfidf(sf)
+        dump_sf(sf, 'data/tfidf_sf.csv')
 
     sf = graphlab.SFrame.read_csv('data/tfidf_sf.csv')
     # Grid Search
@@ -211,11 +211,11 @@ if __name__ == "__main__":
     specs = model_specifications(param_grid = dict([('target', 'rating'),
                                                     ('user_id', '_id'),
                                                     ('item_id', 'album_id'),
-                                                    ('binary_target', False),
+                                                    ('binary_target', True),
                                                     ('max_iterations', 500),
-                                                    ('regularization', [1e-5]),
-                                                    ('linear_regularization', [1e-3]),
-                                                    ('ranking_regularization', [0.5]),
+                                                    ('regularization', [1e-5, 1e-3, 1e-1]),
+                                                    ('linear_regularization', [1e-3, 1e-1]),
+                                                    ('ranking_regularization', [0.5, 0.4, 0.3]),
                                                     ('num_sampled_negative_examples', [4])
                                                    ]),
                                  user_count_min_cutoff = 100,
@@ -223,10 +223,10 @@ if __name__ == "__main__":
                                  album_count_max_cutoff = 1200,
                                  album_count_min_cutoff = 40,
                                  folds = 10,
-                                 should_tfidf = True,
+                                 should_tfidf = False,
                                  should_shuffle_folds = True)
 
-    build_model(should_grid_search = False,
+    build_model(should_grid_search = True,
                 should_filter = True,
                 should_make_test_predictions = True,
                 specs = specs)
