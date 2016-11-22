@@ -2,3 +2,9 @@
 1. In the 'albums' collect of the MongoDB do not use the 'user_urls' field.
    BC hides the user lists as an anti-bot measure when requests occur too
    frequently.
+
+# Model Building
+1. There are three routes to take:
+     Factorization Recommender w/ TF-IDF (use subjectivity)
+     Item Similarity Recommender (use Precision 10 as metric)
+     Factorization Recommender w/ Binary Targets (use Precision 10 as metric)

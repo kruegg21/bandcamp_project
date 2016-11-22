@@ -209,10 +209,10 @@ if __name__ == "__main__":
     specs = model_specifications(param_grid = dict([('target', 'rating'),
                                                     ('user_id', '_id'),
                                                     ('item_id', 'album_id'),
-                                                    ('binary_target', True),
+                                                    ('binary_target', False),
                                                     ('max_iterations', 500),
-                                                    ('regularization', [1e-10]),
-                                                    ('linear_regularization', [1e-5]),
+                                                    ('regularization', [1e-5]),
+                                                    ('linear_regularization', [1e-3]),
                                                     ('ranking_regularization', [0.5]),
                                                     ('num_sampled_negative_examples', [4])
                                                    ]),
