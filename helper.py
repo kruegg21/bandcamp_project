@@ -66,7 +66,10 @@ def load_sparse_csr(filename):
                       shape = loader['shape'])
 
 def get_album_art_to_url_dict():
-    return pd.read_csv('data/album_url_to_art_id.csv').set_index('album_url').to_dict()
+    with open('data/album_url_to_art_id.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        mydict = {rows[0]:rows[1] for rows in reader}
+    return mydict
 
 @timeit
 def dump_sf(sf, name):
