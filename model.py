@@ -190,8 +190,10 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
                                                                       user_id = '_id',
                                                                       item_id = 'album_id',
                                                                       binary_target = binary_target,
-                                                                      max_iterations = 200,
-                                                                      ranking_regularization = 0.1)
+                                                                      max_iterations = 500,
+                                                                      ranking_regularization = 0.1,
+                                                                      linear_regularization = 0.5,
+                                                                      regularization = 1e-5)
 
         # Data print out
         print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
@@ -224,7 +226,7 @@ if __name__ == "__main__":
                                  should_tfidf = True,
                                  should_shuffle_folds = True)
 
-    build_model(should_grid_search = True,
+    build_model(should_grid_search = False,
                 should_filter = True,
                 should_make_test_predictions = True,
                 specs = specs)
