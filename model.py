@@ -29,37 +29,38 @@ def build_model(should_grid_search = True, should_filter = True,
         should_grid_search -- Bool indicating if we should grid search or not
         specs -- model_specifications Object with info about data
     """
-    # Filter
-    if should_filter:
-        # Starting data
-        sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
-
-        # Filter to make data more dense
-        sf = low_pass_filter_on_counts(sf,
-                                       column = 'album_id',
-                                       min_cutoff = specs.album_count_min_cutoff,
-                                       max_cutoff = specs.album_count_max_cutoff,
-                                       name = 'user_to_album_sf',
-                                       dump = True)
-
-        sf = low_pass_filter_on_counts(sf,
-                                       column = '_id',
-                                       min_cutoff = specs.user_count_min_cutoff,
-                                       max_cutoff = specs.user_count_max_cutoff,
-                                       name = 'user_to_album_sf_album',
-                                       dump = True)
-    else:
-        sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
-
-    if specs.should_tfidf:
-        sf = sparse_matrix_tfidf(sf)
-        dump_sf(sf, 'data/tfidf_sf.csv')
-
-    # Grid Search
-    if should_grid_search:
-        graphlab_grid_search(sf, specs)
+    # # Filter
+    # if should_filter:
+    #     # Starting data
+    #     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
+    #
+    #     # Filter to make data more dense
+    #     sf = low_pass_filter_on_counts(sf,
+    #                                    column = 'album_id',
+    #                                    min_cutoff = specs.album_count_min_cutoff,
+    #                                    max_cutoff = specs.album_count_max_cutoff,
+    #                                    name = 'user_to_album_sf',
+    #                                    dump = True)
+    #
+    #     sf = low_pass_filter_on_counts(sf,
+    #                                    column = '_id',
+    #                                    min_cutoff = specs.user_count_min_cutoff,
+    #                                    max_cutoff = specs.user_count_max_cutoff,
+    #                                    name = 'user_to_album_sf_album',
+    #                                    dump = True)
+    # else:
+    #     sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
+    #
+    # if specs.should_tfidf:
+    #     sf = sparse_matrix_tfidf(sf)
+    #     dump_sf(sf, 'data/tfidf_sf.csv')
+    #
+    # # Grid Search
+    # if should_grid_search:
+    #     graphlab_grid_search(sf, specs)
 
     # Train
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
     model = graphlab_factorization_recommender(sf, specs, dump = True)
 
     if should_make_test_predictions:

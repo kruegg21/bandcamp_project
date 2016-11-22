@@ -19,8 +19,6 @@ Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
 """
 
 
-
-
 @timeit
 def convert_to_gephi_format(sf, node_column = None, link_column = None,
                             edge_subset_proportion = 0.3,
