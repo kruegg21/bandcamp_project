@@ -66,6 +66,7 @@ def load_sparse_csr(filename):
     return coo_matrix((loader['data'], (loader['row'], loader['col'])),
                       shape = loader['shape'])
 
+@timeit
 def get_album_art_to_url_dict():
     with open('data/album_url_to_art_id.csv', mode='r') as infile:
         reader = csv.reader(infile)
