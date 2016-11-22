@@ -26,8 +26,8 @@ def build_from_album_art_list(verbose = True):
     """
     df = pd.read_csv('data/user_to_album_art.csv')
 
+    # Read through each row
     album_url_dict = dict()
-
     i = 0
     count = len(df)
     for index, row in df.iterrows():
@@ -41,6 +41,7 @@ def build_from_album_art_list(verbose = True):
                 print "{} complete".format(round(float(i) / count, 2))
             i += 1
 
+    # Create SFrame
     sf = graphlab.SFrame({'album_url': album_url_dict.keys(),
                           'art_id': album_url_dict.values()})
 
@@ -51,11 +52,11 @@ def build_from_album_art_list(verbose = True):
     print "Album URLs are unique: {}".format(n_albums == n_unique_albums)
 
     # Dump
-    
     dump_sf(sf, 'data/album_url_to_art_id.csv')
 
-    return sf
-
-def pipeline()
+    # Dump pickled dictionary
+    d = get_album_art_to_url_dict()
+    dump_dictionary_model(d, 'album_url_to_art_id')
 
 if __name__ == "__main__":
+    build_from_album_art_list(verbose = True)

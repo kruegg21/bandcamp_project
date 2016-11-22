@@ -74,6 +74,16 @@ def get_album_art_to_url_dict():
     return mydict
 
 @timeit
+def read_dictionary_model(name):
+    with open('models/{}.dict'.format(name), 'r+') as f:
+        pickle.load(f)
+
+@timeit
+def dump_dictionary_model(dict, name):
+    with open('models/{}}.dict', 'w+') as f:
+        pickle.dump(d, f)
+
+@timeit
 def dump_sf(sf, name):
     sf.save(name, format = 'csv')
 

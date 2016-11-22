@@ -1,4 +1,5 @@
 import graphlab
+graphlab.set_runtime_config('GRAPHLAB_DEFAULT_NUM_PYLAMBDA_WORKERS', 64)
 import numpy as np
 from sklearn.feature_extraction.text import TfidfTransformer
 from scipy.sparse import coo_matrix
