@@ -140,8 +140,8 @@ def make_test_predictions(model):
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
     # Get keys in correct format
-    album_list = [mongo_key_formatting(x) for x in album_list]
-    _id_list = [mongo_key_formatting(x) for x in _id_list]
+    album_list = [convert_to_mongo_key_formatting(x) for x in album_list]
+    _id_list = [convert_to_mongo_key_formatting(x) for x in _id_list]
 
     # Create SFrame
     prediction_sf = graphlab.SFrame({'_id': _id_list,

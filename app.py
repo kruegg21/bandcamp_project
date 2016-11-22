@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap
-from helper import metal_album_list, get_album_art_to_url_dict
+from helper import metal_album_list, get_album_art_to_url_dict,
+                   convert_to_mongo_key_formatting
 
 
 def create_app():
@@ -36,8 +37,7 @@ def results():
 
     # Get URLs to album art for each predicted album
     url_to_art_dict = get_album_art_to_url_dict()
-    print url_to_art_dict.keys()
-    art_id_list = [url_to_art_dict[x] for x in pred_url_list]
+    art_id_list = [url_to_art_dict[convert_to_mongo_key_formatting(x)] for x in pred_url_list]
 
     html = str()
     for album_url, art_id in zip(pred_url_list, art_id_list):
