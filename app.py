@@ -20,7 +20,7 @@ def dashboard():
     rendered_template = render_template('index.html')
     return rendered_template
 
-@app.route('/results')
+@app.route('/results', methods=['POST'])
 def results():
     data = request.form['exampleTextarea']
     return data
