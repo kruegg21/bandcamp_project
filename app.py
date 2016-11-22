@@ -38,12 +38,10 @@ def results():
     url_to_art_dict = get_album_art_to_url_dict()
     art_id_list = [url_to_art_dict[convert_to_mongo_key_formatting(x)] for x in pred_url_list]
 
-    html = str()
+    albums_list = list()
     for album_url, art_id in zip(pred_url_list, art_id_list):
-        html += '<a href="{}"> \
-                    <img src="https://f4.bcbits.com/img/a{}_10.jpg" alt="HTML tutorial" style="width:220px;height:220px;border:0;"> \
-                </a>'.format(album_url, art_id)
-    return html
+        album_list.append({'album_url': album_url, 'art_id': art_id})
+    return render_template('results.html', items = albums_list)
 
 
 if __name__ == '__main__':
