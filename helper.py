@@ -24,6 +24,14 @@ metal_album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
                     'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
                     'https://deafheavens.bandcamp.com/album/new-bermuda']
 
+rap_album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
+                  'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
+                  'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
+                  'https://miloraps.bandcamp.com/album/plain-speaking',
+                  'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
+                  'https://openmikeeagle360.bandcamp.com/album/time-materials',
+                  'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
+
 # Timing function
 def timeit(method):
     """
@@ -56,6 +64,9 @@ def load_sparse_csr(filename):
     loader = np.load(filename)
     return coo_matrix((loader['data'], (loader['row'], loader['col'])),
                       shape = loader['shape'])
+
+def get_album_art_to_url_dict():
+    return pd.read_csv('data/album_url_to_art_id.csv').set_index('album_url').to_dict()
 
 @timeit
 def dump_sf(sf, name):
