@@ -41,7 +41,7 @@ def results():
     html = str()
     for album_url, art_id in zip(pred_url_list, art_id_list):
         html += '<a href="{}"> \
-                    <img src="https://f4.bcbits.com/img/a{}_10.jpg" alt="HTML tutorial" style="width:150px;height:150px;border:0;"> \
+                    <img src="https://f4.bcbits.com/img/a{}_10.jpg" alt="HTML tutorial" style="width:220px;height:220px;border:0;"> \
                 </a>'.format(album_url, art_id)
     return html
 
