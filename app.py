@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap
 
 
@@ -22,4 +22,5 @@ def dashboard():
 
 @app.route('/results')
 def results():
-    return 'results'
+    data = request.form['exampleTextarea']
+    return data
