@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap
-from helper import metal_album_list, get_album_art_to_url_dict,
-                   convert_to_mongo_key_formatting
+from helper import *
 
 
 def create_app():
