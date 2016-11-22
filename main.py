@@ -58,7 +58,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     # Filter SFrame keeping only subset of nodes
     print "Number of elements before filter: {}".format(len(joined_sf))
     for column in joined_sf.column_names():
-        joined_sf = joined_sf.filter_by(node_list, column)
+        joined_sf = joined_sf.filter_by(node_array, column)
         print "Number of elements after filter: {}".format(len(joined_sf))
     joined_sf.rename({node_column: 'source',
                       node_column + '.1': 'target'})
