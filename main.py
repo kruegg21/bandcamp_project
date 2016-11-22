@@ -42,20 +42,26 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     # Make set of nodes
     node_set = set()
     for column in joined_sf.column_names():
-        node_sarray = joined_sf[column].unique()
-        print len(node_sarray)
+        node_array = joined_sf[column].unique().to_numpy()
+        print node_array.shape[0]
+        break
+
 
     # Get proportion of nodes
     node_subset_proportion = 0.3
-    node_list = random.sample(node_set, len(node_set * node_subset_proportion))
+    node_subset_array = np.random.choice(node_array,
+                                         size = node_array.shape[0] * node_subset_proportion,
+                                         replace = False)
 
+    print "Subsetted nodes"
+
+    # Filter SFrame keeping only subset of nodes
     print "Number of elements before filter: {}".format(len(joined_sf))
     for column in joined_sf.column_names():
         joined_sf = joined_sf.filter_by(node_list, column)
         print "Number of elements after filter: {}".format(len(joined_sf))
-
     joined_sf.rename({node_column: 'source',
-                                node_column + '.1': 'target'})
+                      node_column + '.1': 'target'})
 
     # Get edge weights
     joined_sf = joined_sf.groupby(key_columns = ['source', 'target'],
