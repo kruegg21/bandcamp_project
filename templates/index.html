@@ -43,12 +43,12 @@
 			<div class="container">
 				<div class="tiles">
 					<div class="row">
-						<form method="post" action="{{ url_for('submit')}}">
-							<div class="form-group">
-								<label for="exampleTextarea">Enter URLs for your favorite albums</label>
-								<textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-							</div>
-						</form>
+						<div class="form-group">
+							<form method="post" action="{{ url_for('submit')}}">
+									<label for="exampleTextarea">Enter URLs for your favorite albums</label>
+									<textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+							</form>
+						</div>
 						<a href="http://35.164.193.25:8000/results" class="btn btn-info" role="button">Link Button</a>
 						<div class="col-md-6">
 							<div class="a">
