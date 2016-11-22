@@ -23,6 +23,7 @@ def dashboard():
 @app.route('/results', methods=['POST', 'GET'])
 def results():
     data = request.form['exampleTextarea']
+    data.replace('\n', 'new_line')
     return data
 
 if __name__ == '__main__':
