@@ -20,10 +20,10 @@ def dashboard():
     rendered_template = render_template('index.html')
     return rendered_template
 
-@app.route('/results', methods=['POST'])
+@app.route('/results/', methods=['POST'])
 def results():
     data = request.form['exampleTextarea']
-    return data
+    return 'hello'
 
 if __name__ == '__main__':
   app.run(host = "0.0.0.0", port = int("8000"), debug = True)
