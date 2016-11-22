@@ -47,18 +47,21 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
         break
 
 
+    print "Number of nodes before subsetting: {}".format(node_array.shape[0])
+
     # Get proportion of nodes
     node_subset_proportion = 0.3
     node_subset_array = np.random.choice(node_array,
                                          size = node_array.shape[0] * node_subset_proportion,
                                          replace = False)
 
+    print "Number of nodes after subsetting: {}".format(node_subset_array.shape[0])
     print "Subsetted nodes"
 
     # Filter SFrame keeping only subset of nodes
     print "Number of elements before filter: {}".format(len(joined_sf))
     for column in joined_sf.column_names():
-        joined_sf = joined_sf.filter_by(node_array, column)
+        joined_sf = joined_sf.filter_by(node_subset_array, column)
         print "Number of elements after filter: {}".format(len(joined_sf))
     joined_sf.rename({node_column: 'source',
                       node_column + '.1': 'target'})
