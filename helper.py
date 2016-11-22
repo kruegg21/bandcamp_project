@@ -11,6 +11,7 @@ import numpy as np
 import pickle
 import pymongo
 import time
+import csv
 
 # Contains column names for DataFrames we are working with
 column_names_dict = {
