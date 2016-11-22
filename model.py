@@ -149,7 +149,7 @@ def make_test_predictions(model):
                   'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
                   'https://deafheavens.bandcamp.com/album/new-bermuda']
 
-    album_list = album_list
+    album_list = metal_album_list
     rating_list = [1] * len(album_list)
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 

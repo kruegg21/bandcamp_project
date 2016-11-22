@@ -42,7 +42,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
     # Make set of nodes
     node_set = set()
     for column in joined_sf.column_names():
-        node_sarray = joined_sf[colunm].unique()
+        node_sarray = joined_sf[column].unique()
         print len(node_sarray)
 
     # Get proportion of nodes

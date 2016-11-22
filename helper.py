@@ -18,6 +18,12 @@ column_names_dict = {
     'user_to_album_art' : ['_id', 'album_art_code']
 }
 
+metal_album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
+                    'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
+                    'https://deafheavens.bandcamp.com/album/sunbather',
+                    'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
+                    'https://deafheavens.bandcamp.com/album/new-bermuda']
+
 # Timing function
 def timeit(method):
     """

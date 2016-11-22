@@ -24,6 +24,14 @@ def dashboard():
 def results():
     data = request.form['exampleTextarea']
     url_list = data.split('\n')
+
+    """
+    Predict should take a list of bandcamp album URLs and return a list of
+    predictions
+    """
+    # pred_url_list = predict(url_list)
+    pred_url_list = 
+
     return url_list
 
 if __name__ == '__main__':
