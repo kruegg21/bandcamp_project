@@ -31,7 +31,7 @@ def results():
     predictions
     """
     # pred_url_list = predict(url_list)
-    pred_url_list = metal_album_list
+    pred_url_list = rap_album_list
     pred_url_list = [s.replace('https', 'http') for s in pred_url_list]
 
     # Get URLs to album art for each predicted album
