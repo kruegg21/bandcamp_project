@@ -1,0 +1,4 @@
+# Scraping
+1. In the 'albums' collect of the MongoDB do not use the 'user_urls' field.
+   BC hides the user lists as an anti-bot measure when requests occur too
+   frequently.

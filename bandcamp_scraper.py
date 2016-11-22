@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 from HTMLParser import HTMLParser
 from selenium import webdriver
 from multiprocessing import Pool
-from helper import mongo_key_formatting
+from helper import *
 
 def random_sleep():
     sleep_time = random.uniform(10,15)
@@ -97,7 +97,7 @@ def add_entry_to_user_collection(user, album_dict, album_list):
     user_dict['wishlist'] = wishlist
     user_dict['album'] = album
 
-    album_dict[mongo_key_formatting(album_url)] = user_dict
+    album_dict[convert_to_mongo_key_formatting(album_url)] = user_dict
     return album_dict, album_list
 
 def get_user_collection(url, driver, db):
@@ -120,12 +120,12 @@ def get_user_collection(url, driver, db):
             for key, value in demjson.decode(matches.group(1))['item_details'].iteritems():
                 album_url = value['item_url']
                 album_list.append(album_url)
-                album_dict[mongo_key_formatting(album_url)] = value
+                album_dict[convert_to_mongo_key_formatting(album_url)] = value
 
             # Dump to MongoDB
-            final_dict = {'_id': mongo_key_formatting(url),
+            final_dict = {'_id': convert_to_mongo_key_formatting(url),
                           'data': simplejson.dumps(album_dict)}
-            if not db.user_collections_new.find_one({"_id": mongo_key_formatting(url)}):
+            if not db.user_collections_new.find_one({"_id": convert_to_mongo_key_formatting(url)}):
                 db.user_collections_new.insert(final_dict)
 
             # Error Check
@@ -136,18 +136,25 @@ def get_user_collection(url, driver, db):
     return album_list
 
 def get_album_data(url, driver, db, click_through = True):
-    # Search URL
-    driver.get(url)
-
+    html = None
     if click_through:
+        # # Random sleep
+        # time.sleep(4)
+
+        # Search URL
+        driver.get(url)
+
         # Click to bottom of writing button
         driver = click_through_more_button(driver, 'more-writing')
 
         # Click to bottom of 'more' button
         driver = click_through_more_button(driver, 'more-thumbs')
 
-    # Get raw HTML
-    html = driver.page_source
+        # Get raw HTML
+        html = driver.page_source
+    else:
+        r = requests.get(url)
+        html = r.text
 
     # Make soup
     soup = BeautifulSoup(html, 'lxml')
@@ -208,13 +215,14 @@ def get_album_data(url, driver, db, click_through = True):
     album_data['currency'] = currency
 
     # Dump to MongoDB
-    final_dict = {'_id': mongo_key_formatting(url),
+    final_dict = {'_id': convert_to_mongo_key_formatting(url),
                   'album_data' : simplejson.dumps(album_data)}
-    if not db.albums.find_one({"_id": mongo_key_formatting(url)}) and user_urls:
+    if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(url)}) and album_tags:
         db.albums.insert(final_dict)
 
         # Error checking
-        print "Number of users supporting: {}".format(len(user_urls))
+        if click_through:
+            print "Number of users supporting: {}".format(len(user_urls))
         print "Link to album artwork: {}".format(album_artwork_url)
         print "Album tags: {}".format([translate_url_to_tag(url) for url in album_tags])
         print "Price: {}".format(price)
@@ -232,12 +240,6 @@ def check_for_key(collection, key):
         Bool indicating if key exists in collection
     """
     return collection.find({key : {'$exists': True}}).limit(1)
-
-def reverse_mongo_key_formatting(s):
-    return s.replace('_', '.')
-
-def translate_url_to_tag(url):
-    return url.split('/')[-1]
 
 def crawler(roots):
     while True:
@@ -268,14 +270,14 @@ def crawler(roots):
                 while user_urls:
                     # Get user, gather data and add albums to list
                     user_url = user_urls.pop()
-                    if not db.user_collections_new.find_one({"_id": mongo_key_formatting(user_url)}):
+                    if not db.user_collections_new.find_one({"_id": convert_to_mongo_key_formatting(user_url)}):
                         new_album_urls = get_user_collection(user_url, driver, db)
                         album_urls.update(new_album_urls)
                     else:
                         print "Skipping key: {}".format(user_url)
 
                 album_url = album_urls.pop()
-                if not db.albums.find_one({"_id": mongo_key_formatting(album_url)}):
+                if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
                     new_user_urls = get_album_data(album_url, driver, db)
                     user_urls.update(new_user_urls)
                 else:
@@ -310,11 +312,12 @@ def album_metadata_scraper():
     n = len(album_list) / 8
     album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
 
-    p = Pool(8)
+    p = Pool(1)
     p.map(album_scraper_worker, album_url_chunks)
 
 def album_scraper_worker(album_urls):
-    while True:
+    finished_all_albums = False
+    while not finished_all_albums:
         try:
             # Web driver
             driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
@@ -323,10 +326,16 @@ def album_scraper_worker(album_urls):
             db = get_mongo_database('bandcamp')
 
             for album_url in album_urls:
-                if not db.albums.find_one({"_id": mongo_key_formatting(album_url)}):
-                    _ = get_album_data(reverse_mongo_key_formatting(album_url), driver, db)
+                if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
+                    _ = get_album_data(reverse_convert_to_mongo_key_formatting(album_url),
+                                       driver,
+                                       db,
+                                       click_through = True)
+            finished_all_albums = True
         except:
-            driver.close()
+            # driver.close()
+            pass
+    print "Finished all albums"
 
 
 if __name__ == "__main__":

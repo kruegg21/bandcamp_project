@@ -340,6 +340,12 @@ def convert_to_mongo_key_formatting(s):
     """
     return s.replace('.', '_')
 
+def reverse_convert_to_mongo_key_formatting(s):
+    return s.replace('_', '.')
+
+def translate_url_to_tag(url):
+    return url.split('/')[-1]
+
 
 # Feature building methods
 def album_list(df, row, i):

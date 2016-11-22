@@ -115,7 +115,7 @@ def build_from_album_list():
                                   delimiters = ['\', u\''],
                                   count_column = 'n_albums',
                                   name = 'user_to_album_sf',
-                                  dump = False,
+                                  dump = True,
                                   verbose = False,
                                   get_album_counts = True)
 
