@@ -115,7 +115,11 @@ def sparse_matrix_tfidf(sf):
 
 def graphlab_grid_search(sf, specs = None):
     # Create K-Folds splits
-    folds = graphlab.cross_validation.KFold(sf, specs.folds)
+    if specs.should_shuffle_folds:
+        shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
+        folds = graphlab.cross_validation.KFold(shuffled_sf, specs.folds)
+    else:
+        folds = graphlab.cross_validation.KFold(sf, specs.folds)
 
     # Run Grid Search
     job = graphlab.grid_search.create(folds,
@@ -206,9 +210,9 @@ if __name__ == "__main__":
                                                     ('item_id', 'album_id'),
                                                     ('binary_target', True),
                                                     ('max_iterations', 500),
-                                                    ('regularization', [1e-10, 1e-5, 0.1]),
-                                                    ('linear_regularization', [1e-10, 1e-5, 0.2]),
-                                                    ('ranking_regularization', [0.1, 0.2, 0.5]),
+                                                    ('regularization', [1e-10]),
+                                                    ('linear_regularization', [1e-5]),
+                                                    ('ranking_regularization', [0.5]),
                                                     ('num_sampled_negative_examples', [4])
                                                    ]),
                                  user_count_min_cutoff = 100,
@@ -216,7 +220,8 @@ if __name__ == "__main__":
                                  album_count_max_cutoff = 1200,
                                  album_count_min_cutoff = 40,
                                  folds = 10,
-                                 should_tfidf = True)
+                                 should_tfidf = True,
+                                 should_shuffle_folds = True)
 
     build_model(should_grid_search = True,
                 should_filter = True,

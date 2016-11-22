@@ -136,33 +136,25 @@ def get_user_collection(url, driver, db):
     return album_list
 
 def get_album_data(url, driver, db, click_through = True):
-    html = None
+    # Search URL
+    driver.get(url)
+
     if click_through:
-        # # Random sleep
-        # time.sleep(4)
-
-        # Search URL
-        driver.get(url)
-
         # Click to bottom of writing button
         driver = click_through_more_button(driver, 'more-writing')
 
         # Click to bottom of 'more' button
         driver = click_through_more_button(driver, 'more-thumbs')
 
-        # Get raw HTML
-        html = driver.page_source
-    else:
-        r = requests.get(url)
-        html = r.text
+    # Get raw HTML
+    html = driver.page_source
 
     # Make soup
     soup = BeautifulSoup(html, 'lxml')
 
-
+    # Get list of user URLs
+    user_urls = list()
     if click_through:
-        # Get list of user URLs
-        user_urls = list()
         for user in soup.find_all('a', {'class': 'pic'}):
             user_urls.append(user['href'][:-15])
 
@@ -305,14 +297,14 @@ def main_scraper():
     p = Pool(8)
     p.map(crawler, params)
 
-def album_metadata_scraper():
+def album_metadata_scraper(n_workers = 4):
     df = pd.read_csv('data/user_to_album_sf.csv')
     album_list = df['album_id'].unique()
 
-    n = len(album_list) / 8
+    n = len(album_list) / n_workers
     album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
 
-    p = Pool(1)
+    p = Pool(n_workers)
     p.map(album_scraper_worker, album_url_chunks)
 
 def album_scraper_worker(album_urls):
@@ -330,13 +322,12 @@ def album_scraper_worker(album_urls):
                     _ = get_album_data(reverse_convert_to_mongo_key_formatting(album_url),
                                        driver,
                                        db,
-                                       click_through = True)
+                                       click_through = False)
             finished_all_albums = True
         except:
-            # driver.close()
-            pass
+            driver.close()
     print "Finished all albums"
 
 
 if __name__ == "__main__":
-    album_metadata_scraper()
+    album_metadata_scraper(n_workers = 1)
