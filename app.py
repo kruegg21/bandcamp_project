@@ -36,6 +36,7 @@ def results():
 
     # Get URLs to album art for each predicted album
     url_to_art_dict = get_album_art_to_url_dict()
+    return get_album_art_to_url_dict
     art_id_list = [url_to_art_dict[x] for x in pred_url_list]
 
     html = str()
