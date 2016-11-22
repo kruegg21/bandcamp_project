@@ -135,19 +135,19 @@ def custom_evaluation(model, train, test):
 
 def make_test_predictions(model):
     # Make predictions
-    album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
-                  'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
-                  'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
-                  'https://miloraps.bandcamp.com/album/plain-speaking',
-                  'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
-                  'https://openmikeeagle360.bandcamp.com/album/time-materials',
-                  'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
+    # album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
+    #               'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
+    #               'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
+    #               'https://miloraps.bandcamp.com/album/plain-speaking',
+    #               'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
+    #               'https://openmikeeagle360.bandcamp.com/album/time-materials',
+    #               'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
 
-    # album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
-    #               'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
-    #               'https://deafheavens.bandcamp.com/album/sunbather',
-    #               'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
-    #               'https://deafheavens.bandcamp.com/album/new-bermuda']
+    album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
+                  'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
+                  'https://deafheavens.bandcamp.com/album/sunbather',
+                  'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
+                  'https://deafheavens.bandcamp.com/album/new-bermuda']
 
     album_list = album_list
     rating_list = [1] * len(album_list)
@@ -165,7 +165,7 @@ def make_test_predictions(model):
 
     # Make recommendations
     recommendations_sf = model.recommend(users = ['https://bandcamp.com/kruegg'],
-                                         k = 20,
+                                         k = 50,
                                          new_user_data = prediction_sf)
 
     # Split into logical columns
