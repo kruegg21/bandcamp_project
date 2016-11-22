@@ -29,7 +29,7 @@ def build_model(should_grid_search = True, should_filter = True,
         should_grid_search -- Bool indicating if we should grid search or not
         specs -- model_specifications Object with info about data
     """
-    # # Filter
+    # Filter
     # if should_filter:
     #     # Starting data
     #     sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
@@ -54,13 +54,13 @@ def build_model(should_grid_search = True, should_filter = True,
     # if specs.should_tfidf:
     #     sf = sparse_matrix_tfidf(sf)
     #     dump_sf(sf, 'data/tfidf_sf.csv')
-    #
-    # # Grid Search
-    # if should_grid_search:
-    #     graphlab_grid_search(sf, specs)
+
+    sf = graphlab.SFrame.read_csv('data/tfidf_sf.csv')
+    # Grid Search
+    if should_grid_search:
+        graphlab_grid_search(sf, specs)
 
     # Train
-    sf = graphlab.SFrame.read_csv('data/tfidf_sf.csv')
     model = graphlab_factorization_recommender(sf, specs, dump = True)
 
     if should_make_test_predictions:
@@ -165,7 +165,7 @@ def make_test_predictions(model):
 
     # Make recommendations
     recommendations_sf = model.recommend(users = ['https://bandcamp.com/kruegg'],
-                                         k = 50,
+                                         k = 150,
                                          new_user_data = prediction_sf)
 
     # Split into logical columns
