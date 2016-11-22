@@ -73,7 +73,23 @@ def show_sframe_sparcity(sf):
     print "Number of filled cells: {}".format(len(sf))
     print "Matrix sparcity: {}\n\n".format(float(len(sf)) / (n_albums * n_users))
 
+@timeit
+def convert_to_truncated_string_ids(sf):
+    """
+    Input:
+        sf -- SFrame
 
+    Converts the columns '_id' and 'album_id' to shortened versions
+    """
+
+    sf['_id'] = sf.apply(lambda x: x['_id'].replace('http://bandcamp_com/', '') \
+                                           .replace('https://bandcamp_com/', ''))
+    sf['album_id'] = sf.apply(lambda x: x['album_id'] \
+                       .replace('/album/', '') \
+                       .replace('com/album/', '') \
+                       .replace('http://', '') \
+                       .replace('https://', ''))
+    return sf
 
 @timeit
 def low_pass_filter_on_counts(sf, column = None, min_cutoff = 0,
