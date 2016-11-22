@@ -230,7 +230,7 @@ if __name__ == "__main__":
                                  folds = 10,
                                  should_tfidf = True)
 
-    build_model(should_grid_search = False,
+    build_model(should_grid_search = True,
                 should_filter = True,
                 should_make_test_predictions = True,
                 specs = specs)
