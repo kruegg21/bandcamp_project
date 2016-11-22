@@ -23,7 +23,8 @@ def dashboard():
 @app.route('/results', methods=['POST', 'GET'])
 def results():
     data = request.form['exampleTextarea']
-    return data.replace('\n', 'new_line')
+    url_list = data.split('\n')
+    return url_list
 
 if __name__ == '__main__':
   app.run(host = "0.0.0.0", port = int("8000"), debug = True)
