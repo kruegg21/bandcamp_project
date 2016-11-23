@@ -41,20 +41,7 @@ def custom_evaluation(model, train, test):
     score = recommendations['precision_recall_overall']['precision'][0]
     return {'precision_10': score}
 
-def grid_search(sf, model_factory = None, specs = None):
-    # Create K-Folds splits
-    if specs.should_shuffle_folds:
-        shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
-        folds = graphlab.cross_validation.KFold(shuffled_sf, specs.folds)
-    else:
-        folds = graphlab.cross_validation.KFold(sf, specs.folds)
 
-    # Run Grid Search
-    job = graphlab.grid_search.create(folds,
-                                      graphlab.ranking_factorization_recommender.create,
-                                      specs.param_grid,
-                                      evaluator = custom_evaluation)
-    print job.get_results()
 
 # Timing function
 def timeit(method):
