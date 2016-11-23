@@ -303,19 +303,19 @@ def album_metadata_scraper(n_workers = 4):
 def album_scraper_worker(album_urls):
     finished_all_albums = False
     while not finished_all_albums:
-        try:
-            # Get Mongo database to dump things into
-            db = get_mongo_database('bandcamp')
+        # try:
+        # Get Mongo database to dump things into
+        db = get_mongo_database('bandcamp')
 
-            for album_url in album_urls:
-                if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
-                    _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
-                                       driver = None,
-                                       database = db,
-                                       click_through = False)
-            finished_all_albums = True
-        except:
-            pass
+        for album_url in album_urls:
+            if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
+                _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
+                                   driver = None,
+                                   database = db,
+                                   click_through = False)
+        finished_all_albums = True
+        # except:
+
     print "Finished all albums"
 
 

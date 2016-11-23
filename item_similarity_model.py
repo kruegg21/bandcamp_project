@@ -61,15 +61,13 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
 
 if __name__ == "__main__":
     # Grid Search Parameters
-    param_grid = dict([('target', 'rating'),
+    param_grid = dict([('target', 'rating']),
                        ('user_id', '_id'),
                        ('item_id', 'album_id'),
-                       ('binary_target', True),
-                       ('max_iterations', 500),
-                       ('regularization', [1e-5, 1e-3, 1e-1]),
-                       ('linear_regularization', [1e-3, 1e-1]),
-                       ('ranking_regularization', [0.5, 0.4, 0.3]),
-                       ('num_sampled_negative_examples', [4])
+                       ('similarity_type', 'jaccard'),
+                       ('threshold', 0.001),
+                       ('only_top_k', 100),
+                       ('target_memory_usage', 8589934592 * 8)
                       ])
 
     # Model Parameters
@@ -94,6 +92,6 @@ if __name__ == "__main__":
 
     # Build Model
     build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
-                                should_grid_search = False,
+                                should_grid_search = True,
                                 should_make_test_predictions = True,
                                 specs = specs)
