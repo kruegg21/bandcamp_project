@@ -102,13 +102,13 @@ def build_from_album_list():
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
                                    min_cutoff = 10,
-                                   max_cutoff = 1000,
+                                   max_cutoff = 2000,
                                    name = 'user_to_album_sf_',
                                    dump = False)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = '_id',
-                                   min_cutoff = 10,
+                                   min_cutoff = 100,
                                    name = 'user_to_album_sf_album',
                                    dump = True)
 
