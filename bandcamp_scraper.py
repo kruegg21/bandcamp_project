@@ -137,7 +137,7 @@ def get_user_collection(url, driver, db):
             pass
     return album_list
 
-def get_album_data(url = None, driver = None, database = None, click_through = True):
+def get_album_data(url = None, driver = None, db = None, click_through = True):
     # Search URL
     r = requests.get(url)
     html = r.text
@@ -311,7 +311,7 @@ def album_scraper_worker(album_urls):
             if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
                 _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
                                    driver = None,
-                                   database = db,
+                                   db = db,
                                    click_through = False)
         finished_all_albums = True
         # except:
