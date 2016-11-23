@@ -12,13 +12,17 @@ def build_model(data = None, should_grid_search = True, should_filter = True,
     sf = graphlab.SFrame.read_csv('data/{}.csv'.format(data))
 
     # Train
-    model = factorization_recommender(sf, specs, dump = True)
+    model = factorization_recommender(sf,
+                                      specs,
+                                      dump = True,
+                                      should_grid_search = should_grid_search)
 
     # Make Test Predictions
     if should_make_test_predictions:
         make_test_predictions(model)
 
-def factorization_recommender(sf, specs, dump = True, train = True):
+def factorization_recommender(sf, specs, dump = True, train = True,
+                              should_grid_search = False):
     # Test Train Split
     if specs.should_shuffle_folds:
         shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
