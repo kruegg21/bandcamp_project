@@ -306,20 +306,34 @@ def album_scraper_worker(album_urls, n_threads = 4):
     n = len(album_urls) / n_threads
     album_url_chunks = [album_urls[i:i + n] for i in range(0, len(album_urls), n)]
 
+    thread_list = list()
+    for url_chunk in album_url_chunks:
+        print len(url_chunk)
+        print 'new thread started'
+        t = threading.Thread(target=album_scraper_thread, args = (url_chunk,))
+        thread_list.append(t)
+        t.start()
+
+    for t in thread_list:
+        t.join()
+
+
+def album_scraper_thread(album_urls):
     finished_all_albums = False
     while not finished_all_albums:
-        # try:
-        # Get Mongo database to dump things into
-        db = get_mongo_database('bandcamp')
+        try:
+            # Get Mongo database to dump things into
+            db = get_mongo_database('bandcamp')
 
-        for album_url in album_urls:
-            if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
-                _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
-                                   driver = None,
-                                   db = db,
-                                   click_through = False)
-        finished_all_albums = True
-        # except:
+            for album_url in album_urls:
+                if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
+                    _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
+                                       driver = None,
+                                       db = db,
+                                       click_through = False)
+            finished_all_albums = True
+        except:
+            pass
 
     print "Finished all albums"
 

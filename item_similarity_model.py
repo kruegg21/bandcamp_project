@@ -65,8 +65,8 @@ if __name__ == "__main__":
                        ('user_id', '_id'),
                        ('item_id', 'album_id'),
                        ('similarity_type', 'jaccard'),
-                       ('threshold', 0.001),
-                       ('only_top_k', 100),
+                       ('threshold', 0.0001),
+                       ('only_top_k', 1000),
                        ('target_memory_usage', 8589934592 * 8)
                       ])
 
