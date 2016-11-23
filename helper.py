@@ -79,8 +79,8 @@ def read_dictionary_model(name):
         pickle.load(f)
 
 @timeit
-def dump_dictionary_model(dict, name):
-    with open('models/{}}.dict', 'w+') as f:
+def dump_dictionary_model(d, name):
+    with open('models/{}.dict', 'w+') as f:
         pickle.dump(d, f)
 
 @timeit
@@ -293,6 +293,7 @@ def convert_to_sframe_format(df, list_like_columns = None,
     if get_album_counts:
         album_counts = sf.groupby(key_columns = resulting_column_names[0],
                                   operations = {'count': agg.COUNT()})
+
         album_counts.save('data/{}_album_counts.csv'.format(name),
                           format = 'csv')
 
