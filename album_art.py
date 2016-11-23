@@ -55,7 +55,7 @@ def build_from_album_art_list(verbose = True):
     dump_sf(sf, 'data/album_url_to_art_id.csv')
 
     # Dump pickled dictionary
-    d = get_album_art_to_url_dict()
+    d = get_album_url_to_art_dict()
     dump_dictionary_model(d, 'album_url_to_art_id')
 
 if __name__ == "__main__":

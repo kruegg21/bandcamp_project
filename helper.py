@@ -77,7 +77,7 @@ def load_sparse_csr(filename):
                       shape = loader['shape'])
 
 @timeit
-def get_album_art_to_url_dict():
+def get_album_url_to_art_dict():
     return csv_to_dict('album_url_to_art_id')
 
 @timeit
