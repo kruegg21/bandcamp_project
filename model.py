@@ -23,6 +23,7 @@ class model_specifications(object):
         self.folds = kwargs.get('folds')
         self.should_tfidf = kwargs.get('should_tfidf')
         self.should_shuffle_folds = kwargs.get('should_shuffle_folds')
+        self.serendipity_coefficient = kwargs.get('serendipity_coefficient')
 
 def build_model(should_grid_search = True, should_filter = True,
                 specs = None, should_make_test_predictions = True):
