@@ -1,5 +1,6 @@
 import graphlab
 from helper import custom_evaluation
+import time
 
 def grid_search(sf, model_factory = None, specs = None):
     # Create K-Folds splits
@@ -14,4 +15,9 @@ def grid_search(sf, model_factory = None, specs = None):
                                       model_factory,
                                       specs.param_grid,
                                       evaluator = custom_evaluation)
+    while True:
+        time.sleep(10)
+        print job.get_status()
+
+
     print job.get_results()
