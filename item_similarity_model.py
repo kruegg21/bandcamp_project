@@ -47,7 +47,7 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
                           similarity_type = specs.params['similarity_type'],
                           threshold = specs.params['threshold'],
                           only_top_k = specs.params['only_top_k'],
-                          target_memory_use = specs.params['target_memory_usage'])
+                          target_memory_usage = specs.params['target_memory_usage'])
     # Data print out
     print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
     print rec_model.get_similar_items()
