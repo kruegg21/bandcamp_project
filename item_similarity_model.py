@@ -61,13 +61,13 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
 
 if __name__ == "__main__":
     # Grid Search Parameters
-    param_grid = dict([('target', 'rating'),
-                       ('user_id', '_id'),
-                       ('item_id', 'album_id'),
-                       ('similarity_type', 'jaccard'),
-                       ('threshold', 0.0001),
-                       ('only_top_k', 1000),
-                       ('target_memory_usage', 8589934592 * 8)
+    param_grid = dict([('target', ['rating']),
+                       ('user_id', ['_id']),
+                       ('item_id', ['album_id']),
+                       ('similarity_type', ['jaccard']),
+                       ('threshold', [0.0001]),
+                       ('only_top_k', [1000]),
+                       ('target_memory_usage', [8589934592 * 8])
                       ])
 
     # Model Parameters

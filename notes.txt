@@ -18,3 +18,10 @@
 # Validation
 1. We are forced to choose between two imperfect methods. First is the
    'swiss cheese matrix' method and the second si the 'all cold start' method.
+
+# Serendipity
+1. Change ratings to be 1 + S * (IDF)
+      S -- serendipity parameters
+      IDF -- log inverse document frequency
+2. Get raw probabilities from the factorization model and use these scores as
+   the probability of recommendation
