@@ -30,7 +30,7 @@ def build_serendipity_model(data = None, should_grid_search = True,
 def add_serendipity(sf, specs = None):
     album_url_to_count_dict = get_album_url_to_count_dict()
     sf['album_counts'] = sf.apply(lambda x: album_url_to_count_dict[x['album_id']]).astype(float)
-    sf['log_album_counts'] = np.log(sf['album_counts'])
+    sf['log_inversealbum_counts'] = np.log(sf['album_counts'])
     sf['serendipity_score'] = sf['log_album_counts'] * specs.serendipity_coefficient
     return sf
 

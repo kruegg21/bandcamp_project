@@ -35,7 +35,7 @@ def results():
     pred_url_list = [s.replace('https', 'http') for s in pred_url_list]
 
     # Get URLs to album art for each predicted album
-    url_to_art_dict = get_album_art_to_url_dict()
+    url_to_art_dict = get_album_url_to_art_dict()
     art_id_list = [url_to_art_dict[convert_to_mongo_key_formatting(x)] for x in pred_url_list]
 
     albums_list = list()
