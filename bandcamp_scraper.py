@@ -14,6 +14,8 @@ from bs4 import BeautifulSoup
 from HTMLParser import HTMLParser
 from selenium import webdriver
 from multiprocessing import Pool
+import smtplib
+from email.mime.text import MIMEText
 from helper import *
 
 def random_sleep():
@@ -135,7 +137,7 @@ def get_user_collection(url, driver, db):
             pass
     return album_list
 
-def get_album_data(url, driver, db, click_through = True):
+def get_album_data(url = None, driver = None, db = None, click_through = True):
     # Search URL
     r = requests.get(url)
     html = r.text
@@ -301,22 +303,19 @@ def album_metadata_scraper(n_workers = 4):
 def album_scraper_worker(album_urls):
     finished_all_albums = False
     while not finished_all_albums:
-        # try:
-        # Web driver
-        driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
+        try:
+            # Get Mongo database to dump things into
+            db = get_mongo_database('bandcamp')
 
-        # Get Mongo database to dump things into
-        db = get_mongo_database('bandcamp')
-
-        for album_url in album_urls:
-            if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
-                _ = get_album_data(reverse_convert_to_mongo_key_formatting(album_url),
-                                   driver,
-                                   db,
-                                   click_through = False)
-        finished_all_albums = True
-        # except:
-        #     driver.close()
+            for album_url in album_urls:
+                if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
+                    _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
+                                       driver = None,
+                                       database = db,
+                                       click_through = False)
+            finished_all_albums = True
+        except:
+            pass
     print "Finished all albums"
 
 

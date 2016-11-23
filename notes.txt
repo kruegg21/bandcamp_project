@@ -14,3 +14,7 @@
 
 # Web App
 1. Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
+
+# Validation
+1. We are forced to choose between two imperfect methods. First is the
+   'swiss cheese matrix' method and the second si the 'all cold start' method.

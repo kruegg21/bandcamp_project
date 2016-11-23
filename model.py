@@ -101,43 +101,23 @@ def sparse_matrix_tfidf(sf):
     # print "Make secondary dataframe"
 
     return graphlab.SFrame(tfidf_df)
-
-def graphlab_grid_search(sf, specs = None):
-    # Create K-Folds splits
-    if specs.should_shuffle_folds:
-        shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
-        folds = graphlab.cross_validation.KFold(shuffled_sf, specs.folds)
-    else:
-        folds = graphlab.cross_validation.KFold(sf, specs.folds)
-
-    # Run Grid Search
-    job = graphlab.grid_search.create(folds,
-                                      graphlab.ranking_factorization_recommender.create,
-                                      specs.rank_factorization_param_grid,
-                                      evaluator = custom_evaluation)
-    print job.get_results()
-    log_grid_search_results(grid_search_job)
-
-    # Put optimal parameters in specifications
+# 
+# def graphlab_grid_search(sf, specs = None):
+#     # Create K-Folds splits
+#     if specs.should_shuffle_folds:
+#         shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
+#         folds = graphlab.cross_validation.KFold(shuffled_sf, specs.folds)
+#     else:
+#         folds = graphlab.cross_validation.KFold(sf, specs.folds)
+#
+#     # Run Grid Search
+#     job = graphlab.grid_search.create(folds,
+#                                       graphlab.ranking_factorization_recommender.create,
+#                                       specs.rank_factorization_param_grid,
+#                                       evaluator = custom_evaluation)
+#     print job.get_results()
 
 
-def log_grid_search_results(grid_search_job, specs):
-    """
-    Input:
-        grid_search_job -- GraphLab ModelSearchJob object
-    Ouptu:
-        None
-
-    Dumps the result of grid search to proper text file
-    """
-
-
-def custom_evaluation(model, train, test):
-    recommendations = model.evaluate_precision_recall(test,
-                                                      cutoffs = [10,200,1000],
-                                                      exclude_known = False)
-    score = recommendations['precision_recall_overall']['precision'][0]
-    return {'precision_10': score}
 
 def make_test_predictions(model):
     # Make predictions
@@ -174,39 +154,7 @@ def make_test_predictions(model):
     # Dump recommendations to CSV
     dump_sf(recommendations_sf, 'data/recommendations.csv')
 
-def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
-    if train:
-        # Test train split
-        (train_set, test_set) = sf.random_split(0.8, seed=1)
 
-        # Create model
-        if specs.should_tfidf:
-            binary_target = False
-        else:
-            binary_target = True
-
-        rec_model = graphlab.ranking_factorization_recommender.create(
-                      train_set,
-                      target = specs.rank_factorization_params['target'],
-                      user_id = specs.rank_factorization_params['user_id'],
-                      item_id = specs.rank_factorization_params['item_id'],
-                      binary_target = specs.rank_factorization_params['binary_target'],
-                      max_iterations = specs.rank_factorization_params['max_iterations'],
-                      ranking_regularization = specs.rank_factorization_params['ranking_regularization'],
-                      linear_regularization = specs.rank_factorization_params['linear_regularization'],
-                      regularization = specs.rank_factorization_params['regularization'])
-
-        # Data print out
-        print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
-        print rec_model.get_similar_items()
-    else:
-        rec_model = graphlab.load_model('factorization_recommender')
-
-    # Dump
-    if dump:
-        rec_model.save('factorization_recommender')
-
-    return rec_model
 
 if __name__ == "__main__":
     # Grid Search Parameters

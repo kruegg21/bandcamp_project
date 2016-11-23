@@ -33,6 +33,29 @@ rap_album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
                   'https://openmikeeagle360.bandcamp.com/album/time-materials',
                   'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
 
+
+def custom_evaluation(model, train, test):
+    recommendations = model.evaluate_precision_recall(test,
+                                                      cutoffs = [10,200,1000],
+                                                      exclude_known = False)
+    score = recommendations['precision_recall_overall']['precision'][0]
+    return {'precision_10': score}
+
+def grid_search(sf, model_factory = None, specs = None):
+    # Create K-Folds splits
+    if specs.should_shuffle_folds:
+        shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
+        folds = graphlab.cross_validation.KFold(shuffled_sf, specs.folds)
+    else:
+        folds = graphlab.cross_validation.KFold(sf, specs.folds)
+
+    # Run Grid Search
+    job = graphlab.grid_search.create(folds,
+                                      graphlab.ranking_factorization_recommender.create,
+                                      specs.param_grid,
+                                      evaluator = custom_evaluation)
+    print job.get_results()
+
 # Timing function
 def timeit(method):
     """
