@@ -68,7 +68,19 @@ def load_sparse_csr(filename):
 
 @timeit
 def get_album_art_to_url_dict():
-    with open('data/album_url_to_art_id.csv', mode='r') as infile:
+    return csv_to_dict('album_url_to_art_id')
+    # with open('data/album_url_to_art_id.csv', mode='r') as infile:
+    #     reader = csv.reader(infile)
+    #     mydict = {rows[0]:rows[1] for rows in reader}
+    # return mydict
+
+@timeit
+def get_album_url_to_count_dict():
+    return csv_to_dict('user_to_album_sf_album_counts')
+
+@timeit
+def csv_to_dict(name):
+    with open('data/{}.csv'.format(name), mode='r') as infile:
         reader = csv.reader(infile)
         mydict = {rows[0]:rows[1] for rows in reader}
     return mydict
@@ -296,6 +308,8 @@ def convert_to_sframe_format(df, list_like_columns = None,
 
         album_counts.save('data/{}_album_counts.csv'.format(name),
                           format = 'csv')
+
+
 
     # Dump
     if dump:

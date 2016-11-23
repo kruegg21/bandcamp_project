@@ -78,8 +78,6 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 
 
 
-
-
 # Pipelines
 # DO THIS ON LOCAL
 def build_user_to_album_list_from_database():
@@ -124,7 +122,7 @@ def build_from_album_list():
                                    min_cutoff = 10,
                                    max_cutoff = 1000,
                                    name = 'user_to_album_sf_',
-                                   dump = True)
+                                   dump = False)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = '_id',
