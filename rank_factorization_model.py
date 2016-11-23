@@ -79,7 +79,7 @@ if __name__ == "__main__":
                    ('item_id', 'album_id'),
                    ('binary_target', True),
                    ('max_iterations', 1000),
-                   ('regularization', .001),
+                   ('regularization', .01),
                    ('linear_regularization', 0.01),
                    ('ranking_regularization', 0.4)
                   ])
