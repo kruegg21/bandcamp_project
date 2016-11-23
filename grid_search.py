@@ -15,9 +15,12 @@ def grid_search(sf, model_factory = None, specs = None):
                                       model_factory,
                                       specs.param_grid,
                                       evaluator = custom_evaluation)
-    while True:
+
+    # Status Update
+    while job.get_status()['Pending'] + job.get_status()['Running'] != 0:
         time.sleep(10)
         print job.get_status()
+        print job.summary()
 
 
     print job.get_results()
