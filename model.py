@@ -189,7 +189,7 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
                       train_set,
                       target = specs.rank_factorization_params['target'],
                       user_id = specs.rank_factorization_params['user_id'],
-                      item_id = spec.rank_factorization_params['item_id'],
+                      item_id = specs.rank_factorization_params['item_id'],
                       binary_target = specs.rank_factorization_params['binary_target'],
                       max_iterations = specs.rank_factorization_params['max_iterations'],
                       ranking_regularization = specs.rank_factorization_params['ranking_regularization'],
