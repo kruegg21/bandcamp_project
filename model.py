@@ -187,14 +187,14 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
 
         rec_model = graphlab.ranking_factorization_recommender.create(
                       train_set,
-                      target = specs.rank_factorization_params.target,
-                      user_id = specs.rank_factorization_params.target.user_id,
-                      item_id = spec.rank_factorization_params.item_id,
-                      binary_target = specs.rank_factorization_params.binary_target,
-                      max_iterations = specs.rank_factorization_params.max_iterations,
-                      ranking_regularization = specs.rank_factorization_params.ranking_regularization,
-                      linear_regularization = specs.rank_factorization_params.linear_regularization,
-                      regularization = specs.rank_factorization_params.regularization)
+                      target = specs.rank_factorization_params['target'],
+                      user_id = specs.rank_factorization_params['user_id'],
+                      item_id = spec.rank_factorization_params['item_id'],
+                      binary_target = specs.rank_factorization_params['binary_target'],
+                      max_iterations = specs.rank_factorization_params['max_iterations'],
+                      ranking_regularization = specs.rank_factorization_params['ranking_regularization'],
+                      linear_regularization = specs.rank_factorization_params['linear_regularization'],
+                      regularization = specs.rank_factorization_params['regularization'])
 
         # Data print out
         print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
