@@ -40,16 +40,14 @@ def factorization_recommender(sf, specs, dump = True, train = True,
 
     # Create model
     rec_model = graphlab.item_similarity_recommender.create(
-                  train_set,
-                  target = specs.params['target'],
-                  user_id = specs.params['user_id'],
-                  item_id = specs.params['item_id'],
-                  binary_target = specs.params['binary_target'],
-                  max_iterations = specs.params['max_iterations'],
-                  ranking_regularization = specs.params['ranking_regularization'],
-                  linear_regularization = specs.params['linear_regularization'],
-                  regularization = specs.params['regularization'])
-
+                          train_set,
+                          target = specs.params['target'],
+                          user_id = specs.params['user_id'],
+                          item_id = specs.params['item_id'],
+                          similarity_type = specs.params['similarity_type'],
+                          threshold = specs.params['threshold'],
+                          only_top_k = specs.params['only_top_k'],
+                          target_memory_use = specs.params['target_memory_use'])
     # Data print out
     print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
     print rec_model.get_similar_items()
@@ -78,11 +76,10 @@ if __name__ == "__main__":
     params = dict([('target', 'rating'),
                    ('user_id', '_id'),
                    ('item_id', 'album_id'),
-                   ('binary_target', True),
-                   ('max_iterations', 500),
-                   ('regularization', .001),
-                   ('linear_regularization', 0.001),
-                   ('ranking_regularization', 0.4)
+                   ('similarity_type', 'jaccard'),
+                   ('threshold', 0.001)
+                   ('only_top_k', 100),
+                   ('target_memory_use', 8589934592 * 8)
                   ])
 
     # Specifications for building
