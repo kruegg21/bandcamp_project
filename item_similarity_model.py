@@ -1,6 +1,6 @@
 from helper import *
 from grid_search import grid_search
-from model import make_test_predictions, model_specifications, custom_evaluation
+from model import make_test_predictions, model_specifications
 
 def build_item_similarity_model(data = None, should_grid_search = True,
                                 should_filter = True, specs = None,

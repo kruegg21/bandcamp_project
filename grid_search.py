@@ -1,4 +1,5 @@
 import graphlab
+from helper import custom_evaluation
 
 def grid_search(sf, model_factory = None, specs = None):
     # Create K-Folds splits
