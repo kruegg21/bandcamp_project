@@ -5,12 +5,6 @@ import random
 from bandcamp_scraper import get_mongo_database
 from helper import *
 
-"""
-Notes:
-Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'
-"""
-
-
 @timeit
 def convert_to_gephi_format(sf, node_column = None, link_column = None,
                             edge_subset_proportion = 0.3,
@@ -88,18 +82,6 @@ def build_user_to_album_list_from_database():
                           feature_building_method = album_list,
                           database = db,
                           dump = False)
-
-
-# DO THIS ON LOCAL
-def build_user_to_album_art_from_database():
-    # Get databasea to read from
-    db = get_mongo_database('bandcamp')
-
-    df = update_dataframe(name = 'user_to_album_art',
-                          feature_building_method = album_art,
-                          database = db,
-                          dump = True,
-                          test = False)
 
 
 # DO THIS ON EC2

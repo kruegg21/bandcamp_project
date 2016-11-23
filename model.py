@@ -71,46 +71,47 @@ def build_model(should_grid_search = True, should_filter = True,
 @timeit
 def sparse_matrix_tfidf(sf):
     print "Starting TF-IFD"
+    print sf
 
-    # Transform to DataFrame
-    df = sf.to_dataframe()
-
-    print "Translated to DF"
-
-    # Make translation dictionaries for '_id' and 'album_id'
-    _id_translation_dict = reverse_dict(dict(enumerate(df['_id'].unique())))
-    album_translation_dict = reverse_dict(dict(enumerate(df['album_id'].unique())))
-
-    print "Translation dictionaries made"
-
-    # Create scipy sparse matrix
-    df['_id'].replace(_id_translation_dict, inplace = True)
-    df['album_id'].replace(album_translation_dict, inplace = True)
-    row = df['_id'].values
-    col = df['album_id'].values
-    data = df['rating'].values
-    print "Replaced with translated values"
-    sparse_mat = coo_matrix((data, (row, col)), shape = (row.shape[0], col.shape[0]))
-    print "Converted to scipy matrix"
-    save_sparse_coo('sparse_mat_dump.coo', sparse_mat)
-
-    # TF-IDF scores
-    transformer = TfidfTransformer()
-    tfidf_sparse_mat = transformer.fit_transform(sparse_mat).tocoo()
-    print "Transformed to TF-IDF scores"
-    print sparse_mat.data
-    print tfidf_sparse_mat.data
-
-    print "Created TFIDF ratings"
-
-    tfidf_df = pd.DataFrame()
-    tfidf_df['rating'] = tfidf_sparse_mat.data
-    tfidf_df['_id'] = tfidf_sparse_mat.row
-    tfidf_df['album_id'] = tfidf_sparse_mat.col
-    tfidf_df['_id'].replace(reverse_dict(_id_translation_dict), inplace = True)
-    tfidf_df['album_id'].replace(reverse_dict(album_translation_dict), inplace = True)
-
-    print "Make secondary dataframe"
+    # # Transform to DataFrame
+    # df = sf.to_dataframe()
+    #
+    # print "Translated to DF"
+    #
+    # # Make translation dictionaries for '_id' and 'album_id'
+    # _id_translation_dict = reverse_dict(dict(enumerate(df['_id'].unique())))
+    # album_translation_dict = reverse_dict(dict(enumerate(df['album_id'].unique())))
+    #
+    # print "Translation dictionaries made"
+    #
+    # # Create scipy sparse matrix
+    # df['_id'].replace(_id_translation_dict, inplace = True)
+    # df['album_id'].replace(album_translation_dict, inplace = True)
+    # row = df['_id'].values
+    # col = df['album_id'].values
+    # data = df['rating'].values
+    # print "Replaced with translated values"
+    # sparse_mat = coo_matrix((data, (row, col)), shape = (row.shape[0], col.shape[0]))
+    # print "Converted to scipy matrix"
+    # save_sparse_coo('sparse_mat_dump.coo', sparse_mat)
+    #
+    # # TF-IDF scores
+    # transformer = TfidfTransformer()
+    # tfidf_sparse_mat = transformer.fit_transform(sparse_mat).tocoo()
+    # print "Transformed to TF-IDF scores"
+    # print sparse_mat.data
+    # print tfidf_sparse_mat.data
+    #
+    # print "Created TFIDF ratings"
+    #
+    # tfidf_df = pd.DataFrame()
+    # tfidf_df['rating'] = tfidf_sparse_mat.data
+    # tfidf_df['_id'] = tfidf_sparse_mat.row
+    # tfidf_df['album_id'] = tfidf_sparse_mat.col
+    # tfidf_df['_id'].replace(reverse_dict(_id_translation_dict), inplace = True)
+    # tfidf_df['album_id'].replace(reverse_dict(album_translation_dict), inplace = True)
+    #
+    # print "Make secondary dataframe"
 
     return graphlab.SFrame(tfidf_df)
 
@@ -128,8 +129,20 @@ def graphlab_grid_search(sf, specs = None):
                                       specs.param_grid,
                                       evaluator = custom_evaluation)
     print job.get_results()
+    log_grid_search_results(grid_search_job)
 
     # Put optimal parameters in specifications
+
+
+def log_grid_search_results(grid_search_job, specs):
+    """
+    Input:
+        grid_search_job -- GraphLab ModelSearchJob object
+    Ouptu:
+        None
+
+    Dumps the result of grid search to proper text file
+    """
 
 
 def custom_evaluation(model, train, test):
@@ -224,6 +237,7 @@ if __name__ == "__main__":
                                  album_count_min_cutoff = 40,
                                  folds = 10,
                                  should_tfidf = False,
+
                                  should_shuffle_folds = True)
 
     build_model(should_grid_search = True,
