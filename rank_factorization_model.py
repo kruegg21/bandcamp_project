@@ -1,5 +1,5 @@
 from helper import *
-from model import make_test_predictions
+from model import make_test_predictions, model_specifications
 
 def build_model(data = None, should_grid_search = True, should_filter = True,
                 specs = None, should_make_test_predictions = True):
