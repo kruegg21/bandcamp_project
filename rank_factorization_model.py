@@ -48,6 +48,7 @@ def rank_factorization_recommender(sf, specs, dump = True, train = True,
                   max_iterations = specs.params['max_iterations'],
                   ranking_regularization = specs.params['ranking_regularization'],
                   linear_regularization = specs.params['linear_regularization'],
+                  unobserved_rating_value = specs.params['unobserved_rating_value'],
                   regularization = specs.params['regularization'])
 
     # Data print out
@@ -70,7 +71,8 @@ if __name__ == "__main__":
                        ('regularization', [1e-5, 1e-3, 1e-1]),
                        ('linear_regularization', [1e-3, 1e-1]),
                        ('ranking_regularization', [0.5, 0.4, 0.3]),
-                       ('num_sampled_negative_examples', [4])
+                       ('num_sampled_negative_examples', [4]),
+                       ('unobserved_rating_value', [0])
                       ])
 
     # Model Parameters
@@ -81,7 +83,8 @@ if __name__ == "__main__":
                    ('max_iterations', 1000),
                    ('regularization', .01),
                    ('linear_regularization', 0.01),
-                   ('ranking_regularization', 0.4)
+                   ('ranking_regularization', 0.4),
+                   ('unobserved_rating_value', 0)
                   ])
 
     # Specifications for building
