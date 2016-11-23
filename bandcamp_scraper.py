@@ -137,7 +137,7 @@ def get_user_collection(url, driver, db):
             pass
     return album_list
 
-def get_album_data(url = None, driver = None, db = None, click_through = True):
+def get_album_data(url = None, driver = None, database = None, click_through = True):
     # Search URL
     r = requests.get(url)
     html = r.text
