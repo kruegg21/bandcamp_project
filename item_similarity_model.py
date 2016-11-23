@@ -47,7 +47,7 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
                           similarity_type = specs.params['similarity_type'],
                           threshold = specs.params['threshold'],
                           only_top_k = specs.params['only_top_k'],
-                          target_memory_use = specs.params['target_memory_use'])
+                          target_memory_use = specs.params['target_memory_usage'])
     # Data print out
     print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
     print rec_model.get_similar_items()
@@ -79,7 +79,7 @@ if __name__ == "__main__":
                    ('similarity_type', 'jaccard'),
                    ('threshold', 0.001),
                    ('only_top_k', 100),
-                   ('target_memory_use', 8589934592 * 8)
+                   ('target_memory_usage', 8589934592 * 8)
                   ])
 
     # Specifications for building
