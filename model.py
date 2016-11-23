@@ -121,7 +121,7 @@ def sparse_matrix_tfidf(sf):
 
 def make_test_predictions(model):
     # Make predictions
-    album_list = rap_album_list
+    album_list = metal_album_list
     rating_list = [1] * len(album_list)
     _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
 
@@ -134,6 +134,8 @@ def make_test_predictions(model):
                                      'album_id': album_list,
                                      'rating': rating_list})
     prediction_sf = convert_to_truncated_string_ids(prediction_sf)
+
+    print prediction_sf
 
     # Make recommendations
     recommendations_sf = model.recommend(users = ['https://bandcamp.com/kruegg'],
