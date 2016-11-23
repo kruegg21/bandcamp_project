@@ -2,29 +2,29 @@ from helper import *
 from grid_search import grid_search
 from model import make_test_predictions, model_specifications
 
-def build_rank_factorization_model(data = None, should_grid_search = True,
-                                   should_filter = True, specs = None,
-                                   should_make_test_predictions = True):
+def build_item_similarity_model(data = None, should_grid_search = True,
+                                should_filter = True, specs = None,
+                                should_make_test_predictions = True):
     """
     Input:
         should_grid_search -- Bool indicating if we should grid search or not
-        specs -- model_specifications Object with info about data
+        specs -- model_specifications object with info about parameters and data
     """
     # Read data
     sf = graphlab.SFrame.read_csv('data/{}.csv'.format(data))
 
     # Train
-    model = rank_factorization_recommender(sf,
-                                      specs,
-                                      dump = True,
-                                      should_grid_search = should_grid_search)
+    model = item_similarity_recommender(sf,
+                                        specs,
+                                        dump = True,
+                                        should_grid_search = should_grid_search)
 
     # Make Test Predictions
     if should_make_test_predictions:
         make_test_predictions(model)
 
-def rank_factorization_recommender(sf, specs, dump = True, train = True,
-                                   should_grid_search = False):
+def factorization_recommender(sf, specs, dump = True, train = True,
+                              should_grid_search = False):
     # Test Train Split
     if specs.should_shuffle_folds:
         shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
@@ -41,14 +41,14 @@ def rank_factorization_recommender(sf, specs, dump = True, train = True,
     # Create model
     rec_model = graphlab.ranking_factorization_recommender.create(
                   train_set,
-                  target = specs.params['target'],
-                  user_id = specs.params['user_id'],
-                  item_id = specs.params['item_id'],
-                  binary_target = specs.params['binary_target'],
-                  max_iterations = specs.params['max_iterations'],
-                  ranking_regularization = specs.params['ranking_regularization'],
-                  linear_regularization = specs.params['linear_regularization'],
-                  regularization = specs.params['regularization'])
+                  target = specs.rank_factorization_params['target'],
+                  user_id = specs.rank_factorization_params['user_id'],
+                  item_id = specs.rank_factorization_params['item_id'],
+                  binary_target = specs.rank_factorization_params['binary_target'],
+                  max_iterations = specs.rank_factorization_params['max_iterations'],
+                  ranking_regularization = specs.rank_factorization_params['ranking_regularization'],
+                  linear_regularization = specs.rank_factorization_params['linear_regularization'],
+                  regularization = specs.rank_factorization_params['regularization'])
 
     # Data print out
     print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
@@ -59,6 +59,7 @@ def rank_factorization_recommender(sf, specs, dump = True, train = True,
         rec_model.save('factorization_recommender')
 
     return rec_model
+
 
 if __name__ == "__main__":
     # Grid Search Parameters
@@ -95,7 +96,7 @@ if __name__ == "__main__":
                                  should_shuffle_folds = True)
 
     # Build Model
-    build_rank_factorization_model(data = 'user_to_album_sf_album_id_filtered',
-                                   should_grid_search = False,
-                                   should_make_test_predictions = True,
-                                   specs = specs)
+    build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
+                                should_grid_search = False,
+                                should_make_test_predictions = True,
+                                specs = specs)
