@@ -78,9 +78,9 @@ if __name__ == "__main__":
                    ('user_id', '_id'),
                    ('item_id', 'album_id'),
                    ('binary_target', True),
-                   ('max_iterations', 500),
+                   ('max_iterations', 1000),
                    ('regularization', .001),
-                   ('linear_regularization', 0.001),
+                   ('linear_regularization', 0.01),
                    ('ranking_regularization', 0.4)
                   ])
 
