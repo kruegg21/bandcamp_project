@@ -23,7 +23,7 @@ def build_item_similarity_model(data = None, should_grid_search = True,
     if should_make_test_predictions:
         make_test_predictions(model)
 
-def factorization_recommender(sf, specs, dump = True, train = True,
+def item_similarity_recommender(sf, specs, dump = True, train = True,
                               should_grid_search = False):
     # Test Train Split
     if specs.should_shuffle_folds:
