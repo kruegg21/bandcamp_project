@@ -93,7 +93,9 @@ if __name__ == "__main__":
                    ('max_iterations', 500),
                    ('ranking_regularization', 0.4),
                    ('linear_regularization', 0.001),
-                   ('regularization', .001)])
+                   ('regularization', .001),
+                   ('unobserved_rating_value', 0),
+                   ('num_factors', 200)])
 
     # Specifications for building
     specs = model_specifications(param_grid = param_grid,
