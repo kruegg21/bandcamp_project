@@ -236,8 +236,7 @@ if __name__ == "__main__":
                                  album_count_max_cutoff = 1200,
                                  album_count_min_cutoff = 40,
                                  folds = 10,
-                                 should_tfidf = False,
-
+                                 should_tfidf = True,
                                  should_shuffle_folds = True)
 
     build_model(should_grid_search = True,
