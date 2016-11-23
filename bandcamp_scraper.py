@@ -136,19 +136,6 @@ def get_user_collection(url, driver, db):
     return album_list
 
 def get_album_data(url, driver, db, click_through = True):
-    # # Search URL
-    # driver.get(url)
-    #
-    # if click_through:
-    #     # Click to bottom of writing button
-    #     driver = click_through_more_button(driver, 'more-writing')
-    #
-    #     # Click to bottom of 'more' button
-    #     driver = click_through_more_button(driver, 'more-thumbs')
-    #
-    # # Get raw HTML
-    # html = driver.page_source
-
     # Search URL
     r = requests.get(url)
     html = r.text

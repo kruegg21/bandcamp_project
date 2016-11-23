@@ -56,7 +56,7 @@ def sparse_matrix_tfidf(sf):
     print "Starting TF-IFD"
     print sf
 
-    album_to_count_dict = read_dictionary_model(d, name)
+    album_to_count_dict = read_dictionary_model('album_url_to_count')
 
     popularity_weighted_sf = None
 
