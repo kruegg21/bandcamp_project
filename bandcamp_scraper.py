@@ -136,18 +136,22 @@ def get_user_collection(url, driver, db):
     return album_list
 
 def get_album_data(url, driver, db, click_through = True):
+    # # Search URL
+    # driver.get(url)
+    #
+    # if click_through:
+    #     # Click to bottom of writing button
+    #     driver = click_through_more_button(driver, 'more-writing')
+    #
+    #     # Click to bottom of 'more' button
+    #     driver = click_through_more_button(driver, 'more-thumbs')
+    #
+    # # Get raw HTML
+    # html = driver.page_source
+
     # Search URL
-    driver.get(url)
-
-    if click_through:
-        # Click to bottom of writing button
-        driver = click_through_more_button(driver, 'more-writing')
-
-        # Click to bottom of 'more' button
-        driver = click_through_more_button(driver, 'more-thumbs')
-
-    # Get raw HTML
-    html = driver.page_source
+    r = requests.get(url)
+    html = r.text
 
     # Make soup
     soup = BeautifulSoup(html, 'lxml')
@@ -310,24 +314,24 @@ def album_metadata_scraper(n_workers = 4):
 def album_scraper_worker(album_urls):
     finished_all_albums = False
     while not finished_all_albums:
-        try:
-            # Web driver
-            driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
+        # try:
+        # Web driver
+        driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
 
-            # Get Mongo database to dump things into
-            db = get_mongo_database('bandcamp')
+        # Get Mongo database to dump things into
+        db = get_mongo_database('bandcamp')
 
-            for album_url in album_urls:
-                if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
-                    _ = get_album_data(reverse_convert_to_mongo_key_formatting(album_url),
-                                       driver,
-                                       db,
-                                       click_through = False)
-            finished_all_albums = True
-        except:
-            driver.close()
+        for album_url in album_urls:
+            if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
+                _ = get_album_data(reverse_convert_to_mongo_key_formatting(album_url),
+                                   driver,
+                                   db,
+                                   click_through = False)
+        finished_all_albums = True
+        # except:
+        #     driver.close()
     print "Finished all albums"
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 8)
+    album_metadata_scraper(n_workers = 4)

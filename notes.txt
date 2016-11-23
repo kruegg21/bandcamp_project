@@ -6,8 +6,11 @@
 # Model Building
 1. There are three routes to take:
      Factorization Recommender w/ TF-IDF (use subjectivity)
+        Implement and test using sample albums
      Item Similarity Recommender (use Precision 10 as metric)
+        Run grid search on this model
      Factorization Recommender w/ Binary Targets (use Precision 10 as metric)
+        Run this model more times
 
 # Web App
 1. Album art URLs are of form 'https://f4.bcbits.com/img/a<'item_art_id'>_9.jpg'

@@ -18,7 +18,10 @@ class model_specifications(object):
         self.n_albums = kwargs.get('n_albums')
         self.n_users = kwargs.get('n_users')
         self.model = kwargs.get('model')
-        self.param_grid = kwargs.get('param_grid')
+        self.rank_factorization_param_grid = kwargs.get('rank_factorization_param_grid')
+        self.item_similarity_param_grid = kwargs.get('item_similarity_param_grid')
+        self.rank_factorization_params = kwargs.get('rank_factorization_params')
+        self.item_similarity_params = kwargs.get('item_similarity_params')
         self.params = kwargs.get('params')
         self.folds = kwargs.get('folds')
         self.should_tfidf = kwargs.get('should_tfidf')
@@ -31,27 +34,7 @@ def build_model(should_grid_search = True, should_filter = True,
         should_grid_search -- Bool indicating if we should grid search or not
         specs -- model_specifications Object with info about data
     """
-    # Filter
-    if should_filter:
-        # Starting data
-        sf = graphlab.SFrame.read_csv('data/user_to_album_sf.csv')
-
-        # Filter to make data more dense
-        sf = low_pass_filter_on_counts(sf,
-                                       column = 'album_id',
-                                       min_cutoff = specs.album_count_min_cutoff,
-                                       max_cutoff = specs.album_count_max_cutoff,
-                                       name = 'user_to_album_sf',
-                                       dump = True)
-
-        sf = low_pass_filter_on_counts(sf,
-                                       column = '_id',
-                                       min_cutoff = specs.user_count_min_cutoff,
-                                       max_cutoff = specs.user_count_max_cutoff,
-                                       name = 'user_to_album_sf_album',
-                                       dump = True)
-    else:
-        sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
+    sf = graphlab.SFrame.read_csv('data/user_to_album_sf_album_id_filtered.csv')
 
     if specs.should_tfidf:
         sf = sparse_matrix_tfidf(sf)
@@ -72,6 +55,10 @@ def build_model(should_grid_search = True, should_filter = True,
 def sparse_matrix_tfidf(sf):
     print "Starting TF-IFD"
     print sf
+
+    album_to_count_dict = read_dictionary_model(d, name)
+
+    popularity_weighted_sf = None
 
     # # Transform to DataFrame
     # df = sf.to_dataframe()
@@ -126,7 +113,7 @@ def graphlab_grid_search(sf, specs = None):
     # Run Grid Search
     job = graphlab.grid_search.create(folds,
                                       graphlab.ranking_factorization_recommender.create,
-                                      specs.param_grid,
+                                      specs.rank_factorization_param_grid,
                                       evaluator = custom_evaluation)
     print job.get_results()
     log_grid_search_results(grid_search_job)
@@ -198,15 +185,16 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
         else:
             binary_target = True
 
-        rec_model = graphlab.ranking_factorization_recommender.create(train_set,
-                                                                      target = 'rating',
-                                                                      user_id = '_id',
-                                                                      item_id = 'album_id',
-                                                                      binary_target = binary_target,
-                                                                      max_iterations = 500,
-                                                                      ranking_regularization = 0.1,
-                                                                      linear_regularization = 0.5,
-                                                                      regularization = 1e-5)
+        rec_model = graphlab.ranking_factorization_recommender.create(
+                      train_set,
+                      target = specs.rank_factorization_params.target,
+                      user_id = specs.rank_factorization_params.target.user_id,
+                      item_id = spec.rank_factorization_params.item_id,
+                      binary_target = specs.rank_factorization_params.binary_target,
+                      max_iterations = specs.rank_factorization_params.max_iterations,
+                      ranking_regularization = specs.rank_factorization_params.ranking_regularization,
+                      linear_regularization = specs.rank_factorization_params.linear_regularization,
+                      regularization = specs.rank_factorization_params.regularization)
 
         # Data print out
         print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
@@ -221,16 +209,37 @@ def graphlab_factorization_recommender(sf, specs, dump = True, train = True):
     return rec_model
 
 if __name__ == "__main__":
-    specs = model_specifications(param_grid = dict([('target', 'rating'),
-                                                    ('user_id', '_id'),
-                                                    ('item_id', 'album_id'),
-                                                    ('binary_target', True),
-                                                    ('max_iterations', 500),
-                                                    ('regularization', [1e-5, 1e-3, 1e-1]),
-                                                    ('linear_regularization', [1e-3, 1e-1]),
-                                                    ('ranking_regularization', [0.5, 0.4, 0.3]),
-                                                    ('num_sampled_negative_examples', [4])
-                                                   ]),
+    # Grid Search Parameters
+    rank_factorization_param_grid = dict([('target', 'rating'),
+                                          ('user_id', '_id'),
+                                          ('item_id', 'album_id'),
+                                          ('binary_target', True),
+                                          ('max_iterations', 500),
+                                          ('regularization', [1e-5, 1e-3, 1e-1]),
+                                          ('linear_regularization', [1e-3, 1e-1]),
+                                          ('ranking_regularization', [0.5, 0.4, 0.3]),
+                                          ('num_sampled_negative_examples', [4])
+                                         ])
+
+    item_similarity_param_grid = dict()
+
+    rank_factorization_params = dict([('target', 'rating'),
+                                      ('user_id', '_id'),
+                                      ('item_id', 'album_id'),
+                                      ('binary_target', True),
+                                      ('max_iterations', 500),
+                                      ('ranking_regularization', 0.4),
+                                      ('linear_regularization', 0.001),
+                                      ('regularization', .001)])
+
+    item_similarity_params = dict()
+
+
+    # Specifications for building
+    specs = model_specifications(rank_factorization_param_grid = rank_factorization_param_grid,
+                                 item_similarity_param_grid = item_similarity_param_grid,
+                                 rank_factorization_params = rank_factorization_params,
+                                 item_similarity_params = item_similarity_params,
                                  user_count_min_cutoff = 100,
                                  user_count_max_cutoff = np.inf,
                                  album_count_max_cutoff = 1200,
@@ -239,7 +248,6 @@ if __name__ == "__main__":
                                  should_tfidf = True,
                                  should_shuffle_folds = True)
 
-    build_model(should_grid_search = True,
-                should_filter = True,
+    build_model(should_grid_search = False,
                 should_make_test_predictions = True,
                 specs = specs)
