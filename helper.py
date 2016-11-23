@@ -80,7 +80,7 @@ def read_dictionary_model(name):
 
 @timeit
 def dump_dictionary_model(d, name):
-    with open('models/{}.dict', 'w+') as f:
+    with open('models/{}.dict'.format(name), 'w+') as f:
         pickle.dump(d, f)
 
 @timeit
