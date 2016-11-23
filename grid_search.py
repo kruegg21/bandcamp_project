@@ -11,7 +11,7 @@ def grid_search(sf, model_factory = None, specs = None):
 
     # Run Grid Search
     job = graphlab.grid_search.create(folds,
-                                      graphlab.ranking_factorization_recommender.create,
+                                      model_factory,
                                       specs.param_grid,
                                       evaluator = custom_evaluation)
     print job.get_results()

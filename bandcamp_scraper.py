@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from HTMLParser import HTMLParser
 from selenium import webdriver
 from multiprocessing import Pool
+import threading
 import smtplib
 from email.mime.text import MIMEText
 from helper import *
@@ -300,7 +301,11 @@ def album_metadata_scraper(n_workers = 4):
     p = Pool(n_workers)
     p.map(album_scraper_worker, album_url_chunks)
 
-def album_scraper_worker(album_urls):
+def album_scraper_worker(album_urls, n_threads = 4):
+    # Set up threads
+    n = len(album_urls) / n_threads
+    album_url_chunks = [album_urls[i:i + n] for i in range(0, len(album_urls), n)]
+
     finished_all_albums = False
     while not finished_all_albums:
         # try:
