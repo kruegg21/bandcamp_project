@@ -65,6 +65,7 @@ if __name__ == "__main__":
                                  folds = 10,
                                  should_shuffle_folds = True)
 
-    build_serendipity_model(should_grid_search = False,
+    build_serendipity_model(data = 'user_to_album_sf_album_id_filtered',
+                            should_grid_search = False,
                             should_make_test_predictions = True,
                             specs = specs)
