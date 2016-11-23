@@ -31,7 +31,7 @@ def factorization_recommender(sf, specs, dump = True, train = True,
         (train_set, test_set) = sf.random_split(0.8, seed = 1)
 
     # Grid Search
-    if specs.should_grid_search:
+    if should_grid_search:
         grid_search(train_set,
                     model_factory = graphlab.ranking_factorization_recommender.create,
                     specs = specs)
