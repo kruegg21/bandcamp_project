@@ -84,8 +84,8 @@ if __name__ == "__main__":
                    ('binary_target', True),
                    ('max_iterations', 1000),
                    ('regularization', .01),
-                   ('linear_regularization', 0.01),
-                   ('ranking_regularization', 0.4),
+                   ('linear_regularization', 0.1),
+                   ('ranking_regularization', 0.5),
                    ('unobserved_rating_value', 0),
                    ('num_factors', 200)
                   ])

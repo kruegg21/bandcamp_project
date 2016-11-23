@@ -35,20 +35,20 @@ def factorization_recommender(sf, specs, dump = True, train = True,
     # Grid Search
     if should_grid_search:
         grid_search(train_set,
-                    model_factory = graphlab.ranking_factorization_recommender.create,
+                    model_factory = graphlab.item_similarity_recommender.create,
                     specs = specs)
 
     # Create model
-    rec_model = graphlab.ranking_factorization_recommender.create(
+    rec_model = graphlab.item_similarity_recommender.create(
                   train_set,
-                  target = specs.rank_factorization_params['target'],
-                  user_id = specs.rank_factorization_params['user_id'],
-                  item_id = specs.rank_factorization_params['item_id'],
-                  binary_target = specs.rank_factorization_params['binary_target'],
-                  max_iterations = specs.rank_factorization_params['max_iterations'],
-                  ranking_regularization = specs.rank_factorization_params['ranking_regularization'],
-                  linear_regularization = specs.rank_factorization_params['linear_regularization'],
-                  regularization = specs.rank_factorization_params['regularization'])
+                  target = specs.params['target'],
+                  user_id = specs.params['user_id'],
+                  item_id = specs.params['item_id'],
+                  binary_target = specs.params['binary_target'],
+                  max_iterations = specs.params['max_iterations'],
+                  ranking_regularization = specs.params['ranking_regularization'],
+                  linear_regularization = specs.params['linear_regularization'],
+                  regularization = specs.params['regularization'])
 
     # Data print out
     print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
@@ -56,7 +56,7 @@ def factorization_recommender(sf, specs, dump = True, train = True,
 
     # Dump
     if dump:
-        rec_model.save('factorization_recommender')
+        rec_model.save('item_similarity_recommender')
 
     return rec_model
 
