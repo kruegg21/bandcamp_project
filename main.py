@@ -158,4 +158,4 @@ def build_gephi_data():
                             dump_full_graph = False)
 
 if __name__ == "__main__":
-    build_gephi_data()
+    build_from_album_list()
