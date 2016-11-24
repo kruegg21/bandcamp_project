@@ -17,8 +17,7 @@ from multiprocessing import Pool
 import threading
 import smtplib
 from email.mime.text import MIMEText
-from helper import convert_to_mongo_key_formatting, translate_url_to_tag,
-                   reverse_convert_to_mongo_key_formatting
+from helper import convert_to_mongo_key_formatting, translate_url_to_tag, reverse_convert_to_mongo_key_formatting
 
 def random_sleep():
     sleep_time = random.uniform(10,15)
