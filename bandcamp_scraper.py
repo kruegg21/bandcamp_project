@@ -301,7 +301,7 @@ def album_metadata_scraper(n_workers = 4):
     p = Pool(n_workers)
     p.map(album_scraper_worker, album_url_chunks)
 
-def album_scraper_worker(album_urls, n_threads = 4):
+def album_scraper_worker(album_urls, n_threads = 16):
     # Set up threads
     n = len(album_urls) / n_threads
     album_url_chunks = [album_urls[i:i + n] for i in range(0, len(album_urls), n)]
@@ -339,4 +339,4 @@ def album_scraper_thread(album_urls):
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 4)
+    album_metadata_scraper(n_workers = 64)
