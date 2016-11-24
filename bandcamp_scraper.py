@@ -24,9 +24,9 @@ def random_sleep():
     print "Going to sleep for {} seconds".format(sleep_time)
     time.sleep(sleep_time)
 
-def get_mongo_database(db_name):
+def get_mongo_database(db_name, host):
     # Open MongoDB client
-    client = pymongo.MongoClient()
+    client = pymongo.MongoClient(host)
 
     # Open database
     return client[db_name]
@@ -238,7 +238,7 @@ def crawler(roots):
             driver = webdriver.Chrome(os.getcwd() + '/drivers/chromedriver_mac64')
 
             # Get Mongo database to dump things into
-            db = get_mongo_database('bandcamp')
+            db = get_mongo_database('bandcamp', 'localhost')
 
             # Global set of user and album URLs to iterate through
             user_urls = set()
@@ -301,7 +301,7 @@ def album_metadata_scraper(n_workers = 4):
     p = Pool(n_workers)
     p.map(album_scraper_worker, album_url_chunks)
 
-def album_scraper_worker(album_urls, n_threads = 16):
+def album_scraper_worker(album_urls, n_threads = 4):
     # Set up threads
     n = len(album_urls) / n_threads
     album_url_chunks = [album_urls[i:i + n] for i in range(0, len(album_urls), n)]
@@ -323,7 +323,7 @@ def album_scraper_thread(album_urls):
     while not finished_all_albums:
         try:
             # Get Mongo database to dump things into
-            db = get_mongo_database('bandcamp')
+            db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
 
             for album_url in album_urls:
                 if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
@@ -339,4 +339,4 @@ def album_scraper_thread(album_urls):
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 64)
+    album_metadata_scraper(n_workers = 4)
