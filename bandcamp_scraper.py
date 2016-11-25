@@ -140,11 +140,11 @@ def get_user_collection(url, driver, db):
 
 def get_album_data(url = None, driver = None, db = None, click_through = True):
     try:
-        driver.get(url)
-        html = driver.page_source
+        # driver.get(url)
+        # html = driver.page_source
         # Search URL
-        # r = requests.get(url)
-        # html = r.text
+        r = requests.get(url)
+        html = r.text
     except:
         print url
         return
@@ -157,7 +157,7 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
         if h2_tag:
             print h2_tag.text.strip()
             if h2_tag.text.strip() == 'We\'re offline briefly for maintenance.':
-                print "Site offline"
+                print "{} page offline".format(url)
                 time.sleep(2)
 
                 # Search URL
@@ -346,14 +346,14 @@ def album_scraper_worker(album_urls, n_threads = 4):
 
 def album_scraper_thread(album_urls):
     # Get Mongo database to dump things into
-    db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
-    driver = webdriver.Chrome()
+    # db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
+    # driver = webdriver.Chrome()
 
     counter = 0
     for album_url in album_urls:
         if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
             _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
-                               driver = driver,
+                               driver = None,
                                db = db,
                                click_through = False)
         counter += 1
