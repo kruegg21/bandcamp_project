@@ -140,9 +140,11 @@ def get_user_collection(url, driver, db):
 
 def get_album_data(url = None, driver = None, db = None, click_through = True):
     try:
+        driver.get(url)
+        html = driver.page_source
         # Search URL
-        r = requests.get(url)
-        html = r.text
+        # r = requests.get(url)
+        # html = r.text
     except:
         print url
         return
@@ -154,7 +156,6 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
         h2_tag = soup.find('h2')
         if h2_tag:
             if h2_tag.text == 'We\'re offline briefly for maintenance.':
-                print url
 
                 time.sleep(2)
 
@@ -345,12 +346,13 @@ def album_scraper_worker(album_urls, n_threads = 4):
 def album_scraper_thread(album_urls):
     # Get Mongo database to dump things into
     db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
+    driver = webdriver.Chrome('drivers/chromedriver_linux64')
 
     counter = 0
     for album_url in album_urls:
         if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
             _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
-                               driver = None,
+                               driver = driver,
                                db = db,
                                click_through = False)
         counter += 1
@@ -360,4 +362,12 @@ def album_scraper_thread(album_urls):
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 4)
+    album_metadata_scraper(n_workers = 1)
+    # db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
+    # driver = webdriver.Chrome('drivers/chromedriver_mac64')
+    # a1 = 'https://jeffrosenstock.bandcamp.com/album/worry'
+    # a2 = 'http://modernpain.bandcamp.com/album/self-deconstruction'
+    # get_album_data(a2,
+    #                driver=  driver,
+    #                db = db,
+    #                click_through = False)
