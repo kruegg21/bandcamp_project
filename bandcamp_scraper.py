@@ -139,9 +139,13 @@ def get_user_collection(url, driver, db):
     return album_list
 
 def get_album_data(url = None, driver = None, db = None, click_through = True):
-    # Search URL
-    r = requests.get(url)
-    html = r.text
+    try:
+        # Search URL
+        r = requests.get(url)
+        html = r.text
+    except:
+        print url
+        return
 
     # Make soup
     soup = BeautifulSoup(html, 'lxml')
@@ -155,11 +159,11 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
                 time.sleep(2)
 
                 # Search URL
-                # r = requests.get(url)
-                # html = r.text
-                #
-                # # Make soup
-                # soup = BeautifulSoup(html, 'lxml')
+                r = requests.get(url)
+                html = r.text
+
+                # Make soup
+                soup = BeautifulSoup(html, 'lxml')
             else:
                 break
         else:
