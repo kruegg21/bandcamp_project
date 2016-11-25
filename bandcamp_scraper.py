@@ -340,4 +340,4 @@ def album_scraper_thread(album_urls):
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 4)
+    album_metadata_scraper(n_workers = 32)
