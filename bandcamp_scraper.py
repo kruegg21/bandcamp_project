@@ -146,6 +146,14 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
     # Make soup
     soup = BeautifulSoup(html, 'lxml')
 
+    while soup.find('h2').text == 'We\'re offline briefly for maintenance.':
+        # Search URL
+        r = requests.get(url)
+        html = r.text
+
+        # Make soup
+        soup = BeautifulSoup(html, 'lxml')
+
     # Get list of user URLs
     user_urls = list()
     if click_through:
