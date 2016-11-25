@@ -295,6 +295,10 @@ def album_metadata_scraper(n_workers = 4):
     df = pd.read_csv('data/user_to_album_sf.csv')
     album_list = df['album_id'].unique()
 
+    # Get unique album IDs
+    db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
+    finished_album_list = db.albums.distinct('_id')
+
     n = len(album_list) / n_workers
     album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
 
@@ -328,6 +332,8 @@ def album_scraper_thread(album_urls):
                                    driver = None,
                                    db = db,
                                    click_through = False)
+            else:
+
         except:
             pass
     print "Finished all albums"
