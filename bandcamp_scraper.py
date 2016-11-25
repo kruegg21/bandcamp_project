@@ -345,15 +345,17 @@ def album_scraper_worker(album_urls, n_threads = 4):
 def album_scraper_thread(album_urls):
     # Get Mongo database to dump things into
     db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
+
+    counter = 0
     for album_url in album_urls:
-        # try:
         if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(album_url)}):
             _ = get_album_data(url = reverse_convert_to_mongo_key_formatting(album_url),
                                driver = None,
                                db = db,
                                click_through = False)
-        # except:
-        #     print album_url
+        counter += 1
+        if counter % 1000 == 0:
+            print counter
     print "Finished all albums"
 
 
