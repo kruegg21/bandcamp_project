@@ -155,8 +155,9 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
     while True:
         h2_tag = soup.find('h2')
         if h2_tag:
-            if h2_tag.text == 'We\'re offline briefly for maintenance.':
-
+            print h2_tag.text.strip()
+            if h2_tag.text.strip() == 'We\'re offline briefly for maintenance.':
+                print "Site offline"
                 time.sleep(2)
 
                 # Search URL
@@ -346,7 +347,7 @@ def album_scraper_worker(album_urls, n_threads = 4):
 def album_scraper_thread(album_urls):
     # Get Mongo database to dump things into
     db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
-    driver = webdriver.Chrome(executable_path = '/home/ubuntu/bandcamp_project/drivers/chromedriver_linux64')
+    driver = webdriver.Chrome()
 
     counter = 0
     for album_url in album_urls:
