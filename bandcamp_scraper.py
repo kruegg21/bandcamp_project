@@ -346,7 +346,7 @@ def album_scraper_worker(album_urls, n_threads = 4):
 def album_scraper_thread(album_urls):
     # Get Mongo database to dump things into
     db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
-    driver = webdriver.Chrome('drivers/chromedriver_linux64')
+    driver = webdriver.Chrome('/home/ubuntu/bandcamp_project/drivers/chromedriver_linux64')
 
     counter = 0
     for album_url in album_urls:
