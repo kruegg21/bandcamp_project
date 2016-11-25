@@ -296,6 +296,7 @@ def album_metadata_scraper(n_workers = 4):
     album_list = df['album_id'].unique()
 
     n = len(album_list) / n_workers
+    print n
     album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
 
     p = Pool(n_workers)
@@ -334,4 +335,4 @@ def album_scraper_thread(album_urls):
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 32)
+    album_metadata_scraper(n_workers = 1)
