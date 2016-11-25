@@ -294,9 +294,9 @@ def main_scraper():
 def album_metadata_scraper(n_workers = 4):
     df = pd.read_csv('data/user_to_album_sf.csv')
     album_list = df['album_id'].unique()
+    print len(album_list)
 
     n = len(album_list) / n_workers
-    print n
     album_url_chunks = [album_list[i:i + n] for i in range(0, len(album_list), n)]
 
     p = Pool(n_workers)
@@ -330,7 +330,7 @@ def album_scraper_thread(album_urls):
                                    db = db,
                                    click_through = False)
         except:
-            pass
+            print album_url
     print "Finished all albums"
 
 
