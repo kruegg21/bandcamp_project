@@ -332,8 +332,6 @@ def album_scraper_thread(album_urls):
                                    driver = None,
                                    db = db,
                                    click_through = False)
-            else:
-
         except:
             pass
     print "Finished all albums"
