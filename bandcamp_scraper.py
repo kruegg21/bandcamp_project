@@ -156,9 +156,6 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
     while True:
         h2_tag = soup.find('h2')
         if h2_tag:
-            print h2_tag.text.strip()
-            if h2_tag.text.strip() == 'Sorry, that something isn\'t here.':
-                album_tags = [None]
             if h2_tag.text.strip() == 'We\'re offline briefly for maintenance.':
                 print "{} page offline".format(url)
                 time.sleep(2)
@@ -188,7 +185,10 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
         album_artwork_url = None
 
     # Get album tags
-    album_tags = [tag['href'] for tag in soup.find_all('a', {'class': 'tag'})]
+    if h2_tag.text.strip() == 'Sorry, that something isn\'t here.':
+        album_tags = [None]
+    else:
+        album_tags = [tag['href'] for tag in soup.find_all('a', {'class': 'tag'})]
 
     # Get album description
     album_description_tag = soup.find('div', {'class': 'tralbumData tralbum-about'})
