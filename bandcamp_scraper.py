@@ -172,6 +172,7 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
             else:
                 return
         else:
+            print soup
             break
 
     # Get list of user URLs
