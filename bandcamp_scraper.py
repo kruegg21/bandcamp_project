@@ -371,12 +371,12 @@ def album_scraper_thread(album_urls):
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 1)
+    album_metadata_scraper(n_workers = 8)
     # db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
     # driver = webdriver.Chrome('drivers/chromedriver_mac64')
-    a1 = 'https://jeffrosenstock.bandcamp.com/album/worry'
-    a2 = 'http://modernpain.bandcamp.com/album/self-deconstruction'
-    get_album_data(a2,
-                   driver=  None,
-                   db = db,
-                   click_through = False)
+    # a1 = 'https://jeffrosenstock.bandcamp.com/album/worry'
+    # a2 = 'http://modernpain.bandcamp.com/album/self-deconstruction'
+    # get_album_data(a2,
+    #                driver=  None,
+    #                db = db,
+    #                click_through = False)
