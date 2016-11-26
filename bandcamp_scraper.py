@@ -238,7 +238,8 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
         if click_through:
             print "Number of users supporting: {}".format(len(user_urls))
         print "Link to album artwork: {}".format(album_artwork_url)
-        print "Album tags: {}".format([translate_url_to_tag(url) for url in album_tags])
+        if album_tags:
+            print "Album tags: {}".format([translate_url_to_tag(url) for url in album_tags])
         print "Price: {}".format(price)
         print "Currency: {}\n\n\n".format(currency)
 
