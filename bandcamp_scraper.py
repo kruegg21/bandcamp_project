@@ -190,6 +190,8 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
     if h2_tag:
         if h2_tag.text.strip() == 'Sorry, that something isn\'t here.':
             album_tags = [None]
+        else:
+            album_tags = [tag['href'] for tag in soup.find_all('a', {'class': 'tag'})]
     else:
         album_tags = [tag['href'] for tag in soup.find_all('a', {'class': 'tag'})]
 
