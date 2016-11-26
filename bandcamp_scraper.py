@@ -144,6 +144,7 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
         # html = driver.page_source
         # Search URL
         r = requests.get(url)
+        time.sleep(0.5)
         html = r.text
     except:
         print url
