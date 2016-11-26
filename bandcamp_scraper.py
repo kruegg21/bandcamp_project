@@ -156,18 +156,21 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
     while True:
         h2_tag = soup.find('h2')
         if h2_tag:
-            if h2_tag.text.strip() == 'We\'re offline briefly for maintenance.':
-                print "{} page offline".format(url)
-                time.sleep(2)
+            if not db.albums.find_one({"_id": convert_to_mongo_key_formatting(url)}):
+                if h2_tag.text.strip() == 'We\'re offline briefly for maintenance.':
+                    print "{} page offline".format(url)
+                    time.sleep(0.5)
 
-                # Search URL
-                r = requests.get(url)
-                html = r.text
+                    # Search URL
+                    r = requests.get(url)
+                    html = r.text
 
-                # Make soup
-                soup = BeautifulSoup(html, 'lxml')
+                    # Make soup
+                    soup = BeautifulSoup(html, 'lxml')
+                else:
+                    break
             else:
-                break
+                return
         else:
             break
 
@@ -335,7 +338,7 @@ def album_metadata_scraper(n_workers = 4):
     p = Pool(n_workers)
     p.map(album_scraper_worker, album_url_chunks)
 
-def album_scraper_worker(album_urls, n_threads = 4):
+def album_scraper_worker(album_urls, n_threads = 8):
     # Set up threads
     n = len(album_urls) / n_threads
     album_url_chunks = [album_urls[i:i + n] for i in range(0, len(album_urls), n)]
