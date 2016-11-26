@@ -152,6 +152,7 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
 
     # Make soup
     soup = BeautifulSoup(html, 'lxml')
+    print soup
 
     while True:
         h2_tag = soup.find('h2')
