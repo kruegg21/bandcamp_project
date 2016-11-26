@@ -157,6 +157,8 @@ def get_album_data(url = None, driver = None, db = None, click_through = True):
         h2_tag = soup.find('h2')
         if h2_tag:
             print h2_tag.text.strip()
+            if h2_tag.text.strip() == 'Sorry, that something isn\'t here.':
+                album_tags = [None]
             if h2_tag.text.strip() == 'We\'re offline briefly for maintenance.':
                 print "{} page offline".format(url)
                 time.sleep(2)
