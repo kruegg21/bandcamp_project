@@ -328,7 +328,7 @@ def main_scraper():
     p = Pool(8)
     p.map(crawler, params)
 
-def album_metadata_scraper(n_workers = 4):
+def album_metadata_scraper(n_workers = 1):
     df = pd.read_csv('data/user_to_album_sf.csv')
     album_list = df['album_id'].unique()
     print len(album_list)
@@ -375,7 +375,7 @@ def album_scraper_thread(album_urls):
 
 
 if __name__ == "__main__":
-    album_metadata_scraper(n_workers = 32)
+    album_metadata_scraper(n_workers = 1)
     # db = get_mongo_database('bandcamp', 'mongodb://35.164.187.130/bandcamp')
     # driver = webdriver.Chrome('drivers/chromedriver_mac64')
     # a1 = 'https://jeffrosenstock.bandcamp.com/album/worry'

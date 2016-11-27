@@ -97,7 +97,7 @@ def build_from_album_list():
                                   name = 'user_to_album_sf',
                                   dump = True,
                                   verbose = False,
-                                  get_album_counts = False)
+                                  get_album_counts = True)
 
     sf = low_pass_filter_on_counts(sf,
                                    column = 'album_id',
