@@ -3,3 +3,7 @@
 *.csv
 *.pyc
 .DS_Store
+*.bin
+*.ini
+*.0000
+*.sidx
