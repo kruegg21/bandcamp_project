@@ -43,7 +43,7 @@ def rank_factorization_recommender(sf, specs, dump = True, train = True,
 
     # Convert price to to int
     side_data_sf['album_id'] = side_data_sf['_id']
-    side_data_sf['price'] = side_data_sf['price'].to_dataframe().replace({'Name your price': 0})
+    side_data_sf = graphlab.SFrame(side_data_sf.to_dataframe().replace({'Name your price': 0}))
     item_data_sf = side_data_sf['album_id', 'price']
     print item_data_sf['price'].dtype()
 
