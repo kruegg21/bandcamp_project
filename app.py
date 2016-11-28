@@ -40,7 +40,7 @@ def results():
 
     albums_list = list()
     for album_url, art_id in zip(pred_url_list, art_id_list):
-        albums_list.append({'album_url': album_url, 'art_id': art_id})
+        albums_list.append({'album_url': reverse_convert_to_mongo_key_formatting(album_url), 'art_id': art_id})
     return render_template('results.html', items = albums_list)
 
 def predict(url_list):
