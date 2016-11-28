@@ -170,10 +170,11 @@ def low_pass_filter_on_counts(sf, column = None, min_cutoff = 0,
 
     return filtered_sf
 
-def update_sframe(name = None, collection = 'albums', database = None, test = True):
+def update_sframe(name = None, collection = 'albums', database = None,
+                  test = True, dump = True):
     # Read in old DataFrame if we have already built it
-    if os.path.isfile('data/{}.csv'.format(name)):
-        old_data_sf = graphlab.SFrame.read_csv('data/{}.csv'.format(name))
+    if os.path.isfile('data/{}_sf.csv'.format(name)):
+        old_data_sf = graphlab.SFrame.read_csv('data/{}_sf.csv'.format(name))
         _id_list = list(old_data_sf['_id'].unique())
     else:
         _id_list = []
@@ -201,6 +202,9 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
     new_data_sf = graphlab.SFrame({'_id': id_list, 'album_tags': tag_list, 'price':price_list, 'currency': currency_list})
     if os.path.isfile('data/{}.csv'.format(name)):
         new_data_sf = old_data_sf.append(new_data_sf)
+
+    if dump:
+        new_data_sf.save('data/{}_sf.csv'.format(name, column), format = 'csv'))
     print new_data_sf
 
 
