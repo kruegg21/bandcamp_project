@@ -15,8 +15,9 @@ import csv
 
 # Contains column names for DataFrames we are working with
 column_names_dict = {
-    'user_to_album_list' : ['_id', 'albums', 'n_albums'],
-    'user_to_album_art' : ['_id', 'album_art_code']
+    'user_to_album_list': ['_id', 'albums', 'n_albums'],
+    'user_to_album_art': ['_id', 'album_art_code'],
+    'album_to_album_tags': ['album_id', 'album_tags']
 }
 
 metal_album_list = ['http://toucheamore.bandcamp.com/album/is-survived-by',
