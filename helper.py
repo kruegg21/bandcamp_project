@@ -178,7 +178,7 @@ def update_sframe(name = None, collection = 'albums', database = None):
         old_data_sf = pd.DataFrame(column_names_dict[name])
 
     # List of '_id's we already have
-    _id_list = list(old_data_df['_id'].unique())
+    _id_list = list(old_data_sf['_id'].unique())
 
     # Print number of new points
     count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
