@@ -19,19 +19,19 @@ column_names_dict = {
     'user_to_album_art' : ['_id', 'album_art_code']
 }
 
-metal_album_list = ['https://toucheamore.bandcamp.com/album/is-survived-by',
+metal_album_list = ['http://toucheamore.bandcamp.com/album/is-survived-by',
                     'http://toucheamore.bandcamp.com/album/parting-the-sea-between-brightness-and-me',
-                    'https://deafheavens.bandcamp.com/album/sunbather',
-                    'https://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
-                    'https://deafheavens.bandcamp.com/album/new-bermuda']
+                    'http://deafheavens.bandcamp.com/album/sunbather',
+                    'http://deafheavens.bandcamp.com/track/from-the-kettle-onto-the-coil',
+                    'http://deafheavens.bandcamp.com/album/new-bermuda']
 
-rap_album_list = ['https://openmikeeagle360.bandcamp.com/album/dark-comedy',
-                  'https://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
-                  'https://miloraps.bandcamp.com/album/so-the-flies-dont-come',
-                  'https://miloraps.bandcamp.com/album/plain-speaking',
-                  'https://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
-                  'https://openmikeeagle360.bandcamp.com/album/time-materials',
-                  'https://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
+rap_album_list = ['http://openmikeeagle360.bandcamp.com/album/dark-comedy',
+                  'http://miloraps.bandcamp.com/album/too-much-of-life-is-mood',
+                  'http://miloraps.bandcamp.com/album/so-the-flies-dont-come',
+                  'http://miloraps.bandcamp.com/album/plain-speaking',
+                  'http://openmikeeagle360.bandcamp.com/album/hella-personal-film-festival',
+                  'http://openmikeeagle360.bandcamp.com/album/time-materials',
+                  'http://openmikeeagle360.bandcamp.com/album/a-special-episode-of-ep']
 
 
 def custom_evaluation(model, train, test):
