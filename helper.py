@@ -178,9 +178,6 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
     # List of '_id's we already have
     _id_list = list(old_data_sf['_id'].unique())
 
-    for column in column_names_dict[name]:
-        print old_data_sf[column].dtype()
-
     # Print number of new points
     count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
     print "Number of rows in old DataFrame: {}".format(len(old_data_sf))
