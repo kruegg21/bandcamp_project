@@ -186,10 +186,14 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
     i = 0
     id_list = list()
     tag_list = list()
+    price_list = list()
+    currency_list = list()
     for row in cursor:
         id_list.append(row['_id'])
         tag_list.append(json.loads(row['album_data'])['album_tags'])
-
+        price_list.append(json.loads(row['album_data'])['price'])
+        currency_list.append(json.loads(row['album_data'])['currency'])
+        
         # Progress counter
         if i % 100 == 0:
             print "{} complete".format(round(float(i) / count, 2))
