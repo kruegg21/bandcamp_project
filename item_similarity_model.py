@@ -92,6 +92,6 @@ if __name__ == "__main__":
 
     # Build Model
     build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
-                                should_grid_search = True,
+                                should_grid_search = False,
                                 should_make_test_predictions = True,
                                 specs = specs)
