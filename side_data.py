@@ -50,6 +50,9 @@ def build_from_album_tag_list(verbose = True):
                           'value': value})
     print sf
 
+    # Convert to numpy array
+    arr = sf.to_numpy()
+    print arr.shape
 
     # Sanity checks
     n_unique_albums = len(set(sf['album_id']))
