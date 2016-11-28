@@ -121,7 +121,7 @@ def make_test_predictions(model):
     # Make predictions
     album_list = rap_album_list
     rating_list = [1] * len(album_list)
-    _id_list = ['https://bandcamp.com/kruegg'] * len(album_list)
+    _id_list = ['http://bandcamp.com/kruegg'] * len(album_list)
 
     # Get keys in correct format
     album_list = [convert_to_mongo_key_formatting(x) for x in album_list]
@@ -136,9 +136,9 @@ def make_test_predictions(model):
     print prediction_sf
 
     # Make recommendations
-    recommendations_sf = model.recommend(users = [convert_to_mongo_key_formatting('https://bandcamp.com/kruegg')],
+    recommendations_sf = model.recommend(users = [convert_to_mongo_key_formatting('http://bandcamp.com/kruegg')],
                                          k = 150,
-                                         new_user_data = prediction_sf)
+                                         new_observation_data = prediction_sf)
 
     # Split into logical columns
     recommendations_sf = split_into_artist_album(recommendations_sf)
