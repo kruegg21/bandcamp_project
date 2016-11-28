@@ -175,7 +175,7 @@ def update_sframe(name = None, collection = 'albums', database = None):
     if os.path.isfile('data/{}.csv'.format(name)):
         old_data_sf = graphlab.SFrame.read_csv('data/{}.csv'.format(name))
     else:
-        old_data_sf = graphlab.SFrame(columns = column_names_dict[name])
+        old_data_sf = graphlab.SFrame({column:[] for column in column_names_dict[name]})
 
     print old_data_sf
 
