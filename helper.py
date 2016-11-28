@@ -182,7 +182,7 @@ def update_sframe(name = None, collection = 'albums', database = None):
 
     # Print number of new points
     count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
-    print "Number of rows in old DataFrame: {}".format(len(old_data_df))
+    print "Number of rows in old DataFrame: {}".format(len(old_data_sf))
     print "Number of new data points: {}".format(count)
 
     # Get cursor
