@@ -40,7 +40,7 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
                     model_factory = graphlab.item_similarity_recommender.create,
                     specs = specs)
 
-    # Create model
+    # Create model without test data
     rec_model = graphlab.item_similarity_recommender.create(
                           train_set,
                           target = specs.params['target'],
@@ -54,9 +54,20 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
     print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
     print rec_model.get_similar_items()
 
+    # Create full model
+    rec_model = graphlab.item_similarity_recommender.create(
+                          sf,
+                          target = specs.params['target'],
+                          user_id = specs.params['user_id'],
+                          item_id = specs.params['item_id'],
+                          similarity_type = specs.params['similarity_type'],
+                          threshold = specs.params['threshold'],
+                          only_top_k = specs.params['only_top_k'],
+                          target_memory_usage = specs.params['target_memory_usage'])
+
     # Dump
     if dump:
-        rec_model.save('item_similarity_recommender')
+        rec_model.save('models/item_similarity_recommender')
 
     return rec_model
 
@@ -94,6 +105,6 @@ if __name__ == "__main__":
 
     # Build Model
     m = build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
-                                should_grid_search = False,
-                                should_make_test_predictions = True,
-                                specs = specs)
+                                    should_grid_search = True,
+                                    should_make_test_predictions = True,
+                                    specs = specs)
