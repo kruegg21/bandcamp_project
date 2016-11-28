@@ -174,20 +174,12 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
     # Read in old DataFrame if we have already built it
     if os.path.isfile('data/{}.csv'.format(name)):
         old_data_sf = graphlab.SFrame.read_csv('data/{}.csv'.format(name))
+        _id_list = list(old_data_sf['_id'].unique())
+        count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
+        cursor = database[collection].find(filter = {'_id': {'$nin': _id_list}})
     else:
-        old_data_sf = None
-
-    # List of '_id's we already have
-    # _id_list = list(old_data_sf['_id'].unique())
-
-    # Print number of new points
-    count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
-    # print "Number of rows in old DataFrame: {}".format(len(old_data_sf))
-    print "Number of new data points: {}".format(count)
-
-    # Get cursor
-    cursor = database[collection].find(filter = {'_id': {'$nin': _id_list}})
-
+        _id_list = []
+        
     i = 0
     id_list = list()
     tag_list = list()
