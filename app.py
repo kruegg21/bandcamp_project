@@ -50,7 +50,7 @@ def predict(url_list):
     _id_list = ['http://bandcamp.com/kruegg'] * len(url_list)
 
     # Get keys in correct format
-    album_list = [convert_to_mongo_key_formatting(x) for x in url_list]
+    url_list = [convert_to_mongo_key_formatting(x) for x in url_list]
     _id_list = [convert_to_mongo_key_formatting(x) for x in _id_list]
 
     # Create SFrame
