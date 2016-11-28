@@ -43,6 +43,7 @@ def build_from_album_tag_list(verbose = True):
     # Create SFrame
     sf = graphlab.SFrame({'album_id': album_url_dict.keys(),
                           'album_tag': album_url_dict.values()})
+    print sf
 
 
     # Sanity checks
