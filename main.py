@@ -87,7 +87,7 @@ def build_album_side_data_from_database():
     # Get database to read from
     db = get_mongo_database('bandcamp', 'localhost')
 
-    sf = update_sframe(name = 'album_side_data,
+    sf = update_sframe(name = 'album_side_data',
                        collection = 'albums',
                        database = db)
 
