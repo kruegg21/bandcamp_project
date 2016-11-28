@@ -175,11 +175,11 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
     if os.path.isfile('data/{}.csv'.format(name)):
         old_data_sf = graphlab.SFrame.read_csv('data/{}.csv'.format(name))
         _id_list = list(old_data_sf['_id'].unique())
-        count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
     else:
         _id_list = []
 
     # Get MongoDB cursor
+    count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
     cursor = database[collection].find(filter = {'_id': {'$nin': _id_list}})
 
     # Iterate through cursor
