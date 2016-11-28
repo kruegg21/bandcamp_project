@@ -43,7 +43,7 @@ def rank_factorization_recommender(sf, specs, dump = True, train = True,
 
     item_data_sf = side_data_sf['_id', 'price']
     album_to_tag_sf = graphlab.SFrame.read_csv('data/album_url_to_album_tag.csv')
-    for tag in sf.to_dataframe()['album_tag'].value_counts().index[:10]:
+    for tag in album_to_tag_sf.to_dataframe()['album_tag'].value_counts().index[:10]:
         album_with_tag_list = list(album_to_tag_sf[album_to_tag_sf['album_tag'] == tag]['album_id'])
         item_data_sf['album_has_{}'.format(tag)] = side_data_sf['_id'].is_in(album_with_tag_list)
 
