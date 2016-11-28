@@ -170,7 +170,7 @@ def low_pass_filter_on_counts(sf, column = None, min_cutoff = 0,
 
     return filtered_sf
 
-def update_sframe(name = None, collection = 'albums', database = None):
+def update_sframe(name = None, collection = 'albums', database = None, test = True):
     # Read in old DataFrame if we have already built it
     if os.path.isfile('data/{}.csv'.format(name)):
         old_data_sf = graphlab.SFrame.read_csv('data/{}.csv'.format(name))
