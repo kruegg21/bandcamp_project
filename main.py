@@ -92,7 +92,7 @@ def build_album_to_tag_list_from_database():
                           database = db,
                           collection = 'albums',
                           dump = True,
-                          test = True)
+                          test = False)
 
 # DO THIS ON EC2
 def build_from_album_list():

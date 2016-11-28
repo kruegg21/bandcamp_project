@@ -387,3 +387,10 @@ def album_tags(df, row, i):
     _id = row['_id']
     df.loc[i, '_id'] = _id
     df.loc[i, 'album_tags'] = json.loads(row['album_data'])['album_tags']
+
+def album_price(df, row, i):
+    _id = row['_id']
+    json_dict = json.loads(row['data'])
+    df.loc[i, '_id'] = _id
+    df.loc[i, 'price'] = json_dict['price']
+    df.loc[i, 'currency'] = json_dict['currency']
