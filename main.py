@@ -83,11 +83,11 @@ def build_user_to_album_list_from_database():
                           database = db,
                           dump = False)
 
-def build_album_to_tag_list_from_database():
+def build_album_side_data_from_database():
     # Get database to read from
     db = get_mongo_database('bandcamp', 'localhost')
 
-    sf = update_sframe(name = 'album_to_album_tags',
+    sf = update_sframe(name = 'album_side_data,
                        collection = 'albums',
                        database = db)
 
@@ -145,4 +145,4 @@ def build_gephi_data():
                             dump_full_graph = False)
 
 if __name__ == "__main__":
-    build_album_to_tag_list_from_database()
+    build_album_side_data_from_database()

@@ -38,6 +38,9 @@ def rank_factorization_recommender(sf, specs, dump = True, train = True,
                     model_factory = graphlab.ranking_factorization_recommender.create,
                     specs = specs)
 
+    # Get side data
+    
+
     # Create model
     rec_model = graphlab.ranking_factorization_recommender.create(
                   train_set,
