@@ -131,7 +131,7 @@ def make_test_predictions(model):
     prediction_sf = graphlab.SFrame({'_id': _id_list,
                                      'album_id': album_list,
                                      'rating': rating_list})
-    prediction_sf = convert_to_truncated_string_ids(prediction_sf)
+    # prediction_sf = convert_to_truncated_string_ids(prediction_sf)
 
     print prediction_sf
 
