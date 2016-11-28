@@ -17,7 +17,8 @@ import csv
 column_names_dict = {
     'user_to_album_list': ['_id', 'albums', 'n_albums'],
     'user_to_album_art': ['_id', 'album_art_code'],
-    'album_to_album_tags': ['_id', 'album_tags']
+    'album_to_album_tags': ['_id', 'album_tags'],
+    'album_to_album_price': ['_id', 'price', 'currency']
 }
 
 metal_album_list = ['http://toucheamore.bandcamp.com/album/is-survived-by',
@@ -169,6 +170,24 @@ def low_pass_filter_on_counts(sf, column = None, min_cutoff = 0,
 
     return filtered_sf
 
+def update_sframe(name = None, collection = 'albums', database = None):
+    # Read in old DataFrame if we have already built it
+    if os.path.isfile('data/{}.csv'.format(name)):
+        old_data_sf = graphlab.SFrame.read_csv('data/{}.csv'.format(name))
+    else:
+        old_data_sf = pd.DataFrame(column_names_dict[name])
+
+    # List of '_id's we already have
+    _id_list = list(old_data_df['_id'].unique())
+
+    # Print number of new points
+    count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
+    print "Number of rows in old DataFrame: {}".format(len(old_data_df))
+    print "Number of new data points: {}".format(count)
+
+    # Get cursor
+    cursor = database[collection].find(filter = {'_id': {'$nin': _id_list}})
+
 
 def update_dataframe(name = None, feature_building_method = None,
                      collection = 'user_collections_new', database = None,
@@ -208,6 +227,7 @@ def update_dataframe(name = None, feature_building_method = None,
                                columns = column_names_dict[name])
 
     # Run through each row
+    batch_size = 10000
     i = 0
     for row in cursor:
         feature_building_method(new_data_df, row, i)

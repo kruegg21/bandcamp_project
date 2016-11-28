@@ -87,12 +87,9 @@ def build_album_to_tag_list_from_database():
     # Get database to read from
     db = get_mongo_database('bandcamp', 'localhost')
 
-    df = update_dataframe(name = 'album_to_album_tags',
-                          feature_building_method = album_tags,
-                          database = db,
-                          collection = 'albums',
-                          dump = True,
-                          test = False)
+    sf = update_sframe(name = 'album_to_album_tags',
+                       collection = 'albums',
+                       database = db)
 
 # DO THIS ON EC2
 def build_from_album_list():
