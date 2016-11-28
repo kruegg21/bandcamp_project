@@ -23,6 +23,8 @@ def build_item_similarity_model(data = None, should_grid_search = True,
     if should_make_test_predictions:
         make_test_predictions(model)
 
+    return model
+
 def item_similarity_recommender(sf, specs, dump = True, train = True,
                               should_grid_search = False):
     # Test Train Split
@@ -91,7 +93,7 @@ if __name__ == "__main__":
                                  should_shuffle_folds = True)
 
     # Build Model
-    build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
+    m = build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
                                 should_grid_search = False,
                                 should_make_test_predictions = True,
                                 specs = specs)
