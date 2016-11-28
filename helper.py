@@ -208,10 +208,10 @@ def update_sframe(name = None, collection = 'albums', database = None):
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
 
-        if test:
-            if i > 200:
-                print new_data_df
-                break
+        # if test:
+        #     if i > 200:
+        #         print new_data_df
+        #         break
 
 
 def update_dataframe(name = None, feature_building_method = None,
