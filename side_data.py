@@ -25,15 +25,15 @@ def build_from_album_tag_list(verbose = True):
     df = pd.read_csv('data/album_side_data_sf.csv')
 
     # Read through each row
-    album_url_dict = dict()
+    album_url_list = list()
+    album_tag_list = list()
     i = 0
     count = len(df)
     for index, row in df.iterrows():
         album_url = row['_id']
         list_string = row['album_tags']
-        album_art_list = eval(list_string)
-        print album_art_list
-        album_url_dict.update(dict([(album_url, x) for x in album_art_list]))
+        album_tag_list += eval(list_string)
+        album_url_list = [album_url] * len(eval(list_string))
 
         if verbose:
             # Progress counter
@@ -42,8 +42,8 @@ def build_from_album_tag_list(verbose = True):
             i += 1
 
     # Create SFrame
-    sf = graphlab.SFrame({'album_id': album_url_dict.keys(),
-                          'album_tag': album_url_dict.values()})
+    sf = graphlab.SFrame({'album_id': album_url_list,
+                          'album_tag': album_tag_list})
     print sf
 
 
