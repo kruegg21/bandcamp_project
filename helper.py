@@ -170,7 +170,8 @@ def low_pass_filter_on_counts(sf, column = None, min_cutoff = 0,
 
 
 def update_dataframe(name = None, feature_building_method = None,
-                     database = None, dump = False, test = False):
+                     collection = 'user_collections_new', database = None,
+                     dump = False, test = False):
     """
     Input:
         name -- string of the name of the DataFrame
@@ -192,9 +193,6 @@ def update_dataframe(name = None, feature_building_method = None,
 
     # List of '_id's we already have
     _id_list = list(set(old_data_df._id.tolist()))
-
-    # Specify collection
-    collection = 'user_collections_new'
 
     # Print number of new points
     count = database[collection].find(filter = {'_id': {'$nin': _id_list}}).count()
@@ -383,3 +381,8 @@ def album_art(df, row, i):
     json_dict = json.loads(row['data'])
     df.loc[i, '_id'] = _id
     df.loc[i, 'album_art_code'] = [(key, value['item_art_id']) for key, value in json_dict.iteritems()]
+
+def album_tags(df, row, i):
+    _id = row['_id']
+    df.loc[i, 'album_id'] = _id
+    df.loc[i, 'album_codes'] = json.load(row['album_tags'])

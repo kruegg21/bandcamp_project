@@ -75,7 +75,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 # Pipelines
 # DO THIS ON LOCAL
 def build_user_to_album_list_from_database():
-    # Get databasea to read from
+    # Get database to read from
     db = get_mongo_database('bandcamp')
 
     df = update_dataframe(name = 'user_to_album_list',
@@ -83,6 +83,16 @@ def build_user_to_album_list_from_database():
                           database = db,
                           dump = False)
 
+def build_album_to_tag_list_from_database():
+    # Get database to read from
+    db = get_mongo_database('bandcamp')
+
+    df = update_dataframe(name = 'album_to_album_tags',
+                          feature_building_method = album_tags,
+                          database = db,
+                          collection = 'albums',
+                          dump = True,
+                          test = True)
 
 # DO THIS ON EC2
 def build_from_album_list():

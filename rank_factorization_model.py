@@ -79,7 +79,7 @@ if __name__ == "__main__":
                        ('ranking_regularization', [0.5, 0.4, 0.3]),
                        ('num_sampled_negative_examples', [4]),
                        ('unobserved_rating_value', [0]),
-                       ('num_factors', [200])
+                       ('num_factors', [20, 100, 200])
                       ])
 
     # Model Parameters
