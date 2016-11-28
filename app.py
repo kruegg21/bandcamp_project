@@ -44,7 +44,7 @@ def results():
     return render_template('results.html', items = albums_list)
 
 def predict(url_list):
-    model = graphlab.load_model('model/item_similarity_recommender')
+    model = graphlab.load_model('models/item_similarity_recommender')
 
     rating_list = [1] * len(url_list)
     _id_list = ['http://bandcamp.com/kruegg'] * len(url_list)
