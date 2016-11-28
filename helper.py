@@ -188,20 +188,22 @@ def update_sframe(name = None, collection = 'albums', database = None):
     # Get cursor
     cursor = database[collection].find(filter = {'_id': {'$nin': _id_list}})
 
-    batch_size = 5000
+    i = 0
     for row in cursor:
         print type(row)
-        # json_string =
+        new_sf = graphlab.SFrame({'_id': row['_id'],
+                              'album_tags': json.loads(row['album_data'])['album_tags']})
+        old_data_sf = old_data_sf.append(new_sf)
 
-        # # Progress counter
-        # if i % 100 == 0:
-        #     print "{} complete".format(round(float(i) / count, 2))
-        # i += 1
-        #
-        # if test:
-        #     if i > 200:
-        #         print new_data_df
-        #         break
+        # Progress counter
+        if i % 100 == 0:
+            print "{} complete".format(round(float(i) / count, 2))
+        i += 1
+
+        if test:
+            if i > 200:
+                print new_data_df
+                break
 
 
 def update_dataframe(name = None, feature_building_method = None,
