@@ -46,7 +46,7 @@ def build_from_album_tag_list(verbose = True):
 
 
     # Sanity checks
-    n_unique_albums = len(set(sf['album_url']))
+    n_unique_albums = len(set(sf['album_id']))
     n_unique_tags = len(set(sf['album_tag']))
     print "Number of albums: {}".format(n_unique_albums)
     print "Number of tags: {}".format(n_unique_tags)
