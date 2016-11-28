@@ -177,6 +177,8 @@ def update_sframe(name = None, collection = 'albums', database = None):
     else:
         old_data_sf = graphlab.SFrame(column_names_dict[name])
 
+    print old_data_sf
+
     # List of '_id's we already have
     _id_list = list(old_data_sf['_id'].unique())
 
