@@ -386,4 +386,4 @@ def album_art(df, row, i):
 def album_tags(df, row, i):
     _id = row['_id']
     df.loc[i, '_id'] = _id
-    df.loc[i, 'album_tags'] = json.load(row['album_tags'])
+    df.loc[i, 'album_tags'] = json.load(row['album_data'])['album_tags']
