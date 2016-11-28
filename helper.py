@@ -17,7 +17,7 @@ import csv
 column_names_dict = {
     'user_to_album_list': ['_id', 'albums', 'n_albums'],
     'user_to_album_art': ['_id', 'album_art_code'],
-    'album_to_album_tags': ['album_id', 'album_tags']
+    'album_to_album_tags': ['_id', 'album_tags']
 }
 
 metal_album_list = ['http://toucheamore.bandcamp.com/album/is-survived-by',
@@ -385,5 +385,5 @@ def album_art(df, row, i):
 
 def album_tags(df, row, i):
     _id = row['_id']
-    df.loc[i, 'album_id'] = _id
+    df.loc[i, '_id'] = _id
     df.loc[i, 'album_codes'] = json.load(row['album_tags'])
