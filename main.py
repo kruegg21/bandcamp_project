@@ -148,4 +148,4 @@ def build_gephi_data():
                             dump_full_graph = False)
 
 if __name__ == "__main__":
-    build_from_album_list()
+    build_album_to_tag_list_from_database()
