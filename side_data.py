@@ -32,6 +32,7 @@ def build_from_album_tag_list(verbose = True):
         album_url = row['_id']
         list_string = row['album_tags']
         album_art_list = eval(list_string)
+        print album_art_list
         album_url_dict.update(dict([(album_url, x) for x in album_art_list]))
 
         if verbose:
