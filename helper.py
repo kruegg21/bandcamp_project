@@ -193,12 +193,12 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
         tag_list.append(json.loads(row['album_data'])['album_tags'])
         price_list.append(json.loads(row['album_data'])['price'])
         currency_list.append(json.loads(row['album_data'])['currency'])
-        
+
         # Progress counter
         if i % 100 == 0:
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
-    new_data_sf = graphlab.SFrame({'_id': id_list, 'album_tags': tag_list})
+    new_data_sf = graphlab.SFrame({'_id': id_list, 'album_tags': tag_list, 'price':price_list, 'currency': currency_list})
     if os.path.isfile('data/{}.csv'.format(name)):
         new_data_sf = old_data_sf.append(new_data_sf)
     print new_data_sf
