@@ -198,8 +198,8 @@ def update_sframe(name = None, collection = 'albums', database = None):
         print len([json.loads(row['album_data'])['album_tags']])
         new_sf = graphlab.SFrame({'_id': [row['_id']],
                                   'album_tags': [json.loads(row['album_data'])['album_tags']]})
-        print new_sf
-        print old_data_sf
+        for column in column_names_dict[name]:
+            print new_sf[column].dtype()
         old_data_sf = old_data_sf.append(new_sf)
 
         # Progress counter
