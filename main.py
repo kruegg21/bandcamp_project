@@ -76,7 +76,7 @@ def convert_to_gephi_format(sf, node_column = None, link_column = None,
 # DO THIS ON LOCAL
 def build_user_to_album_list_from_database():
     # Get database to read from
-    db = get_mongo_database('bandcamp')
+    db = get_mongo_database('bandcamp', 'localhost')
 
     df = update_dataframe(name = 'user_to_album_list',
                           feature_building_method = album_list,
@@ -85,7 +85,7 @@ def build_user_to_album_list_from_database():
 
 def build_album_to_tag_list_from_database():
     # Get database to read from
-    db = get_mongo_database('bandcamp')
+    db = get_mongo_database('bandcamp', 'localhost')
 
     df = update_dataframe(name = 'album_to_album_tags',
                           feature_building_method = album_tags,
