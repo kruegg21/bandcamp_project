@@ -177,8 +177,6 @@ def update_sframe(name = None, collection = 'albums', database = None):
     else:
         old_data_sf = graphlab.SFrame({column:[] for column in column_names_dict[name]})
 
-    print old_data_sf
-
     # List of '_id's we already have
     _id_list = list(old_data_sf['_id'].unique())
 
@@ -189,6 +187,21 @@ def update_sframe(name = None, collection = 'albums', database = None):
 
     # Get cursor
     cursor = database[collection].find(filter = {'_id': {'$nin': _id_list}})
+
+    batch_size = 5000
+    for row in cursor:
+        print type(row)
+        # json_string =
+
+        # # Progress counter
+        # if i % 100 == 0:
+        #     print "{} complete".format(round(float(i) / count, 2))
+        # i += 1
+        #
+        # if test:
+        #     if i > 200:
+        #         print new_data_df
+        #         break
 
 
 def update_dataframe(name = None, feature_building_method = None,
