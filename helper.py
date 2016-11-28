@@ -204,7 +204,7 @@ def update_sframe(name = None, collection = 'albums', database = None,
         new_data_sf = old_data_sf.append(new_data_sf)
 
     if dump:
-        new_data_sf.save('data/{}_sf.csv'.format(name, column), format = 'csv')
+        new_data_sf.save('data/{}_sf.csv'.format(name), format = 'csv')
     print new_data_sf
 
 
