@@ -205,7 +205,7 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
 
         if test:
             if i > 200:
-                print new_data_df
+                print old_data_sf
                 break
 
 
