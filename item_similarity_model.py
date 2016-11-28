@@ -51,7 +51,7 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
                           only_top_k = specs.params['only_top_k'],
                           target_memory_usage = specs.params['target_memory_usage'])
     # Data print out
-    print rec_model.evaluate_precision_recall(test_set, cutoffs = [100,200,1000], exclude_known = False)
+    print rec_model.evaluate_precision_recall(test_set, cutoffs = [10,20,100], exclude_known = True)
     print rec_model.get_similar_items()
 
     # Create full model
@@ -105,6 +105,6 @@ if __name__ == "__main__":
 
     # Build Model
     m = build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
-                                    should_grid_search = True,
+                                    should_grid_search = False,
                                     should_make_test_predictions = True,
                                     specs = specs)
