@@ -33,7 +33,7 @@ def build_from_album_tag_list(verbose = True):
         album_url = row['_id']
         list_string = row['album_tags']
         album_tag_list += eval(list_string)
-        album_url_list = [album_url] * len(eval(list_string))
+        album_url_list += [album_url] * len(eval(list_string))
 
         if verbose:
             # Progress counter
