@@ -175,7 +175,7 @@ def update_sframe(name = None, collection = 'albums', database = None):
     if os.path.isfile('data/{}.csv'.format(name)):
         old_data_sf = graphlab.SFrame.read_csv('data/{}.csv'.format(name))
     else:
-        old_data_sf = pd.DataFrame(column_names_dict[name])
+        old_data_sf = graphlab.SFrame.DataFrame(column_names_dict[name])
 
     # List of '_id's we already have
     _id_list = list(old_data_sf['_id'].unique())
