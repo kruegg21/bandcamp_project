@@ -2,6 +2,8 @@ from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap
 from helper import *
 
+model = graphlab.load_model('models/item_similarity_recommender')
+url_to_art_dict = get_album_url_to_art_dict()
 
 def create_app():
   app = Flask(__name__)
@@ -31,11 +33,7 @@ def results():
     predictions
     """
     pred_url_list = predict(url_list)
-    # pred_url_list = rap_album_list
     pred_url_list = [s.replace('https', 'http') for s in pred_url_list]
-
-    # Get URLs to album art for each predicted album
-    url_to_art_dict = get_album_url_to_art_dict()
     art_id_list = [url_to_art_dict[convert_to_mongo_key_formatting(x)] for x in pred_url_list]
 
     albums_list = list()
@@ -44,8 +42,6 @@ def results():
     return render_template('results.html', items = albums_list)
 
 def predict(url_list):
-    model = graphlab.load_model('models/item_similarity_recommender')
-
     rating_list = [1] * len(url_list)
     _id_list = ['http://bandcamp.com/kruegg'] * len(url_list)
 
@@ -57,8 +53,6 @@ def predict(url_list):
     prediction_sf = graphlab.SFrame({'_id': _id_list,
                                      'album_id': url_list,
                                      'rating': rating_list})
-
-    print prediction_sf
 
     # Make recommendations
     recommendations_sf = model.recommend(users = [convert_to_mongo_key_formatting('http://bandcamp.com/kruegg')],
