@@ -27,6 +27,7 @@ def build_from_album_tag_list(verbose = True):
     # Read through each row
     album_url_list = list()
     album_tag_list = list()
+    value = list()
     i = 0
     count = len(df)
     for index, row in df.iterrows():
@@ -34,6 +35,8 @@ def build_from_album_tag_list(verbose = True):
         list_string = row['album_tags']
         album_tag_list += eval(list_string)
         album_url_list += [album_url] * len(eval(list_string))
+        value += [1] * len(eval(list_string))
+
 
         if verbose:
             # Progress counter
@@ -43,7 +46,8 @@ def build_from_album_tag_list(verbose = True):
 
     # Create SFrame
     sf = graphlab.SFrame({'album_id': album_url_list,
-                          'album_tag': album_tag_list})
+                          'album_tag': album_tag_list,
+                          'value': value})
     print sf
 
 
