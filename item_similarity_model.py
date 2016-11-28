@@ -52,7 +52,6 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
                           target_memory_usage = specs.params['target_memory_usage'])
     # Data print out
     print rec_model.evaluate_precision_recall(test_set, cutoffs = [10,20,100], exclude_known = True)
-    print rec_model.get_similar_items()
 
     # Create full model
     rec_model = graphlab.item_similarity_recommender.create(
