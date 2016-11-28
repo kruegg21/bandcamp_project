@@ -10,7 +10,7 @@ def album_counts_eda(binwidth = None, cutoff = None):
     Output:
         None
     """
-    
+
     # Lower
     album_counts_df = pd.read_csv('data/album_counts.csv')
     counts = album_counts_df['count']
@@ -37,6 +37,12 @@ def album_counts_eda(binwidth = None, cutoff = None):
     plt.show()
     plt.savefig('images/album_counts_higher.png')
 
+def tag_counts_eda():
+    """
+    Prints the most common tags in descending order
+    """
+    sf = graphlab.SFrame.read_csv('data/album_url_to_album_tag.csv')
+    print sf.to_dataframe()['album_tag'].value_counts()
 
 if __name__ == "__main__":
     album_counts_eda(binwidth = 10,
