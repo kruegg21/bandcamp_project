@@ -197,7 +197,7 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
     tag_list = list()
     for row in cursor:
         id_list.append(row['_id'])
-        tag_list.append(json.loads(row['album_data'])['album_tags']])
+        tag_list.append(json.loads(row['album_data'])['album_tags'])
         # new_sf = graphlab.SFrame({'_id': [row['_id']],
         #                           'album_tags': [json.loads(row['album_data'])['album_tags']]})
         # old_data_sf = old_data_sf.append(new_sf)
@@ -206,7 +206,7 @@ def update_sframe(name = None, collection = 'albums', database = None, test = Tr
         if i % 100 == 0:
             print "{} complete".format(round(float(i) / count, 2))
         i += 1
-        # 
+        #
         # if test:
         #     if i > 200:
         #         print old_data_sf
