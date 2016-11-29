@@ -20,8 +20,8 @@ def album_counts_eda(binwidth = None, cutoff = None):
              log = True,
              normed = False,
              bins = range(min(counts_low), max(counts_low) + binwidth, binwidth))
-    plt.ylabel('Log Album Counts')
-    plt.xlabel('Albums')
+    plt.ylabel('Log Number of Albums')
+    plt.xlabel('Users Supporting')
     plt.show()
     plt.savefig('images/album_counts_lower.png')
 
@@ -32,8 +32,8 @@ def album_counts_eda(binwidth = None, cutoff = None):
              log = False,
              normed = False,
              bins = range(min(counts_high), max(counts_high) + binwidth, binwidth))
-    plt.ylabel('Album Counts')
-    plt.xlabel('Albums')
+    plt.ylabel('Number of Albums')
+    plt.xlabel('Users Supporting')
     plt.show()
     plt.savefig('images/album_counts_higher.png')
 
