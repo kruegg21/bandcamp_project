@@ -22,3 +22,4 @@ def grid_search(sf, model_factory = None, specs = None):
         print job.get_status()
 
     print job.get_results()
+    job.get_results().save('grid_search_results')
