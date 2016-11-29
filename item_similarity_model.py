@@ -26,7 +26,7 @@ def build_item_similarity_model(data = None, should_grid_search = True,
     return model
 
 def item_similarity_recommender(sf, specs, dump = True, train = True,
-                              should_grid_search = False):
+                              should_grid_search = False, should_add_side_data = True):
     # Test Train Split
     if specs.should_shuffle_folds:
         shuffled_sf = graphlab.toolkits.cross_validation.shuffle(sf)
