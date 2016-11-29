@@ -1,5 +1,9 @@
-{% for item in items %}
-<a href={{item.album_url}}>
-  <img src="https://f4.bcbits.com/img/a{{item.art_id}}_10.jpg" style="width:249px;height:249px;border:0;">
-</a>
-{% endfor %}
+<html>
+<body bgcolor="#000000">  
+  {% for item in items %}
+  <a href={{item.album_url}}>
+    <img src="https://f4.bcbits.com/img/a{{item.art_id}}_10.jpg" style="width:249px;height:249px;border:0;">
+  </a>
+  {% endfor %}
+</body>
+</html>
