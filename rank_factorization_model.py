@@ -76,7 +76,7 @@ def rank_factorization_recommender(sf, specs, dump = True, train = True,
                   regularization = specs.params['regularization'])
 
     # Display Precision on test set
-    print rec_model.evaluate_precision_recall(test_set, cutoffs = [10,20,100], exclude_known = False)
+    print rec_model.evaluate_precision_recall(test_set, cutoffs = [10,20,100], exclude_known = True)
     print rec_model.get_similar_items()
 
     # Retrain on full data set

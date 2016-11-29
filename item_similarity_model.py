@@ -40,12 +40,32 @@ def item_similarity_recommender(sf, specs, dump = True, train = True,
                     model_factory = graphlab.item_similarity_recommender.create,
                     specs = specs)
 
+    # Get side data
+    if should_add_side_data:
+        side_data_sf = graphlab.SFrame.read_csv('data/album_side_data_sf.csv')
+
+        # Convert price to to int
+        side_data_sf['album_id'] = side_data_sf['_id']
+        temp_df = side_data_sf.to_dataframe().replace({'Name your price': 0})
+        temp_df['price'] = pd.to_numeric(temp_df['price'])
+        side_data_sf = graphlab.SFrame(temp_df)
+        item_data_sf = side_data_sf['album_id', 'price']
+        print item_data_sf['price'].dtype()
+
+        album_to_tag_sf = graphlab.SFrame.read_csv('data/album_url_to_album_tag.csv')
+        for tag in album_to_tag_sf.to_dataframe()['album_tag'].value_counts().index[:10]:
+            album_with_tag_list = list(album_to_tag_sf[album_to_tag_sf['album_tag'] == tag]['album_id'])
+            item_data_sf['album_has_{}'.format(tag)] = side_data_sf['_id'].is_in(album_with_tag_list)
+    else:
+        item_data_sf = None
+
     # Create model without test data
     rec_model = graphlab.item_similarity_recommender.create(
                           train_set,
                           target = specs.params['target'],
                           user_id = specs.params['user_id'],
                           item_id = specs.params['item_id'],
+                          item_data = item_data_sf,
                           similarity_type = specs.params['similarity_type'],
                           threshold = specs.params['threshold'],
                           only_top_k = specs.params['only_top_k'],
