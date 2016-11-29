@@ -16,10 +16,10 @@ def build_rank_factorization_model(data = None, should_grid_search = True,
 
     # Train
     model = rank_factorization_recommender(sf,
-                                      specs,
-                                      dump = True,
-                                      should_grid_search = should_grid_search,
-                                      should_add_side_data = should_add_side_data)
+                                           specs,
+                                           dump = True,
+                                           should_grid_search = should_grid_search,
+                                           should_add_side_data = should_add_side_data)
 
     # Make Test Predictions
     if should_make_test_predictions:
@@ -102,7 +102,7 @@ if __name__ == "__main__":
                        ('ranking_regularization', [0.5, 0.4, 0.3]),
                        ('num_sampled_negative_examples', [4]),
                        ('unobserved_rating_value', [0]),
-                       ('num_factors', [20, 100, 200])
+                       ('num_factors', [20])
                       ])
 
     # Model Parameters
@@ -132,5 +132,5 @@ if __name__ == "__main__":
     build_rank_factorization_model(data = 'user_to_album_sf_album_id_filtered',
                                    should_grid_search = False,
                                    should_make_test_predictions = True,
-                                   should_add_side_data = False,
+                                   should_add_side_data = True,
                                    specs = specs)
