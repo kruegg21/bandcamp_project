@@ -123,7 +123,7 @@ if __name__ == "__main__":
                                  should_shuffle_folds = True)
 
     # Build Model
-    m = build_item_similarity_model(data = 'user_to_album_sf_album_id_filtered',
+    m = build_item_similarity_model(data = 'user_to_album_sf',
                                     should_grid_search = False,
                                     should_make_test_predictions = True,
                                     specs = specs)
