@@ -111,11 +111,11 @@ if __name__ == "__main__":
                    ('item_id', 'album_id'),
                    ('binary_target', True),
                    ('max_iterations', 100),
-                   ('regularization', 1e-5),
-                   ('linear_regularization', 0.001),
+                   ('regularization', [1e-6, 1e-7, 1e-5]),
+                   ('linear_regularization', [1e-4, 1e-5, 0.001]),
                    ('ranking_regularization', 0.5),
                    ('unobserved_rating_value', 0),
-                   ('num_factors', 50)
+                   ('num_factors', [50, 100])
                   ])
 
     # Specifications for building
@@ -125,7 +125,7 @@ if __name__ == "__main__":
                                  user_count_max_cutoff = np.inf,
                                  album_count_max_cutoff = 1200,
                                  album_count_min_cutoff = 40,
-                                 folds = 3,
+                                 folds = 5,
                                  should_shuffle_folds = True)
 
     # Build Model
