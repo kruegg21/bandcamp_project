@@ -96,13 +96,13 @@ if __name__ == "__main__":
                        ('user_id', '_id'),
                        ('item_id', 'album_id'),
                        ('binary_target', True),
-                       ('max_iterations', 500),
+                       ('max_iterations', 100),
                        ('regularization', [1e-5, 1e-3, 1e-1]),
                        ('linear_regularization', [1e-3, 1e-1]),
                        ('ranking_regularization', [0.5, 0.4, 0.3]),
                        ('num_sampled_negative_examples', [4]),
                        ('unobserved_rating_value', [0]),
-                       ('num_factors', [20])
+                       ('num_factors', [20, 50, 100])
                       ])
 
     # Model Parameters
@@ -110,7 +110,7 @@ if __name__ == "__main__":
                    ('user_id', '_id'),
                    ('item_id', 'album_id'),
                    ('binary_target', True),
-                   ('max_iterations', 1000),
+                   ('max_iterations', 100),
                    ('regularization', .01),
                    ('linear_regularization', 0.1),
                    ('ranking_regularization', 0.5),
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     # Build Model
     build_rank_factorization_model(data = 'user_to_album_sf_album_id_filtered',
-                                   should_grid_search = False,
+                                   should_grid_search = True,
                                    should_make_test_predictions = True,
                                    should_add_side_data = True,
                                    specs = specs)
