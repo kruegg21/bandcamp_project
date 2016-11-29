@@ -115,7 +115,7 @@ if __name__ == "__main__":
                    ('linear_regularization', 0.1),
                    ('ranking_regularization', 0.5),
                    ('unobserved_rating_value', 0),
-                   ('num_factors', 200)
+                   ('num_factors', 20)
                   ])
 
     # Specifications for building
