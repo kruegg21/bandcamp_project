@@ -25,3 +25,18 @@
       IDF -- log inverse document frequency
 2. Get raw probabilities from the factorization model and use these scores as
    the probability of recommendation
+
+
+
+   Data:
++--------+----------------+-----------------+
+| cutoff |   precision    |      recall     |
++--------+----------------+-----------------+
+|   10   | 0.377936063767 | 0.0929500388074 |
+|   20   | 0.308191299924 |  0.146478503892 |
+|  100   | 0.140008479607 |  0.306475238211 |
++--------+----------------+-----------------+
+
+
+
+0.245449094848
