@@ -45,6 +45,9 @@ def predict(url_list):
     rating_list = [1] * len(url_list)
     _id_list = ['http://bandcamp.com/kruegg'] * len(url_list)
 
+    # Convert URL list to correct form
+    url_list = [s.replace('https', 'http') for s in url_list]
+
     # Get keys in correct format
     url_list = [convert_to_mongo_key_formatting(x) for x in url_list]
     _id_list = [convert_to_mongo_key_formatting(x) for x in _id_list]
