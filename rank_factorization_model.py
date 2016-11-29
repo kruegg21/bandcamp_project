@@ -97,12 +97,12 @@ if __name__ == "__main__":
                        ('item_id', 'album_id'),
                        ('binary_target', True),
                        ('max_iterations', 100),
-                       ('regularization', [1e-5]),
-                       ('linear_regularization', [1e-3]),
+                       ('regularization', [1e-6, 1e-7, 1e-5]),
+                       ('linear_regularization', [1e-4, 1e-5, 1e-3]),
                        ('ranking_regularization', [0.5]),
                        ('num_sampled_negative_examples', [4]),
                        ('unobserved_rating_value', [0]),
-                       ('num_factors', [100])
+                       ('num_factors', [200, 100])
                       ])
 
     # Model Parameters
@@ -112,7 +112,7 @@ if __name__ == "__main__":
                    ('binary_target', True),
                    ('max_iterations', 100),
                    ('regularization', [1e-6, 1e-7, 1e-5]),
-                   ('linear_regularization', [1e-4, 1e-5, 0.001]),
+                   ('linear_regularization', [1e-4, 1e-5, 1e-3]),
                    ('ranking_regularization', 0.5),
                    ('unobserved_rating_value', 0),
                    ('num_factors', [50, 100])
